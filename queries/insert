@@ -1,0 +1,2 @@
+INSERT INTO rssfeed (title, url)
+VALUES ('News from the BBC', 'https://www.bbc.co.uk/news/rss.xml');
