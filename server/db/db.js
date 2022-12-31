@@ -1,4 +1,5 @@
 const { isValidEmail } = require("./utils");
+const bcrypt = require("bcrypt");
 
 require("dotenv").config();
 const Pool = require("pg").Pool;
@@ -42,14 +43,17 @@ async function getAllUsers(request, response) {
 async function addUser(request, response) {
   try {
     const { email, password } = request.query;
-    console.log(request.query);
+
     if (!isValidEmail(email)) {
       throw new Error("Email not valid!");
     }
 
+    // hash the password using the SHA-256 algorithm
+    const hash = await bcrypt.hash(password, 10);
+
     const result = await pool.query(
       "INSERT INTO users (email,password) VALUES ($1, $2) RETURNING *",
-      [email, password]
+      [email, hash]
     );
     response.status(201).send(`User added with ID: ${result.rows[0].rowid}`);
   } catch (error) {
