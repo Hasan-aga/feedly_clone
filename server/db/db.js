@@ -1,3 +1,5 @@
+const { isValidEmail } = require("./utils");
+
 require("dotenv").config();
 const Pool = require("pg").Pool;
 
@@ -41,6 +43,9 @@ async function addUser(request, response) {
   try {
     const { email, password } = request.query;
     console.log(request.query);
+    if (!isValidEmail(email)) {
+      throw new Error("Email not valid!");
+    }
 
     const result = await pool.query(
       "INSERT INTO users (email,password) VALUES ($1, $2) RETURNING *",
