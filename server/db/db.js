@@ -3,13 +3,38 @@ const Pool = require("pg").Pool;
 
 const pool = new Pool();
 
-function getAllFeeds(request, response) {
-  pool.query("SELECT * FROM rssfeeds ORDER BY rowid ASC", (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
-  });
+async function getAllFeeds(request, response) {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM rssfeeds ORDER BY rowid ASC"
+    );
+    response.status(200).json(result.rows);
+  } catch (error) {
+    // create a friendly error message
+    const message = "An error occurred while processing your request";
+
+    // log the error for debugging purposes
+    console.error(error);
+
+    // send the friendly error message to the user
+    response.status(500).json({ success: false, message });
+  }
+}
+
+async function getAllUsers(request, response) {
+  try {
+    const result = await pool.query("SELECT * FROM users ORDER BY rowid ASC");
+    response.status(200).json(result.rows);
+  } catch (error) {
+    // create a friendly error message
+    const message = "An error occurred while processing your request";
+
+    // log the error for debugging purposes
+    console.error(error);
+
+    // send the friendly error message to the user
+    response.status(500).json({ success: false, message });
+  }
 }
 
 async function addUser(request, response) {
@@ -72,6 +97,39 @@ async function addFeed(request, response) {
   }
 }
 
+async function deleteFeed(request, response) {
+  try {
+    const { id } = request.query;
+
+    // delete the feed with the specified id
+    const result = await pool.query(
+      "DELETE FROM rssfeeds WHERE rowid = $1 RETURNING *",
+      [id]
+    );
+
+    // if no rows were affected, the feed was not found
+    if (result.rowCount === 0) {
+      // create a friendly error message
+      const message = "The specified feed was not found";
+
+      // send the friendly error message to the user
+      response.status(404).json({ success: false, message });
+    } else {
+      // send a success message to the user
+      response.status(200).json({ success: true });
+    }
+  } catch (error) {
+    // create a friendly error message
+    const message = "An error occurred while processing your request";
+
+    // log the error for debugging purposes
+    console.error(error);
+
+    // send the friendly error message to the user
+    response.status(500).json({ success: false, message });
+  }
+}
+
 async function deleteUsersWithDuplicateEmails(request, response) {
   try {
     const result = await pool.query(
@@ -97,6 +155,39 @@ async function deleteUsersWithDuplicateEmails(request, response) {
   }
 }
 
+async function deleteUser(request, response) {
+  try {
+    const { id } = request.query;
+
+    // delete the user with the specified id
+    const result = await pool.query(
+      "DELETE FROM users WHERE rowid = $1 RETURNING *",
+      [id]
+    );
+
+    // if no rows were affected, the user was not found
+    if (result.rowCount === 0) {
+      // create a friendly error message
+      const message = "The specified user was not found";
+
+      // send the friendly error message to the user
+      response.status(404).json({ success: false, message });
+    } else {
+      // send a success message to the user
+      response.status(200).json({ success: true });
+    }
+  } catch (error) {
+    // create a friendly error message
+    const message = "An error occurred while processing your request";
+
+    // log the error for debugging purposes
+    console.error(error);
+
+    // send the friendly error message to the user
+    response.status(500).json({ success: false, message });
+  }
+}
+
 // TODO: create table if not exist
 
 module.exports = {
@@ -107,4 +198,7 @@ module.exports = {
   addUser,
   addFeed,
   deleteUsersWithDuplicateEmails,
+  deleteFeed,
+  deleteUser,
+  getAllUsers,
 };
