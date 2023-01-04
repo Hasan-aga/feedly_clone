@@ -5,11 +5,13 @@ const LocalStrategy = require("passport-local").Strategy;
 const localStrategy = new LocalStrategy(
   {
     usernameField: "email",
-    passwordField: "pass",
+    passwordField: "password",
   },
   // function of username, password, done(callback)
   async function (email, password, done) {
     try {
+      console.log("Verification function called");
+
       // look for the user data
       const user = await db.getUserByEmail(email);
       // if user doesn't exist

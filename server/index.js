@@ -33,6 +33,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await db.getUserByRowId(id);
+    console.log("deserial user", user);
+
     done(null, user);
   } catch (error) {
     done(new Error(`User was not found!`));
@@ -58,12 +60,15 @@ app.post("/addUser", db.addUser);
 app.post("/addFeed", db.addFeed);
 app.post(
   "/login",
-  passport.authenticate("local", { failureRedirect: "/" }),
+  passport.authenticate("local", { failureRedirect: "/hi" }),
   function (req, res) {
-    console.log(req.user);
-    res.redirect("/dashboard");
+    console.log("user:", req.user);
+    res.status(200).json({ success: true, message: "logged in" });
   }
 );
+app.get("/profile", ensureLoggedIn(), (request, response) => {
+  response.status(200).json({ user: request.user.email });
+});
 app.delete("/deleteFeed", db.deleteFeed);
 app.delete("/deleteUser", db.deleteUser);
 app.delete(
