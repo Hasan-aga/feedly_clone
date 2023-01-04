@@ -19,7 +19,9 @@ const localStrategy = new LocalStrategy(
         return done(null, false, { message: "User not found." });
       }
       // if the password isn't correct
-      if (!isMatchingPasswords(password, user.password)) {
+      const passCheck = await isMatchingPasswords(password, user.password);
+      console.log("passcheck", passCheck);
+      if (!passCheck) {
         return done(null, false, {
           message: "User not found.",
         });

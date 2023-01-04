@@ -7,8 +7,8 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-function isMatchingPasswords(password1, password2) {
-  return password1 === password2;
+async function isMatchingPasswords(incomingPassword, savedPassword) {
+  return await bcrypt.compare(incomingPassword, savedPassword);
 }
 
 module.exports = { isValidEmail, isMatchingPasswords };
