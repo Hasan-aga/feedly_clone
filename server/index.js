@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const db = require("./db/db");
@@ -5,6 +7,7 @@ const helmet = require("helmet");
 const session = require("express-session");
 const passport = require("passport");
 const { localStrategy } = require("./db/localStrategy");
+const { ensureLoggedIn } = require("connect-ensure-login");
 
 const app = express();
 const port = 3000;
@@ -23,6 +26,7 @@ app.use(passport.session());
 passport.use(localStrategy);
 // used to serialize the user for the session
 passport.serializeUser((user, done) => {
+  console.log("serial user", user);
   done(null, user.rowid);
 });
 
@@ -48,12 +52,18 @@ app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
 });
 app.get("/allFeeds", db.getAllFeeds);
-
 // todo: remove this endpoint from production
-app.get("/allUsers", db.getAllUsers);
+app.get("/allUsers", ensureLoggedIn("/hello"), db.getAllUsers);
 app.post("/addUser", db.addUser);
 app.post("/addFeed", db.addFeed);
-app.post("/login", db.loginWithEmailAndPassword);
+app.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/" }),
+  function (req, res) {
+    console.log(req.user);
+    res.redirect("/dashboard");
+  }
+);
 app.delete("/deleteFeed", db.deleteFeed);
 app.delete("/deleteUser", db.deleteUser);
 app.delete(

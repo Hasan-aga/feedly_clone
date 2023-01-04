@@ -1,7 +1,6 @@
 const { isValidEmail, isMatchingPasswords } = require("./utils");
 const bcrypt = require("bcrypt");
 
-require("dotenv").config();
 const Pool = require("pg").Pool;
 
 const pool = new Pool();
@@ -25,6 +24,7 @@ async function getAllFeeds(request, response) {
 }
 
 async function getAllUsers(request, response) {
+  console.log("user: ", request.user);
   try {
     const result = await pool.query("SELECT * FROM users ORDER BY rowid ASC");
     response.status(200).json(result.rows);
