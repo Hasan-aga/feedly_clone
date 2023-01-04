@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 function isValidEmail(email) {
   // use a regular expression to verify the email format
   const emailRegex =
@@ -5,4 +7,8 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-module.exports = { isValidEmail };
+function isMatchingPasswords(password1, password2) {
+  return password1 === password2;
+}
+
+module.exports = { isValidEmail, isMatchingPasswords };

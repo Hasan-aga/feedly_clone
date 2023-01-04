@@ -14,13 +14,18 @@ app.use(
   })
 );
 
+// todo: implement associating user to feed
+// 1. login
+
 app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
 });
 app.get("/allFeeds", db.getAllFeeds);
+// todo: remove this endpoint from production
 app.get("/allUsers", db.getAllUsers);
 app.post("/addUser", db.addUser);
 app.post("/addFeed", db.addFeed);
+app.post("/login", db.loginWithEmailAndPassword);
 app.delete("/deleteFeed", db.deleteFeed);
 app.delete("/deleteUser", db.deleteUser);
 app.delete(

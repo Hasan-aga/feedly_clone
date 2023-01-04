@@ -1,4 +1,4 @@
-const { isValidEmail } = require("./utils");
+const { isValidEmail, isMatchingPasswords } = require("./utils");
 const bcrypt = require("bcrypt");
 
 require("dotenv").config();
@@ -197,6 +197,45 @@ async function deleteUser(request, response) {
   }
 }
 
+// check if login info exists
+// get one user from db by email
+
+// do not export
+async function getUserByEmail(email) {
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1 ", [
+      email,
+    ]);
+    const user = result.rows[0];
+    if (!user) {
+      throw new Error("no user found.");
+    }
+    return user;
+  } catch (error) {
+    const message = "Could not find a user with given email.";
+
+    console.error(error);
+
+    throw new Error(`${message}, ${error}`);
+  }
+}
+
+async function loginWithEmailAndPassword(request, response) {
+  try {
+    const { email, password } = request.query;
+    console.log("searching for user with email", email);
+    const { password: existingPassword } = await getUserByEmail(email);
+    if (!isMatchingPasswords(password, existingPassword)) {
+      throw new Error();
+    }
+    response.status(200).json({ success: true, jwt: "todo" });
+  } catch (error) {
+    const message = "User or password do not match";
+    console.log("error finding user");
+    response.status(500).json({ success: false, message });
+  }
+}
+
 // TODO: create table if not exist
 
 module.exports = {
@@ -210,4 +249,5 @@ module.exports = {
   deleteFeed,
   deleteUser,
   getAllUsers,
+  loginWithEmailAndPassword,
 };
