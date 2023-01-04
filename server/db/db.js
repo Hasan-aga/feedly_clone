@@ -200,11 +200,28 @@ async function deleteUser(request, response) {
 // check if login info exists
 // get one user from db by email
 
-// do not export
 async function getUserByEmail(email) {
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1 ", [
       email,
+    ]);
+    const user = result.rows[0];
+    if (!user) {
+      throw new Error("no user found.");
+    }
+    return user;
+  } catch (error) {
+    const message = "Could not find a user with given email.";
+
+    console.error(error);
+
+    throw new Error(`${message}, ${error}`);
+  }
+}
+async function getUserByRowId(id) {
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE rowid = $1 ", [
+      id,
     ]);
     const user = result.rows[0];
     if (!user) {
@@ -250,4 +267,6 @@ module.exports = {
   deleteUser,
   getAllUsers,
   loginWithEmailAndPassword,
+  getUserByEmail,
+  getUserByRowId,
 };
