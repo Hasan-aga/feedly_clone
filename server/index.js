@@ -63,11 +63,27 @@ app.post(
   passport.authenticate("local", { failureRedirect: "/hi" }),
   function (req, res) {
     console.log("user:", req.user);
-    res.status(200).json({ success: true, message: "logged in" });
+    res.status(200).json({ success: true, message: req.user.email });
   }
 );
 app.get("/profile", ensureLoggedIn(), (request, response) => {
   response.status(200).json({ user: request.user.email });
+});
+app.post("/logout", (request, response) => {
+  if (!request.user) {
+    response.status(404).json({
+      success: false,
+      message: "You are not logged-in to begin with.",
+    });
+  } else {
+    console.log("Logging out,", request.user.email);
+    request.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      response.redirect("/");
+    });
+  }
 });
 app.delete("/deleteFeed", db.deleteFeed);
 app.delete("/deleteUser", db.deleteUser);
