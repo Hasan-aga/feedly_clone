@@ -25,3 +25,15 @@ export async function addFeed(title, url) {
     throw new Error(`failed to process query, ${error}`);
   }
 }
+
+export async function addUser(email, hash) {
+  try {
+    const result = await pool.query(
+      "INSERT INTO users (email,password) VALUES ($1, $2) RETURNING *",
+      [email, hash]
+    );
+    return result;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
