@@ -8,9 +8,10 @@ const session = require("express-session");
 const passport = require("passport");
 const { localStrategy } = require("./db/localStrategy");
 const { ensureLoggedIn } = require("connect-ensure-login");
+const path = require("path");
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(helmet());
 app.use(
@@ -49,10 +50,8 @@ app.use(
 
 // todo: implement associating user to feed
 // 1. login
+// todo: migrate to nextjs backend
 
-app.get("/", (request, response) => {
-  response.json({ info: "Node.js, Express, and Postgres API" });
-});
 app.get("/allFeeds", db.getAllFeeds);
 // todo: remove this endpoint from production
 app.get("/allUsers", ensureLoggedIn("/hello"), db.getAllUsers);
@@ -94,4 +93,10 @@ app.delete(
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
+});
+
+app.use(express.static(path.join(__dirname, "..", "client", "public")));
+
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "client", "public", "index.html"));
 });
