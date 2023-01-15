@@ -13,11 +13,11 @@ export async function getAllFeeds() {
   }
 }
 
-export async function addFeed(title, url) {
+export async function addFeed(url) {
   try {
     const results = await pool.query(
-      "INSERT INTO rssfeeds (title,url) VALUES ($1, $2) RETURNING *",
-      [title, url]
+      "INSERT INTO rssfeeds (url) VALUES ($1) RETURNING *",
+      [url]
     );
 
     return results;
@@ -39,6 +39,17 @@ export async function addUser(email) {
 }
 
 export async function getUserByEmail(email) {
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1 ", [
+      email,
+    ]);
+    return result;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function linkUserToFeed(userID, feedID) {
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1 ", [
       email,
