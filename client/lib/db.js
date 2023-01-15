@@ -26,12 +26,23 @@ export async function addFeed(title, url) {
   }
 }
 
-export async function addUser(email, hash) {
+export async function addUser(email) {
   try {
     const result = await pool.query(
-      "INSERT INTO users (email,password) VALUES ($1, $2) RETURNING *",
-      [email, hash]
+      "INSERT INTO users (email) VALUES ($1) RETURNING *",
+      [email]
     );
+    return result;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function getUserByEmail(email) {
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1 ", [
+      email,
+    ]);
     return result;
   } catch (error) {
     throw new Error(`failed to process query, ${error}`);

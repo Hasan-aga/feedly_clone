@@ -12,9 +12,7 @@ export default async function handler(req, res) {
         throw new Error("Email not valid!");
       }
 
-      // hash the password using the SHA-256 algorithm
-      const hash = await hashPassword(password);
-      const result = await addUser(email, hash);
+      const result = await addUser(email);
       res.status(201).json({ success: true, result: result.rows });
     } catch (error) {
       console.log(`failed adding ${email}, ${error}`);
