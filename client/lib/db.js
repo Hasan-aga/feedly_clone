@@ -37,3 +37,6 @@ export async function addUser(email, hash) {
     throw new Error(`failed to process query, ${error}`);
   }
 }
+
+// todo: associate user w/ feeds
+// when adding feed, add relation to user-feed table
