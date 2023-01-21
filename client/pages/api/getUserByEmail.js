@@ -3,7 +3,7 @@ import { getUserByEmail } from "@/lib/db";
 export default async function handler(req, res) {
   const { email } = req.query;
   try {
-    const userExists = await getUserByEmail(email).rows;
+    const userExists = await getUserByEmail(email);
     if (!userExists) {
       throw new Error("no user found with this email.");
     }

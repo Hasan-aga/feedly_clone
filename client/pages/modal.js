@@ -3,8 +3,23 @@ import { useState } from "react";
 
 export default function CustomModal({ children, visible, closeHandler }) {
   const [input, setInput] = useState(null);
-  function addHandler(e) {
+
+  async function addHandler(e) {
     console.log(input);
+    var requestOptions = {
+      method: "POST",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    try {
+      const result = fetch(
+        `http://localhost:3000/api/addFeed?url=${input}`,
+        requestOptions
+      );
+    } catch (error) {
+      console.log("oops!");
+    }
+
     closeHandler();
   }
   return (
@@ -29,10 +44,10 @@ export default function CustomModal({ children, visible, closeHandler }) {
           size="lg"
           placeholder="ex: http://blog.hasan.one"
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
+          onKeyDown={async (e) => {
             if (e.key === "Enter") {
               setInput(e.target.value);
-              addHandler();
+              await addHandler();
             }
           }}
           //   contentLeft={<Mail fill="currentColor" />}

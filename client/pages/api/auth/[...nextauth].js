@@ -17,11 +17,11 @@ export const authOptions = {
     // ...add more providers here
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
       console.log(`callback `, user);
       const isAllowedToSignIn = true;
       try {
-        const userExists = await getUserByEmail(user.email).rows;
+        const userExists = await getUserByEmail(user.email);
         if (!userExists) {
           // save user to db
           console.log(`adding user ${user.email} to db.`);
