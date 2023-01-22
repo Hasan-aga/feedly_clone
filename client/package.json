@@ -18,7 +18,6 @@
     "next-auth": "^4.18.8",
     "pg": "^8.8.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "rsshub": "^1.0.0-master.7e6fbdb"
+    "react-dom": "18.2.0"
   }
 }

@@ -6,6 +6,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
 
   async function addHandler(e) {
     console.log(input);
+
     var requestOptions = {
       method: "POST",
       redirect: "follow",

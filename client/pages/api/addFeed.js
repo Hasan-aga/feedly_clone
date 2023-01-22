@@ -27,9 +27,26 @@ export default async function handler(req, res) {
       const feedExists = await getFeedByUrl(url);
 
       let feedID;
+      const res1 = fetch(url + "/feed");
+      const res2 = fetch(url + "/rss.xml");
+
+      const result = await Promise.all([res1, res2]);
+
+      // console.log(`posts:`, feed1);
+      let winner;
+      result.forEach((w) => {
+        if (w.ok) {
+          winner = w.url;
+          return;
+        }
+      });
+
+      console.log(winner);
+
       if (!feedExists) {
-        console.log("Adding", url);
-        const result = await addFeed(url);
+        console.log("Adding", winner);
+
+        const result = await addFeed(winner);
         feedID = result.rows[0].rowid;
       } else {
         feedID = feedExists.rowid;
