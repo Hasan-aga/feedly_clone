@@ -42,22 +42,77 @@ export async function saveArticle(article) {
   return articleid.rows[0].articleid;
 }
 
-export async function updateFeedArticles(feedid, articles) {
+export async function getFeedTimestamp(feedID) {
   try {
+    const result = pool.query(
+      "SELECT lastupdated FROM rssfeeds WHERE rowid = $1",
+      [feedID]
+    );
+    console.log("timestamp:", result.rows[0]);
+  } catch (error) {
+    console.log("error getting timestamp", error);
+  }
+}
+
+export async function getArticlesOfFeed(feedID, offset = 0) {
+  try {
+    const articleIDs = await pool.query(
+      "SELECT articleid FROM feed_articles WHERE feedid = $1 LIMIT 5 OFFSET $2",
+      [feedID, offset]
+    );
+
+    // get article from article id
+    const articles = [];
+    for (let { articleid } of articleIDs.rows) {
+      const article = await pool.query(
+        "SELECT * FROM articles WHERE articleid = $1",
+        [articleid]
+      );
+      articles.push(...article.rows);
+    }
+    return articles;
+  } catch (error) {
+    throw error;
+  }
+}
+export async function getUserArticles(userID, offset = 0) {
+  try {
+    // get the user feed ids
+    const feedIDs = await getFeedsOfUser(userID);
+    let results = {};
+    console.log(`getting articles for ${userID}`, feedIDs);
+    for (let feedID of feedIDs) {
+      results[feedID.rssid] = {
+        articles: await getArticlesOfFeed(feedID.rssid),
+        offset,
+      };
+      // todo: give meaningful name to each feed
+    }
+
+    console.log("results ", results);
+    return results;
+    // for each feed id, get 5 articles
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function updateFeedArticles(feedID, articles) {
+  try {
+    await getFeedTimestamp(feedID);
     const timestamp = new Date();
     // update timestamp in rssfeeds table
     await pool.query("UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2", [
       timestamp,
-      feedid,
+      feedID,
     ]);
 
     // update article in feed_articles table
     for (let article of articles) {
       const articleid = await saveArticle(article);
-      console.log(`feed/article ${feedid}/`, articleid);
       pool.query(
         "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
-        [feedid, articleid]
+        [feedID, articleid]
       );
     }
   } catch (error) {
@@ -111,16 +166,13 @@ export async function linkUserToFeed(userID, feedID) {
   }
 }
 
-export async function getFeedsOfUser(user) {
-  const { email } = user;
-  const { rowid: userID } = await getUserByEmail(email);
-
+export async function getFeedsOfUser(userID) {
   const feedLinks = await pool.query(
-    "SELECT url FROM rssfeeds WHERE rowid IN (SELECT rssid FROM user_to_rss_feed WHERE userid = $1) ",
+    "SELECT rssid FROM user_to_rss_feed WHERE userid = $1",
     [userID]
   );
 
-  return feedLinks;
+  return feedLinks.rows;
 }
 
 // todo: associate user w/ feeds
