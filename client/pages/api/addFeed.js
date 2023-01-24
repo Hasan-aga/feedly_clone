@@ -5,49 +5,73 @@ import {
   getFeedByUrl,
   getUserByEmail,
   linkUserToFeed,
+  updateFeedArticles,
 } from "@/lib/db";
+import { XMLParser } from "fast-xml-parser";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
+async function determineFeedPath(url) {
+  const res1 = fetch(url + "/feed");
+  const res2 = fetch(url + "/rss.xml");
+  const result = await Promise.all([res1, res2]);
+  for (let w of result) {
+    if (w.ok) {
+      return w.url;
+    }
+  }
+  throw new Error("No link was resolved! try again.");
+}
+
+async function getFreshArticles(url) {
+  // {
+  //   '?xml': '',
+  //   rss: {
+  //     channel: {
+  //       title: 'صفحات صغيرة',
+  //       'atom:link': '',
+  //       link: 'https://smallpages.blog',
+  //       description: 'أفكار في التقنية، التعليم والتبسيط يكتبها عبدالله المهيري',
+  //       lastBuildDate: 'Tue, 24 Jan 2023 14:11:06 +0000',
+  //       language: 'ar',
+  //       'sy:updatePeriod': 'hourly',
+  //       'sy:updateFrequency': 1,
+  //       generator: 'https://wordpress.org/?v=6.1.1',
+  //       image: [Object],
+  //       site: 193963405,
+  //       item: [Array]
+  //     }
+  //   }
+  // }
+  const res = await fetch(url);
+  if (res.ok) {
+    const articles = await res.text();
+    const parser = new XMLParser();
+    let articleObject = parser.parse(articles);
+    return articleObject.rss.channel.item;
+  } else throw new Error("Failed to get new articles.");
+}
+
 export default async function handler(req, res) {
-  console.log("req", req);
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     res.status(403).json({ success: false, error: "You are not signed in." });
   } else if (req.method === "POST")
     try {
-      // todo: db throws error if feed exists. this is not right.
-      // if user not signed in, block access to this endpoint
-      // get url of feed
-      //  if feed not in db, add it
-      // get id of feed
-      // get id of user
-      // link user to feed
       const { url } = req.query;
       const feedExists = await getFeedByUrl(url);
 
+      const correctUrl = await determineFeedPath(url);
+      console.log("winner", correctUrl);
+
       let feedID;
-      const res1 = fetch(url + "/feed");
-      const res2 = fetch(url + "/rss.xml");
-
-      const result = await Promise.all([res1, res2]);
-
-      // console.log(`posts:`, feed1);
-      let winner;
-      result.forEach((w) => {
-        if (w.ok) {
-          winner = w.url;
-          return;
-        }
-      });
-
-      console.log(winner);
-
       if (!feedExists) {
-        console.log("Adding", winner);
+        console.log("Adding", correctUrl);
 
-        const result = await addFeed(winner);
+        const result = await addFeed(correctUrl);
         feedID = result.rows[0].rowid;
+        const articles = await getFreshArticles(correctUrl);
+        await updateFeedArticles(feedID, articles);
       } else {
         feedID = feedExists.rowid;
       }

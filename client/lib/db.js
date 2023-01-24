@@ -15,12 +15,51 @@ export async function getAllFeeds() {
 
 export async function addFeed(url) {
   try {
+    const timestamp = new Date();
     const results = await pool.query(
-      "INSERT INTO rssfeeds (url) VALUES ($1) RETURNING * ",
-      [url]
+      "INSERT INTO rssfeeds (url, lastupdated) VALUES ($1, $2) RETURNING * ",
+      [url, timestamp]
     );
 
     return results;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function saveArticle(article) {
+  const articleid = await pool.query(
+    "INSERT INTO articles (title, link, description, publication_date, category) VALUES ($1, $2, $3, $4, $5) RETURNING articleid ",
+    [
+      article.title,
+      article.link,
+      article.description,
+      article.pubDate,
+      article.category,
+    ]
+  );
+
+  return articleid.rows[0].articleid;
+}
+
+export async function updateFeedArticles(feedid, articles) {
+  try {
+    const timestamp = new Date();
+    // update timestamp in rssfeeds table
+    await pool.query("UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2", [
+      timestamp,
+      feedid,
+    ]);
+
+    // update article in feed_articles table
+    for (let article of articles) {
+      const articleid = await saveArticle(article);
+      console.log(`feed/article ${feedid}/`, articleid);
+      pool.query(
+        "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
+        [feedid, articleid]
+      );
+    }
   } catch (error) {
     throw new Error(`failed to process query, ${error}`);
   }
