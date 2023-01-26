@@ -2,6 +2,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { User, Grid, Button, Card, Text, Spacer } from "@nextui-org/react";
 import CustomModal from "@/pages/modal";
 import { useState } from "react";
+import ContentStack from "@/components/contentStack";
 
 export default function Profile() {
   const { data: session } = useSession();
@@ -22,6 +23,8 @@ export default function Profile() {
           />
         </Grid>
         <Spacer y={2} />
+        <Spacer y={2} />
+        <ContentStack />
       </>
     );
   }

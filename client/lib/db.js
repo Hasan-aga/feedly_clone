@@ -75,6 +75,19 @@ export async function getArticlesOfFeed(feedID, offset = 0) {
     throw error;
   }
 }
+
+export async function getUrlFromFeedID(feedID) {
+  try {
+    const result = await pool.query(
+      "SELECT url FROM rssfeeds WHERE rowid = $1",
+      [feedID]
+    );
+    const feedUrl = result.rows[0].url;
+    return feedUrl;
+  } catch (error) {
+    throw error;
+  }
+}
 export async function getUserArticles(userID, offset = 0) {
   try {
     // get the user feed ids
@@ -82,7 +95,9 @@ export async function getUserArticles(userID, offset = 0) {
     let results = {};
     console.log(`getting articles for ${userID}`, feedIDs);
     for (let feedID of feedIDs) {
+      const link = await getUrlFromFeedID(feedID.rssid);
       results[feedID.rssid] = {
+        link,
         articles: await getArticlesOfFeed(feedID.rssid),
         offset,
       };
@@ -167,12 +182,12 @@ export async function linkUserToFeed(userID, feedID) {
 }
 
 export async function getFeedsOfUser(userID) {
-  const feedLinks = await pool.query(
-    "SELECT rssid FROM user_to_rss_feed WHERE userid = $1",
+  const feeds = await pool.query(
+    "SELECT * FROM rssfeeds where rowid in (SELECT rssid FROM user_to_rss_feed WHERE userid = $1)",
     [userID]
   );
 
-  return feedLinks.rows;
+  return feeds.rows;
 }
 
 // todo: associate user w/ feeds

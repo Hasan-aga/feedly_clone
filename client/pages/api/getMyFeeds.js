@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getUserByEmail, getUserArticles } from "@/lib/db";
+import { getUserByEmail, getUserArticles, getFeedsOfUser } from "@/lib/db";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       const user = await getUserByEmail(session.user.email);
       const userID = user.rowid;
 
-      const results = await getUserArticles(userID);
+      const results = await getFeedsOfUser(userID);
       res.status(200).json({ success: true, results });
     } catch (error) {
       console.log(`failed getting articles, ${error}`);
