@@ -1,3 +1,5 @@
+import { needsUpdate } from "./utils";
+
 const { Pool } = require("pg");
 
 // leaving the args to Pool empty loads the defaults from env
@@ -13,12 +15,12 @@ export async function getAllFeeds() {
   }
 }
 
-export async function addFeed(url) {
+export async function addFeed(url, title) {
   try {
     const timestamp = new Date();
     const results = await pool.query(
-      "INSERT INTO rssfeeds (url, lastupdated) VALUES ($1, $2) RETURNING * ",
-      [url, timestamp]
+      "INSERT INTO rssfeeds (url, lastupdated, title) VALUES ($1, $2, $3) RETURNING * ",
+      [url, timestamp, title]
     );
 
     return results;
@@ -72,7 +74,7 @@ export async function getArticlesOfFeed(feedID, offset = 0) {
     }
     return articles;
   } catch (error) {
-    throw error;
+    throw new Error(`failed to process query, ${error}`);
   }
 }
 
@@ -88,33 +90,9 @@ export async function getUrlFromFeedID(feedID) {
     throw error;
   }
 }
-export async function getUserArticles(userID, offset = 0) {
-  try {
-    // get the user feed ids
-    const feedIDs = await getFeedsOfUser(userID);
-    let results = {};
-    console.log(`getting articles for ${userID}`, feedIDs);
-    for (let feedID of feedIDs) {
-      const link = await getUrlFromFeedID(feedID.rssid);
-      results[feedID.rssid] = {
-        link,
-        articles: await getArticlesOfFeed(feedID.rssid),
-        offset,
-      };
-      // todo: give meaningful name to each feed
-    }
-
-    console.log("results ", results);
-    return results;
-    // for each feed id, get 5 articles
-  } catch (error) {
-    throw new Error(`failed to process query, ${error}`);
-  }
-}
 
 export async function updateFeedArticles(feedID, articles) {
   try {
-    await getFeedTimestamp(feedID);
     const timestamp = new Date();
     // update timestamp in rssfeeds table
     await pool.query("UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2", [
@@ -135,11 +113,12 @@ export async function updateFeedArticles(feedID, articles) {
   }
 }
 
-export async function getFeedByUrl(url) {
+export async function getFeedByTitle(title) {
   try {
-    const result = await pool.query("SELECT * FROM rssfeeds WHERE url = $1 ", [
-      url,
-    ]);
+    const result = await pool.query(
+      "SELECT * FROM rssfeeds WHERE title = $1 ",
+      [title]
+    );
     return result.rows[0];
   } catch (error) {
     throw new Error(`failed to process query, ${error}`);

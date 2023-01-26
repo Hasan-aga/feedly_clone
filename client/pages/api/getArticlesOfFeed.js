@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getUserByEmail, getUserArticles, getFeedsOfUser } from "@/lib/db";
-import { needsUpdate } from "@/lib/utils";
+import { getUserByEmail, getFeedsOfUser, getArticlesOfFeed } from "@/lib/db";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -11,15 +10,10 @@ export default async function handler(req, res) {
     res.status(403).json({ success: false, error: "You are not signed in." });
   } else if (req.method === "GET")
     try {
-      const user = await getUserByEmail(session.user.email);
-      const userID = user.rowid;
+      // http://localhost:3000/api/getArticlesOfFeed?feedid=82
+      const { feedid } = req.query;
+      const results = await getArticlesOfFeed(feedid);
 
-      const results = await getFeedsOfUser(userID);
-      for (const feed of results) {
-        // check if feed needs updating articles
-
-        console.log(needsUpdate(feed.lastupdated));
-      }
       res.status(200).json({ success: true, results });
     } catch (error) {
       console.log(`failed getting articles, ${error}`);

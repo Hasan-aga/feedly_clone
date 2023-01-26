@@ -2,47 +2,17 @@
 
 import {
   addFeed,
-  getFeedByUrl,
+  getFeedByTitle,
   getUserByEmail,
   linkUserToFeed,
   updateFeedArticles,
 } from "@/lib/db";
+import { determineFeedPath } from "@/lib/utils";
 import { XMLParser } from "fast-xml-parser";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
-async function determineFeedPath(url) {
-  const res1 = fetch(url + "/feed");
-  const res2 = fetch(url + "/rss.xml");
-  const result = await Promise.all([res1, res2]);
-  for (let w of result) {
-    if (w.ok) {
-      return w.url;
-    }
-  }
-  throw new Error("No link was resolved! try again.");
-}
-
 async function getFreshArticles(url) {
-  // {
-  //   '?xml': '',
-  //   rss: {
-  //     channel: {
-  //       title: 'صفحات صغيرة',
-  //       'atom:link': '',
-  //       link: 'https://smallpages.blog',
-  //       description: 'أفكار في التقنية، التعليم والتبسيط يكتبها عبدالله المهيري',
-  //       lastBuildDate: 'Tue, 24 Jan 2023 14:11:06 +0000',
-  //       language: 'ar',
-  //       'sy:updatePeriod': 'hourly',
-  //       'sy:updateFrequency': 1,
-  //       generator: 'https://wordpress.org/?v=6.1.1',
-  //       image: [Object],
-  //       site: 193963405,
-  //       item: [Array]
-  //     }
-  //   }
-  // }
   const res = await fetch(url);
   if (res.ok) {
     const articles = await res.text();
@@ -59,16 +29,15 @@ export default async function handler(req, res) {
   } else if (req.method === "POST")
     try {
       const { url } = req.query;
-      const feedExists = await getFeedByUrl(url);
-
-      const correctUrl = await determineFeedPath(url);
-      console.log("winner", correctUrl);
-
+      const urlDetails = new URL(url);
+      const title = urlDetails.hostname;
+      const feedExists = await getFeedByTitle(title);
+      console.log(`${urlDetails.hostname} exists?`, feedExists);
       let feedID;
       if (!feedExists) {
+        const correctUrl = await determineFeedPath(url);
         console.log("Adding", correctUrl);
-
-        const result = await addFeed(correctUrl);
+        const result = await addFeed(correctUrl, title);
         feedID = result.rows[0].rowid;
         const articles = await getFreshArticles(correctUrl);
         await updateFeedArticles(feedID, articles);
