@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Collapse, Text, Button, Loading } from "@nextui-org/react";
+import { Collapse, Grid, Button, Loading } from "@nextui-org/react";
+import ArticleCard from "./articleCard";
 
 export default function Feed({ feed }) {
-  const [articles, setArticles] = useState([[]]);
+  const [articles, setArticles] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -15,6 +16,7 @@ export default function Feed({ feed }) {
     if (results) {
       setLoading(false);
       setArticles([...articles, ...results]);
+      console.log("articles", articles);
     }
   }
 
@@ -31,13 +33,24 @@ export default function Feed({ feed }) {
   return (
     <>
       <Collapse title={feed.title}>
-        {articles &&
-          articles.map((article, index) => {
-            return <Text key={index}>{article.title}</Text>;
-          })}
-        <Button flat color="primary" auto onPress={loadMore}>
-          {loading ? <Loading /> : "Load More"}
-        </Button>
+        <Grid.Container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          gap={2}
+        >
+          {articles &&
+            articles.map((article, index) => {
+              return <ArticleCard article={article} />;
+            })}
+          <Button flat color="primary" auto onPress={loadMore}>
+            {loading ? (
+              <Loading type="points" color="currentColor" size="sm" />
+            ) : (
+              "Load More"
+            )}
+          </Button>
+        </Grid.Container>
       </Collapse>
     </>
   );
