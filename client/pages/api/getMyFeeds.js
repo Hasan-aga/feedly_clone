@@ -18,7 +18,13 @@ export default async function handler(req, res) {
       for (const feed of results) {
         // check if feed needs updating articles
 
-        console.log(needsUpdate(feed.lastupdated));
+        console.log("feed needs update? ", needsUpdate(feed.lastupdated));
+        if (needsUpdate(feed.lastupdated)) {
+          // update the articles of feed
+          // todo: test that updating works
+          const articles = await getFreshArticles(correctUrl);
+          await updateFeedArticles(feed.rowid, articles);
+        }
       }
       res.status(200).json({ success: true, results });
     } catch (error) {

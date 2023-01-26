@@ -1,27 +1,30 @@
 import { useState, useEffect } from "react";
+import { Collapse } from "@nextui-org/react";
+import Feed from "./feed";
+
 export default function ContentStack() {
-  const [articles, setArticles] = useState();
+  const [feeds, setFeeds] = useState();
   useEffect(() => {
-    async function getArticles() {
-      const res = await fetch("http://localhost:3000/api/getMyArticles");
+    async function getFeeds() {
+      const res = await fetch("http://localhost:3000/api/getMyFeeds");
       const { results } = await res.json();
 
       if (results) {
-        for (let key of Object.keys(results)) {
-          console.log(results[key]);
-        //   todo: break down api
-        // api for fetching articles of feed
-        // api for fetching feeds of user = this is where we keep articles uptodate
-        }
+        setFeeds(results);
       }
     }
 
-    getArticles();
+    getFeeds();
   }, []);
 
   return (
     <>
-      <h4>{articles && Object.keys(articles).map((key) => key)}</h4>
+      <Collapse.Group>
+        {feeds &&
+          feeds.map((feed, index) => {
+            return <Feed feed={feed} key={index} />;
+          })}
+      </Collapse.Group>
     </>
   );
 }

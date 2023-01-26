@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getUserByEmail, getFeedsOfUser, getArticlesOfFeed } from "@/lib/db";
+import { getArticlesOfFeed } from "@/lib/db";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -11,8 +11,9 @@ export default async function handler(req, res) {
   } else if (req.method === "GET")
     try {
       // http://localhost:3000/api/getArticlesOfFeed?feedid=82
-      const { feedid } = req.query;
-      const results = await getArticlesOfFeed(feedid);
+      const { feedid, offset } = req.query;
+      console.log(`getting articles for feed ${feedid}`);
+      const results = await getArticlesOfFeed(feedid, offset);
 
       res.status(200).json({ success: true, results });
     } catch (error) {

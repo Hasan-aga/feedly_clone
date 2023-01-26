@@ -1,3 +1,5 @@
+import { XMLParser } from "fast-xml-parser";
+
 const bcrypt = require("bcrypt");
 
 export function isValidEmail(email) {
@@ -32,4 +34,14 @@ export async function determineFeedPath(url) {
     }
   }
   throw new Error("No link was resolved! try again.");
+}
+
+export async function getFreshArticles(url) {
+  const res = await fetch(url);
+  if (res.ok) {
+    const articles = await res.text();
+    const parser = new XMLParser();
+    let articleObject = parser.parse(articles);
+    return articleObject.rss.channel.item;
+  } else throw new Error("Failed to get new articles.");
 }
