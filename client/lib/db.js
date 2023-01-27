@@ -1,9 +1,10 @@
 import { needsUpdate } from "./utils";
 
-const { Pool } = require("pg");
+const { Pool, Client } = require("pg");
 
 // leaving the args to Pool empty loads the defaults from env
 const pool = new Pool();
+const client = new Client();
 export async function getAllFeeds() {
   try {
     const result = await pool.query(
@@ -29,19 +30,29 @@ export async function addFeed(url, title) {
   }
 }
 
-export async function saveArticle(article) {
-  const articleid = await pool.query(
-    "INSERT INTO articles (title, link, description, publication_date, category) VALUES ($1, $2, $3, $4, $5) RETURNING articleid ",
-    [
-      article.title,
-      article.link,
-      article.description,
-      article.pubDate,
-      article.category,
-    ]
-  );
+export async function saveArticle(article, client) {
+  try {
+    // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict
+    const articleid = await client.query(
+      "INSERT INTO articles (title, link, description, publication_date, category) VALUES ($1, $2, $3, $4, $5) ON CONFLICT(link) DO NOTHING RETURNING articleid ",
+      [
+        article.title,
+        article.link,
+        article.description,
+        article.pubDate,
+        article.category,
+      ]
+    );
+    console.log("saved article ", article.title);
 
-  return articleid.rows[0].articleid;
+    return articleid.rows[0]?.articleid;
+  } catch (error) {
+    if (error.code === "23505") {
+      console.log("Duplicate url found, skipping article");
+      return;
+    }
+    throw error;
+  }
 }
 
 export async function getFeedTimestamp(feedID) {
@@ -92,24 +103,40 @@ export async function getUrlFromFeedID(feedID) {
 }
 
 export async function updateFeedArticles(feedID, articles) {
+  // const client = await pool.connect();
+  await client.connect();
   try {
+    // todo: transaction is failing we must use same client:
+    // start transaction
+    await client.query("BEGIN");
+    console.log("begin saving articles...");
     const timestamp = new Date();
     // update timestamp in rssfeeds table
-    await pool.query("UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2", [
-      timestamp,
-      feedID,
-    ]);
+    await client.query(
+      "UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2 RETURNING *",
+      [timestamp, feedID]
+    );
+    console.log("finished 1st query");
 
     // update article in feed_articles table
     for (let article of articles) {
-      const articleid = await saveArticle(article);
-      pool.query(
-        "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
-        [feedID, articleid]
-      );
+      const articleid = await saveArticle(article, client);
+      if (articleid) {
+        client.query(
+          "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
+          [feedID, articleid]
+        );
+        console.log("saved articleid: ", articleid);
+      }
     }
+    console.log("commit.");
+    await client.query("COMMIT"); // end transaction
   } catch (error) {
+    console.log("error");
+    await client.query("ROLLBACK"); // if an error occurs, undo the transaction
     throw new Error(`failed to process query, ${error}`);
+  } finally {
+    await client.end();
   }
 }
 

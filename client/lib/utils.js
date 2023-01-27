@@ -37,11 +37,18 @@ export async function determineFeedPath(url) {
 }
 
 export async function getFreshArticles(url) {
+  console.log("getting fresh articles");
   const res = await fetch(url);
   if (res.ok) {
+    console.log("getting text");
     const articles = await res.text();
+    console.log("getting xml");
     const parser = new XMLParser();
     let articleObject = parser.parse(articles);
+    console.log(
+      `articles of ${url}`,
+      articleObject.rss.channel.item[0].pubDate
+    );
     return articleObject.rss.channel.item;
   } else throw new Error("Failed to get new articles.");
 }

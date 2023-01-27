@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getUserByEmail, getUserArticles, getFeedsOfUser } from "@/lib/db";
-import { needsUpdate } from "@/lib/utils";
+import { getUserByEmail, getFeedsOfUser, updateFeedArticles } from "@/lib/db";
+import { getFreshArticles, needsUpdate } from "@/lib/utils";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         if (needsUpdate(feed.lastupdated)) {
           // update the articles of feed
           // todo: test that updating works
-          const articles = await getFreshArticles(correctUrl);
+          const articles = await getFreshArticles(feed.url);
           await updateFeedArticles(feed.rowid, articles);
         }
       }
