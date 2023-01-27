@@ -6,7 +6,7 @@ import styles from "./cardButtons.module.css";
 export default function CardButtons() {
   return (
     <>
-      <Grid xs={12} justify="flex-end" className={styles.cardbuttons}>
+      <Grid xs={12} justify="flex-end">
         <Bookmark />
         <Checkmark />
       </Grid>
