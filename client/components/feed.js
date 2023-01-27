@@ -7,7 +7,7 @@ export default function Feed({ feed }) {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  async function getArticles() {
+  async function getArticles(offset = 0) {
     const res = await fetch(
       `http://localhost:3000/api/getArticlesOfFeed?feedid=${feed.rowid}&offset=${offset}`
     );
@@ -16,7 +16,8 @@ export default function Feed({ feed }) {
     if (results) {
       setLoading(false);
       setArticles([...articles, ...results]);
-      console.log("articles", articles);
+      console.log("offset", offset);
+      console.log("articles", results);
     }
   }
 
@@ -24,7 +25,8 @@ export default function Feed({ feed }) {
     setLoading(true);
     const newOffset = offset + 5;
     setOffset(newOffset);
-    await getArticles();
+
+    await getArticles(newOffset);
   }
   useEffect(() => {
     getArticles();
@@ -41,7 +43,7 @@ export default function Feed({ feed }) {
         >
           {articles &&
             articles.map((article, index) => {
-              return <ArticleCard article={article} />;
+              return <ArticleCard key={index} article={article} />;
             })}
           <Button flat color="primary" auto onPress={loadMore}>
             {loading ? (
