@@ -11,6 +11,8 @@ import CustomModal from "@/pages/modal";
 import { useState } from "react";
 import ContentStack from "@/components/contentStack";
 import { useTheme as useNextTheme } from "next-themes";
+import Moon, { MoonIcon } from "@/components/icons/moon";
+import { SunIcon } from "@/components/icons/sun";
 
 export default function Profile() {
   const { data: session } = useSession();
@@ -23,10 +25,12 @@ export default function Profile() {
     return (
       <>
         <div>
-          The current theme is: {type}
           <Switch
             checked={isDark}
             onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+            size="xl"
+            iconOn={<SunIcon filled />}
+            iconOff={<MoonIcon filled />}
           />
         </div>
         <User src={session.user.image} name={session.user.name} />
