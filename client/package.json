@@ -17,6 +17,7 @@
     "fast-xml-parser": "^4.0.14",
     "next": "13.1.2",
     "next-auth": "^4.18.10",
+    "next-themes": "^0.2.1",
     "pg": "^8.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
