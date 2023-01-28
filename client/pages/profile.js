@@ -11,7 +11,7 @@ import CustomModal from "@/pages/modal";
 import { useState } from "react";
 import ContentStack from "@/components/contentStack";
 import { useTheme as useNextTheme } from "next-themes";
-import Moon, { MoonIcon } from "@/components/icons/moon";
+import { MoonIcon } from "@/components/icons/moon";
 import { SunIcon } from "@/components/icons/sun";
 
 export default function Profile() {
@@ -19,7 +19,7 @@ export default function Profile() {
   const [visible, setVisible] = useState(false);
 
   const { setTheme } = useNextTheme();
-  const { isDark, type } = useTheme();
+  const { isDark } = useTheme();
 
   if (session) {
     return (
@@ -44,8 +44,7 @@ export default function Profile() {
             closeHandler={() => setVisible(false)}
           />
         </Grid>
-        <Spacer y={2} />
-        <Spacer y={2} />
+        <Spacer y={4} />
         <ContentStack />
       </>
     );
