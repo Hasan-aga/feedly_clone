@@ -2,12 +2,17 @@
 
 import {
   addFeed,
+  addUser,
   getFeedByTitle,
   getUserByEmail,
   linkUserToFeed,
   updateFeedArticles,
 } from "@/lib/db";
-import { determineFeedPath, getFreshArticles } from "@/lib/utils";
+import {
+  determineFeedPath,
+  getFeedUrlAndFavicon,
+  getFreshArticles,
+} from "@/lib/utils";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -17,34 +22,40 @@ export default async function handler(req, res) {
     res.status(403).json({ success: false, error: "You are not signed in." });
   } else if (req.method === "POST")
     try {
-      const { url } = req.query;
-      const feedID = await addFeedToDB(url);
       // get user id
-      const user = await getUserByEmail(session.user.email);
+      let user = await getUserByEmail(session.user.email);
+      if (!user) {
+        user = await addUser(session.user.email);
+        console.log(`added user `, user);
+      }
       const userID = user.rowid;
-      await linkFeedToUser(userID, feedID);
+      const { url, category } = req.query;
+      console.log(`adding feed to category ${category}`);
+      const feedID = await addFeedToDB(url, category, userID);
+      await linkUserToFeed(userID, feedID);
       res.status(200).json({ success: true });
     } catch (error) {
       console.log(`failed adding feed, ${error}`);
       res.status(500).json({ success: false, error });
     }
 }
-async function linkFeedToUser(userID, feedID) {
-  const relation = await linkUserToFeed(userID, feedID);
-  console.log(relation.rows[0], feedID);
-}
 
-async function addFeedToDB(url) {
+async function addFeedToDB(url, category, userID) {
   const urlDetails = new URL(url);
   const title = urlDetails.hostname;
   const feedExists = await getFeedByTitle(title);
   console.log(`${urlDetails.hostname} exists?`, feedExists);
   let feedID;
   if (!feedExists) {
-    const correctUrl = await determineFeedPath(url);
+    const { url: correctUrl, favicon } = await getFeedUrlAndFavicon(url);
     console.log("Adding", correctUrl);
-    const result = await addFeed(correctUrl, title);
-    feedID = result.rows[0].rowid;
+    const feedInfo = {
+      correctUrl,
+      favicon,
+      category,
+      title,
+    };
+    feedID = await addFeed(feedInfo, userID);
     try {
       // separate into own try / catch. failing to get articles wont disrupt creating user/feed relation
       const articles = await getFreshArticles(correctUrl);
@@ -55,5 +66,7 @@ async function addFeedToDB(url) {
   } else {
     feedID = feedExists.rowid;
   }
+  console.log(`feed id:${feedID}`);
+
   return feedID;
 }

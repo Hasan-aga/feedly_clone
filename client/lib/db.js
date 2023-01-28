@@ -4,7 +4,6 @@ const { Pool, Client } = require("pg");
 
 // leaving the args to Pool empty loads the defaults from env
 const pool = new Pool();
-const client = new Client();
 export async function getAllFeeds() {
   try {
     const result = await pool.query(
@@ -16,17 +15,40 @@ export async function getAllFeeds() {
   }
 }
 
-export async function addFeed(url, title) {
+export async function addFeed(feedInfo, userid) {
+  const { correctUrl: url, title, category, favicon } = feedInfo;
+  const client = new Client();
+  await client.connect();
+  console.log(`adding feed ${JSON.stringify(feedInfo)} for user ${userid}`);
   try {
     const timestamp = new Date();
-    const results = await pool.query(
-      "INSERT INTO rssfeeds (url, lastupdated, title) VALUES ($1, $2, $3) RETURNING * ",
-      [url, timestamp, title]
+    await client.query("BEGIN");
+    // add feed to feed table
+    const results = await client.query(
+      "INSERT INTO rssfeeds (url, lastupdated, title, favicon) VALUES ($1, $2, $3, $4) RETURNING * ",
+      [url, timestamp, title, favicon]
     );
 
-    return results;
+    const feedid = results.rows[0].rowid;
+
+    // record feed category for current user
+    await client.query(
+      `INSERT INTO user_feeds_categories(userid, feedid, category) VALUES($1, $2, $3) `,
+      [userid, feedid, category]
+    );
+    await client.query("COMMIT");
+
+    return feedid;
   } catch (error) {
+    console.log("rolling back.");
+    client.query("ROLLBACK");
     throw new Error(`failed to process query, ${error}`);
+  } finally {
+    console.log("closing feed client");
+    client
+      .end()
+      .then(() => console.log("client has disconnected"))
+      .catch((err) => console.error("error during disconnection", err.stack));
   }
 }
 
@@ -43,7 +65,7 @@ export async function saveArticle(article, client) {
         article.category,
       ]
     );
-    console.log("saved article ", article.title);
+    console.log("saved article ", article.title.slice(0, 5));
 
     return articleid.rows[0]?.articleid;
   } catch (error) {
@@ -112,6 +134,7 @@ export async function getUrlFromFeedID(feedID) {
 
 export async function updateFeedArticles(feedID, articles) {
   // const client = await pool.connect();
+  const client = new Client();
   await client.connect();
   try {
     // todo: transaction is failing we must use same client:
@@ -134,7 +157,7 @@ export async function updateFeedArticles(feedID, articles) {
           "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
           [feedID, articleid]
         );
-        console.log("saved articleid: ", articleid);
+        console.log(`linked article ${articleid} to feed ${feedID}`);
       }
     }
     console.log("commit.");
@@ -144,7 +167,10 @@ export async function updateFeedArticles(feedID, articles) {
     await client.query("ROLLBACK"); // if an error occurs, undo the transaction
     throw new Error(`failed to process query, ${error}`);
   } finally {
-    await client.end();
+    client
+      .end()
+      .then(() => console.log("client has disconnected"))
+      .catch((err) => console.error("error during disconnection", err.stack));
   }
 }
 
@@ -166,7 +192,7 @@ export async function addUser(email) {
       "INSERT INTO users (email) VALUES ($1) RETURNING *",
       [email]
     );
-    return result;
+    return result.rows[0];
   } catch (error) {
     throw new Error(`failed to process query, ${error}`);
   }
@@ -184,6 +210,8 @@ export async function getUserByEmail(email) {
 }
 
 export async function linkUserToFeed(userID, feedID) {
+  // todo: adding new feed and linking it to user and saving articles should be transaction
+  console.log(`linking user ${userID} to feed ${feedID}`);
   try {
     const result = await pool.query(
       "INSERT INTO user_to_rss_feed (userid, rssid) VALUES ($1, $2) RETURNING *",
@@ -203,6 +231,3 @@ export async function getFeedsOfUser(userID) {
 
   return feeds.rows;
 }
-
-// todo: associate user w/ feeds
-// when adding feed, add relation to user-feed table
