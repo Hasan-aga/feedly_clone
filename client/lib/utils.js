@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import rssFinder from "rss-finder";
 
 const bcrypt = require("bcrypt");
 
@@ -24,16 +25,17 @@ export function needsUpdate(lastUpdateTime) {
   return hoursSinceUpdate >= 12 ? true : false;
 }
 
-export async function determineFeedPath(url) {
-  const res1 = fetch(url + "/feed");
-  const res2 = fetch(url + "/rss.xml");
-  const result = await Promise.all([res1, res2]);
-  for (let w of result) {
-    if (w.ok) {
-      return w.url;
+export async function getFeedUrlAndFavicon(url) {
+  try {
+    const res = await rssFinder(url);
+    console.log("rss finder", res);
+    if (res.feedUrls.length === 0) {
+      throw new Error("No link was resolved! try again.");
     }
+    return { url: res.feedUrls[0].url, favicon: res.site.favicon };
+  } catch (error) {
+    throw error;
   }
-  throw new Error("No link was resolved! try again.");
 }
 
 export async function getFreshArticles(url) {
@@ -45,10 +47,8 @@ export async function getFreshArticles(url) {
     console.log("getting xml");
     const parser = new XMLParser();
     let articleObject = parser.parse(articles);
-    console.log(
-      `articles of ${url}`,
-      articleObject.rss.channel.item[0].pubDate
-    );
+    // console.log(`articles of ${url}`, articleObject);
+    // todo: fix case where there is no channel
     return articleObject.rss.channel.item;
   } else throw new Error("Failed to get new articles.");
 }
