@@ -1,12 +1,12 @@
 import { Client } from "pg";
-import { addFeed, linkUserToFeed } from "./db_transaction";
-import { getFeedUrlAndFavicon, getFreshArticles } from "./utils";
+import { addFeed, linkUserToFeed, updateFeedArticles } from "./db_transaction";
+import { getFeedUrlAndFavicon, getFreshArticles, needsUpdate } from "./utils";
 
 const {
   getUserByEmail,
   getFeedByTitle,
-  updateFeedArticles,
   addUser,
+  getFeedsOfUser,
 } = require("./db");
 
 export class Controller {
@@ -36,8 +36,8 @@ export class Controller {
   async addNewFeed(url, category) {
     console.log("adding", url);
     const client = new Client();
+    client.connect();
     try {
-      client.connect();
       await client.query("BEGIN");
       const urlDetails = new URL(url);
       const title = urlDetails.hostname;
@@ -62,12 +62,43 @@ export class Controller {
       }
       console.log(`feed id:${feedID}`);
       await linkUserToFeed(this.userid, feedID, client);
+      client.query("COMMIT");
       return { user: this.userid, email: this.email, feedID };
     } catch (error) {
       console.log("got error,", error);
       console.log("rolling back...");
       client.query("ROLLBACK");
       throw error;
+    } finally {
+      client
+        .end()
+        .then(() => console.log("client has disconnected"))
+        .catch((err) => console.error("error during disconnection", err.stack));
+    }
+  }
+
+  async getMyFeeds() {
+    const client = new Client();
+    client.connect();
+    try {
+      const results = await getFeedsOfUser(this.userid);
+      for (const feed of results) {
+        // check if feed needs updating articles
+
+        console.log("feed needs update? ", needsUpdate(feed.lastupdated));
+        if (needsUpdate(feed.lastupdated)) {
+          // update the articles of feed
+          const articles = await getFreshArticles(feed.url);
+          client.query("BEGIN");
+          await updateFeedArticles(feed.rowid, articles, client);
+          client.query("COMMIT");
+        }
+      }
+      return results;
+    } catch (error) {
+      console.log("got error,", error);
+      console.log("rolling back");
+      client.query("ROLLBACK");
     } finally {
       client
         .end()

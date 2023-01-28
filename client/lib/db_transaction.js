@@ -16,7 +16,6 @@ export async function addFeed(feedInfo, userid, client) {
       `INSERT INTO user_feeds_categories(userid, feedid, category) VALUES($1, $2, $3) `,
       [userid, feedid, category]
     );
-    await client.query("COMMIT");
 
     return feedid;
   } catch (error) {
@@ -24,9 +23,25 @@ export async function addFeed(feedInfo, userid, client) {
   }
 }
 
+export async function linkUserToFeed(userID, feedID, client) {
+  console.log(`linking user ${userID} to feed ${feedID}`);
+  try {
+    const result = await client.query(
+      "INSERT INTO user_to_rss_feed (userid, rssid) VALUES ($1, $2) RETURNING *",
+      [userID, feedID]
+    );
+    return result;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
 export async function updateFeedArticles(feedID, articles, client) {
   // const client = await pool.connect();
+
   try {
+    // todo: transaction is failing we must use same client:
+    // start transaction
     console.log("begin saving articles...");
     const timestamp = new Date();
     // update timestamp in rssfeeds table
@@ -47,22 +62,33 @@ export async function updateFeedArticles(feedID, articles, client) {
         console.log(`linked article ${articleid} to feed ${feedID}`);
       }
     }
-    console.log("commit.");
-    await client.query("COMMIT"); // end transaction
   } catch (error) {
+    console.log("error");
     throw new Error(`failed to process query, ${error}`);
   }
 }
 
-export async function linkUserToFeed(userID, feedID, client) {
-  console.log(`linking user ${userID} to feed ${feedID}`);
+export async function saveArticle(article, client) {
   try {
-    const result = await client.query(
-      "INSERT INTO user_to_rss_feed (userid, rssid) VALUES ($1, $2) RETURNING *",
-      [userID, feedID]
+    // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict
+    const articleid = await client.query(
+      "INSERT INTO articles (title, link, description, publication_date, category) VALUES ($1, $2, $3, $4, $5) ON CONFLICT(link) DO NOTHING RETURNING articleid ",
+      [
+        article.title,
+        article.link,
+        article.description,
+        article.pubDate,
+        article.category,
+      ]
     );
-    return result;
+    console.log("saved article ", article.title.slice(0, 5));
+
+    return articleid.rows[0]?.articleid;
   } catch (error) {
-    throw new Error(`failed to process query, ${error}`);
+    if (error.code === "23505") {
+      console.log("Duplicate url found, skipping article");
+      return;
+    }
+    throw error;
   }
 }
