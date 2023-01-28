@@ -13,6 +13,7 @@ export class Controller {
   constructor(session, userid) {
     this.email = session.user.email;
     this.userid = userid;
+    this.client = new Client();
   }
 
   static async start(session) {
@@ -35,10 +36,9 @@ export class Controller {
 
   async addNewFeed(url, category) {
     console.log("adding", url);
-    const client = new Client();
-    client.connect();
+    await this.client.connect();
     try {
-      await client.query("BEGIN");
+      await this.client.query("BEGIN");
       const urlDetails = new URL(url);
       const title = urlDetails.hostname;
       const feedExists = await getFeedByTitle(title);
@@ -53,24 +53,24 @@ export class Controller {
           category,
           title,
         };
-        feedID = await addFeed(feedInfo, this.userid, client);
+        feedID = await addFeed(feedInfo, this.userid, this.client);
 
         const articles = await getFreshArticles(correctUrl);
-        await updateFeedArticles(feedID, articles, client);
+        await updateFeedArticles(feedID, articles, this.client);
       } else {
         feedID = feedExists.rowid;
       }
       console.log(`feed id:${feedID}`);
-      await linkUserToFeed(this.userid, feedID, client);
-      client.query("COMMIT");
+      await linkUserToFeed(this.userid, feedID, this.client);
+      await this.client.query("COMMIT");
       return { user: this.userid, email: this.email, feedID };
     } catch (error) {
       console.log("got error,", error);
       console.log("rolling back...");
-      client.query("ROLLBACK");
+      this.client.query("ROLLBACK");
       throw error;
     } finally {
-      client
+      this.client
         .end()
         .then(() => console.log("client has disconnected"))
         .catch((err) => console.error("error during disconnection", err.stack));
@@ -78,10 +78,10 @@ export class Controller {
   }
 
   async getMyFeeds() {
-    const client = new Client();
-    client.connect();
+    await this.client.connect();
     try {
       const results = await getFeedsOfUser(this.userid);
+      console.log(`user ${this.userid} feed:`, results);
       for (const feed of results) {
         // check if feed needs updating articles
 
@@ -89,18 +89,18 @@ export class Controller {
         if (needsUpdate(feed.lastupdated)) {
           // update the articles of feed
           const articles = await getFreshArticles(feed.url);
-          client.query("BEGIN");
-          await updateFeedArticles(feed.rowid, articles, client);
-          client.query("COMMIT");
+          this.client.query("BEGIN");
+          await updateFeedArticles(feed.rowid, articles, this.client);
+          await this.client.query("COMMIT");
         }
       }
       return results;
     } catch (error) {
       console.log("got error,", error);
       console.log("rolling back");
-      client.query("ROLLBACK");
+      this.client.query("ROLLBACK");
     } finally {
-      client
+      this.client
         .end()
         .then(() => console.log("client has disconnected"))
         .catch((err) => console.error("error during disconnection", err.stack));

@@ -24,6 +24,7 @@ export async function addFeed(feedInfo, userid, client) {
 }
 
 export async function linkUserToFeed(userID, feedID, client) {
+  // todo: handle linking existing link
   console.log(`linking user ${userID} to feed ${feedID}`);
   try {
     const result = await client.query(

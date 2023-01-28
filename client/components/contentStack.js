@@ -6,11 +6,12 @@ export default function ContentStack() {
   const [feeds, setFeeds] = useState();
   useEffect(() => {
     async function getFeeds() {
-      const res = await fetch("http://localhost:3000/api/getMyFeeds");
+      const res = await fetch("http://localhost:3000/api/feeds");
       const { results } = await res.json();
 
       if (results) {
         setFeeds(results);
+        console.log(results);
       }
     }
 

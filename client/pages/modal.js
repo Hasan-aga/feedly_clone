@@ -14,7 +14,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
     };
     try {
       await fetch(
-        `http://localhost:3000/api/addFeed?url=${input}&category=${category}`,
+        `http://localhost:3000/api/feeds?url=${input}&category=${category}`,
         requestOptions
       );
     } catch (error) {

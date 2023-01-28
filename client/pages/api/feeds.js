@@ -10,20 +10,29 @@ export default async function handler(req, res) {
     }
     const { url, category } = req.query;
     const controller = await Controller.start(session);
-    if (req.method === "POST") {
-      const info = await controller.addNewFeed(url, category);
-      res.status(200).json({ success: true, info });
+
+    switch (req.method) {
+      case "POST":
+        {
+          const info = await controller.addNewFeed(url, category);
+          res.status(200).json({ success: true, info });
+        }
+        break;
+      case "GET":
+        {
+          const results = await controller.getMyFeeds();
+          res.status(200).json({ success: true, results });
+        }
+        break;
+
+      default:
+        res.status(404).json({
+          success: false,
+          info: "this endpoint only accepts GET or POST requests",
+        });
+        break;
     }
-    if (req.method === "GET") {
-      const info = await controller.getMyFeeds();
-      res.status(200).json({ success: true, info });
-    }
-    res
-      .status(404)
-      .json({
-        success: false,
-        info: "this endpoint only accepts GET or POST requests",
-      });
+    return;
   } catch (error) {
     console.log(`failed!, ${error}`);
     res.status(500).json({ success: false, error });

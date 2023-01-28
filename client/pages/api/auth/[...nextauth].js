@@ -4,6 +4,12 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = {
+  theme: {
+    colorScheme: "dark", // "auto" | "dark" | "light"
+    brandColor: "#444", // Hex color code
+    logo: "", // Absolute URL to image
+    buttonText: "", // Hex color code
+  },
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
