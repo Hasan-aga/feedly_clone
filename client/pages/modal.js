@@ -1,27 +1,28 @@
-import { Modal, Button, Text, Input, Row, Checkbox } from "@nextui-org/react";
-import { useState } from "react";
+import { Modal, Button, Text, Input, Spacer, Loading } from "@nextui-org/react";
+import { useRef, useState } from "react";
 
 export default function CustomModal({ children, visible, closeHandler }) {
   const [input, setInput] = useState(null);
-
-  async function addHandler(e) {
-    console.log(input);
-
+  const [category, setCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const categoryInput = useRef();
+  async function addHandler() {
     var requestOptions = {
       method: "POST",
       redirect: "follow",
       cerendtials: "include",
     };
     try {
-      const result = fetch(
-        `http://localhost:3000/api/addFeed?url=${input}`,
+      await fetch(
+        `http://localhost:3000/api/addFeed?url=${input}&category=${category}`,
         requestOptions
       );
     } catch (error) {
-      console.log("oops!");
+      console.log("oops!", error);
+    } finally {
+      setIsLoading(false);
+      closeHandler();
     }
-
-    closeHandler();
   }
   return (
     <Modal
@@ -36,22 +37,41 @@ export default function CustomModal({ children, visible, closeHandler }) {
         </Text>
       </Modal.Header>
       <Modal.Body>
+        <Spacer />
         <Input
+          autoFocus
           aria-label="add feed"
-          clearable
           bordered
           fullWidth
           color="primary"
           size="lg"
-          placeholder="ex: http://blog.hasan.one"
+          labelPlaceholder="ex: http://blog.hasan.one"
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               setInput(e.target.value);
-              await addHandler();
+              categoryInput.current.focus();
             }
           }}
           //   contentLeft={<Mail fill="currentColor" />}
+        />
+        <Spacer />
+        <Input
+          ref={categoryInput}
+          aria-label="add category"
+          bordered
+          fullWidth
+          color="primary"
+          size="lg"
+          labelPlaceholder="ex: Tech"
+          onChange={(e) => setCategory(e.target.value)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              setCategory(e.target.value);
+              setIsLoading(true);
+              await addHandler();
+            }
+          }}
         />
       </Modal.Body>
       <Modal.Footer>
@@ -59,7 +79,11 @@ export default function CustomModal({ children, visible, closeHandler }) {
           Close
         </Button>
         <Button auto onPress={addHandler}>
-          Add
+          {isLoading ? (
+            <Loading type="points" color="currentColor" size="sm" />
+          ) : (
+            "Add"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>
