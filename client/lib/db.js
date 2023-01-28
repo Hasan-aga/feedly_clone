@@ -225,7 +225,11 @@ export async function linkUserToFeed(userID, feedID) {
 
 export async function getFeedsOfUser(userID) {
   const feeds = await pool.query(
-    "SELECT * FROM rssfeeds where rowid in (SELECT rssid FROM user_to_rss_feed WHERE userid = $1)",
+    `SELECT rssfeeds.rowid, rssfeeds.title, rssfeeds.url, rssfeeds.lastupdated, rssfeeds.favicon, user_feeds_categories.category
+    FROM rssfeeds
+    JOIN user_to_rss_feed ON rssfeeds.rowid = user_to_rss_feed.rssid
+    JOIN user_feeds_categories ON user_to_rss_feed.userid = user_feeds_categories.userid AND rssfeeds.rowid = user_feeds_categories.feedid
+    WHERE user_to_rss_feed.userid = $1`,
     [userID]
   );
 
