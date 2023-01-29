@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   User,
   Grid,
@@ -24,10 +24,9 @@ export default function Profile() {
     async function getFeeds() {
       const res = await fetch("http://localhost:3000/api/feeds");
       const { results } = await res.json();
-
       if (results) {
         setFeeds(results);
-        console.log(results);
+        console.log("results", results);
       }
     }
 
@@ -36,31 +35,10 @@ export default function Profile() {
   if (session) {
     return (
       <>
-        <Grid.Container direction="row" gap={2}>
-          <Grid xs={2} direction="column">
-            <Sidebar session={session} feeds={feeds} />
-          </Grid>
-          <Grid xs={10} justify="center">
-            <ContentStack feeds={feeds} />
-          </Grid>
-        </Grid.Container>
+        <Grid xs={10} justify="center">
+          <ContentStack feeds={feeds} />
+        </Grid>
       </>
     );
   }
-  return (
-    <>
-      <Grid.Container direction="column" gap={2} justify="center">
-        <Grid>
-          <Text h3>Sign-in to customize your feed.</Text>
-        </Grid>
-        <Grid xs={2} direction="column">
-          <Button onPress={() => signIn()}>Sign in</Button>
-        </Grid>
-        <Grid xs={8}>
-          <Spacer y={4} />
-          <ContentStack />
-        </Grid>
-      </Grid.Container>
-    </>
-  );
 }
