@@ -47,8 +47,24 @@ export async function getFreshArticles(url) {
     console.log("getting xml");
     const parser = new XMLParser();
     let articleObject = parser.parse(articles);
-    // console.log(`articles of ${url}`, articleObject);
-    // todo: fix case where there is no channel
-    return articleObject.rss.channel.item;
+    console.dir(articleObject);
+
+    if (articleObject.rss) {
+      return articleObject.rss.channel.item;
+    }
+    if (articleObject.feed) {
+      const articles = articleObject.feed.entry.map((entry) => {
+        let articleTemplate = {};
+        const { title, link, id, content, updated } = entry;
+        articleTemplate.title = title;
+        articleTemplate.description = content;
+        articleTemplate.link = id;
+        articleTemplate.pubDate = updated;
+        return articleTemplate;
+      });
+
+      return articles;
+    }
+    throw new Error("articles object has different schema:", articleObject);
   } else throw new Error("Failed to get new articles.");
 }
