@@ -1,6 +1,11 @@
 import { Client } from "pg";
 import { addFeed, linkUserToFeed, updateFeedArticles } from "./db_transaction";
-import { getFeedUrlAndFavicon, getFreshArticles, needsUpdate } from "./utils";
+import {
+  getFeedUrlAndFavicon,
+  getFreshArticles,
+  groupByCategory,
+  needsUpdate,
+} from "./utils";
 
 const {
   getUserByEmail,
@@ -94,7 +99,8 @@ export class Controller {
           await this.client.query("COMMIT");
         }
       }
-      return results;
+
+      return groupByCategory(results);
     } catch (error) {
       console.log("got error,", error);
       console.log("rolling back");

@@ -68,3 +68,11 @@ export async function getFreshArticles(url) {
     throw new Error("articles object has different schema:", articleObject);
   } else throw new Error("Failed to get new articles.");
 }
+
+export function groupByCategory(dataArray) {
+  return dataArray.reduce(function (acc, item) {
+    acc[item.category] = acc[item.category] || [];
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+}
