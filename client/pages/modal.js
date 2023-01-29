@@ -64,7 +64,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
           color="primary"
           size="lg"
           labelPlaceholder="ex: Tech"
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => setCategory(e.target.value.toLowerCase())}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               setCategory(e.target.value);

@@ -2,6 +2,7 @@ import CustomModal from "@/pages/modal";
 import {
   Button,
   Grid,
+  Row,
   Spacer,
   Switch,
   User,
@@ -12,33 +13,36 @@ import { useState } from "react";
 import { MoonIcon } from "./icons/moon";
 import { SunIcon } from "./icons/sun";
 import { signIn, signOut } from "next-auth/react";
+import Categories from "./categories";
 
-export default function Sidebar({ session }) {
+export default function Sidebar({ session, feeds }) {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
   const [visible, setVisible] = useState(false);
 
   return (
     <>
-      <Grid.Container gap={2} justify="center" alignItems="center">
-        <Grid>
-          <User
-            size="lg"
-            bordered
-            color="primary"
-            src={session.user.image}
-            name={session.user.name}
-          />
-        </Grid>
-        <Grid>
-          <Switch
-            checked={isDark}
-            onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-            size="xl"
-            iconOn={<SunIcon filled />}
-            iconOff={<MoonIcon filled />}
-          />
-        </Grid>
+      <Grid.Container direction="column" gap={2} alignItems="flex-start">
+        <Grid.Container direction="row">
+          <Grid>
+            <User
+              size="lg"
+              bordered
+              color="primary"
+              src={session.user.image}
+              name={session.user.name}
+            />
+          </Grid>
+          <Grid>
+            <Switch
+              checked={isDark}
+              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+              size="xl"
+              iconOn={<SunIcon filled />}
+              iconOff={<MoonIcon filled />}
+            />
+          </Grid>
+        </Grid.Container>
         <Grid>
           <Button onPress={() => signOut()}>Sign out</Button>
         </Grid>
@@ -47,6 +51,7 @@ export default function Sidebar({ session }) {
           <Button onPress={() => setVisible(true)}>Add a feed</Button>
         </Grid>
         <CustomModal visible={visible} closeHandler={() => setVisible(false)} />
+        <Categories feeds={feeds} />
       </Grid.Container>
     </>
   );

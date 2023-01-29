@@ -9,7 +9,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import CustomModal from "@/pages/modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContentStack from "@/components/contentStack";
 import { useTheme as useNextTheme } from "next-themes";
 import { MoonIcon } from "@/components/icons/moon";
@@ -18,20 +18,30 @@ import Sidebar from "@/components/sidebar";
 
 export default function Profile() {
   const { data: session } = useSession();
+  const [feeds, setFeeds] = useState();
 
-  const { setTheme } = useNextTheme();
-  const { isDark } = useTheme();
+  useEffect(() => {
+    async function getFeeds() {
+      const res = await fetch("http://localhost:3000/api/feeds");
+      const { results } = await res.json();
 
+      if (results) {
+        setFeeds(results);
+        console.log(results);
+      }
+    }
+
+    getFeeds();
+  }, []);
   if (session) {
     return (
       <>
         <Grid.Container direction="row" gap={2}>
           <Grid xs={2} direction="column">
-            <Sidebar session={session} />
+            <Sidebar session={session} feeds={feeds} />
           </Grid>
-          <Grid xs={8}>
-            <Spacer y={4} />
-            <ContentStack />
+          <Grid xs={10} justify="center">
+            <ContentStack feeds={feeds} />
           </Grid>
         </Grid.Container>
       </>
