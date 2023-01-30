@@ -6,6 +6,10 @@ export default function Feed({ feed }) {
   const [articles, setArticles] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [mainLoading, setMainLoading] = useState(false);
+  const articlesMap = articles.map((article, index) => {
+    return <ArticleCard key={index} article={article} />;
+  });
 
   async function getArticles(offset = 0) {
     const res = await fetch(
@@ -15,6 +19,7 @@ export default function Feed({ feed }) {
 
     if (results) {
       setLoading(false);
+      setMainLoading(false);
       setArticles([...articles, ...results]);
       console.log("offset", offset);
       console.log("articles", results);
@@ -29,31 +34,37 @@ export default function Feed({ feed }) {
     await getArticles(newOffset);
   }
   useEffect(() => {
+    setMainLoading(true);
     getArticles();
-  }, []);
+  }, [feed]);
+
+  if (mainLoading) {
+    return <Loading type="points" color="currentColor" size="lg" />;
+  }
 
   return (
     <>
-      <Collapse title={feed.title}>
-        <Grid.Container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          gap={2}
-        >
-          {articles &&
-            articles.map((article, index) => {
+      {articles && (
+        <Collapse title={feed.title} expanded={articles ? true : false}>
+          <Grid.Container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            gap={2}
+          >
+            {articles.map((article, index) => {
               return <ArticleCard key={index} article={article} />;
             })}
-          <Button flat color="primary" auto onPress={loadMore}>
-            {loading ? (
-              <Loading type="points" color="currentColor" size="sm" />
-            ) : (
-              "Load More"
-            )}
-          </Button>
-        </Grid.Container>
-      </Collapse>
+            <Button flat color="primary" auto onPress={loadMore}>
+              {loading ? (
+                <Loading type="points" color="currentColor" size="sm" />
+              ) : (
+                "Load More"
+              )}
+            </Button>
+          </Grid.Container>
+        </Collapse>
+      )}
     </>
   );
 }
