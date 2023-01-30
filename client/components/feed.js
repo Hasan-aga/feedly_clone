@@ -10,7 +10,7 @@ export default function Feed({ feed }) {
 
   async function getArticles(offset = 0) {
     const res = await fetch(
-      `http://localhost:3000/api/getArticlesOfFeed?feedid=${feed.rowid}&offset=${offset}`
+      `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
     );
     const { results } = await res.json();
 

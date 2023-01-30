@@ -20,7 +20,7 @@ export default function ArticleCard({ article }) {
               <Text css={{ color: "$accents8" }}>{date}</Text>
             </Grid>
             <Grid xs={4}>
-              <CardButtons />
+              <CardButtons articleID={article.articleid} />
             </Grid>
           </Card.Header>
           <Card.Body css={{ paddingTop: "$5" }}>

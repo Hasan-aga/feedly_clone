@@ -66,6 +66,23 @@ export async function deleteFeedForUser(userid, feedid) {
   }
 }
 
+export async function bookmarkArticleForUser(userid, articleid) {
+  try {
+    await pool.query(
+      `INSERT INTO user_bookmarks 
+    VALUES ($1, $2)`,
+      [userid, articleid]
+    );
+    return true;
+  } catch (error) {
+    const msg =
+      error.code === "23505"
+        ? new Error("Already bookmarked")
+        : new Error(`${error}`);
+    throw msg;
+  }
+}
+
 export async function saveArticle(article, client) {
   try {
     // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict
