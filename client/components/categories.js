@@ -11,6 +11,9 @@ export default function Categories({ feeds }) {
           <Text h5>FEEDS</Text>
         </Grid>
         <Grid>
+          <Link href="/">All</Link>
+        </Grid>
+        <Grid>
           <Collapse.Group accordion={false}>
             {feeds &&
               Object.keys(feeds).map((category) => {
@@ -24,7 +27,9 @@ export default function Categories({ feeds }) {
                   >
                     {feeds[category].map((feed) => (
                       // todo: link to each blog
-                      <Link href={"/blog.hasan.one"}>
+                      <Link
+                        href={`/feed?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
+                      >
                         <Row gap={1}>
                           <Grid xs={6}>
                             <Text b>{feed.title}</Text>
