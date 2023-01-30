@@ -1,20 +1,7 @@
 import { useSession } from "next-auth/react";
-import {
-  User,
-  Grid,
-  Button,
-  Spacer,
-  Switch,
-  useTheme,
-  Text,
-} from "@nextui-org/react";
-import CustomModal from "@/pages/modal";
+import { Grid } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import ContentStack from "@/components/contentStack";
-import { useTheme as useNextTheme } from "next-themes";
-import { MoonIcon } from "@/components/icons/moon";
-import { SunIcon } from "@/components/icons/sun";
-import Sidebar from "@/components/sidebar";
 
 export default function Profile() {
   const { data: session } = useSession();
