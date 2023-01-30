@@ -1,24 +1,34 @@
-import { Collapse, Grid, Image, Row, Text } from "@nextui-org/react";
+import { Collapse, Grid, Image, Loading, Row, Text } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Cog from "./icons/cog";
 
 export default function Categories({ feeds }) {
-  console.log("feeds", feeds);
-  if (!feeds) return <></>;
+  const router = useRouter();
+  if (!feeds) return <Loading type="points" color="currentColor" size="sm" />;
   return (
     <>
       <Grid.Container direction="column">
         <Grid>
           <Text h5>FEEDS</Text>
         </Grid>
-        <Grid>
-          <Link href="/">All</Link>
-        </Grid>
+        <Row>
+          <Grid xs={10}>
+            <Link href="/">All</Link>
+          </Grid>
+          <Grid>
+            <Link href="/settings/data?hello=world">
+              <Cog />
+            </Link>
+          </Grid>
+        </Row>
         <Grid>
           <Collapse.Group accordion={false}>
             {feeds &&
               Object.keys(feeds).map((category) => {
                 return (
                   <Collapse
+                    expanded
                     title={
                       <Text h6 css={{ textTransform: "capitalize" }}>
                         {category}
@@ -26,9 +36,8 @@ export default function Categories({ feeds }) {
                     }
                   >
                     {feeds[category].map((feed) => (
-                      // todo: link to each blog
                       <Link
-                        href={`/feed?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
+                        href={`/feed/data?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
                       >
                         <Row gap={1}>
                           <Grid xs={6}>

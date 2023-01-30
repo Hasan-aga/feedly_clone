@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 export default function SpecificFeed() {
   const router = useRouter();
   const feed = router.query;
-  const { origin } = new URL(feed.url);
 
   return (
     <>
