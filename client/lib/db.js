@@ -52,6 +52,20 @@ export async function addFeed(feedInfo, userid) {
   }
 }
 
+export async function deleteFeedForUser(userid, feedid) {
+  try {
+    pool.query(
+      `DELETE FROM user_to_rss_feed
+    WHERE userid = $1 AND rssid = $2`,
+      [userid, feedid]
+    );
+
+    return true;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
 export async function saveArticle(article, client) {
   try {
     // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict

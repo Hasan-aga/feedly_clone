@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     if (!session) {
       throw new Error("you are not signed in.");
     }
-    const { url, category } = req.query;
+    const { url, category, feedid } = req.query;
     const controller = await Controller.start(session);
 
     switch (req.method) {
@@ -24,11 +24,17 @@ export default async function handler(req, res) {
           res.status(200).json({ success: true, results });
         }
         break;
+      case "DELETE":
+        {
+          await controller.deleteFeed(feedid);
+          res.status(200).json({ success: true });
+        }
+        break;
 
       default:
         res.status(404).json({
           success: false,
-          info: "this endpoint only accepts GET or POST requests",
+          info: "No such endpoint. Check request type / path",
         });
         break;
     }

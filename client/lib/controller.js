@@ -12,6 +12,7 @@ const {
   getFeedByTitle,
   addUser,
   getFeedsOfUser,
+  deleteFeedForUser,
 } = require("./db");
 
 export class Controller {
@@ -110,6 +111,14 @@ export class Controller {
         .end()
         .then(() => console.log("client has disconnected"))
         .catch((err) => console.error("error during disconnection", err.stack));
+    }
+  }
+
+  async deleteFeed(feedid) {
+    try {
+      await deleteFeedForUser(this.userid, feedid);
+    } catch (error) {
+      throw error;
     }
   }
 }
