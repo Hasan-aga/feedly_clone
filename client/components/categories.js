@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import Cog from "./icons/cog";
 
 export default function Categories({ feeds }) {
-  const router = useRouter();
   if (!feeds) return <Loading type="points" color="currentColor" size="sm" />;
   return (
     <>

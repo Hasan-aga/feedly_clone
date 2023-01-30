@@ -7,9 +7,6 @@ export default function Feed({ feed }) {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mainLoading, setMainLoading] = useState(false);
-  const articlesMap = articles.map((article, index) => {
-    return <ArticleCard key={index} article={article} />;
-  });
 
   async function getArticles(offset = 0) {
     const res = await fetch(
@@ -45,7 +42,7 @@ export default function Feed({ feed }) {
   return (
     <>
       {articles && (
-        <Collapse title={feed.title} expanded={articles ? true : false}>
+        <Collapse title={feed.title}>
           <Grid.Container
             direction="column"
             justify="center"
