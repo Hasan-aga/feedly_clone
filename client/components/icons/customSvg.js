@@ -1,6 +1,7 @@
 import { styled, useTheme } from "@nextui-org/react";
 
 export default function CustomSvg({
+  fill = "currentColor",
   width = "24px",
   height = "24px",
   children,
@@ -8,7 +9,7 @@ export default function CustomSvg({
   const { theme } = useTheme();
 
   const Wrapper = styled("svg", {
-    fill: theme.colors.primary.value,
+    fill,
     width,
     height,
     "&:hover": {
@@ -17,7 +18,7 @@ export default function CustomSvg({
   });
   return (
     <>
-      <Wrapper>{children}</Wrapper>
+      <Wrapper viewBox="0 0 24 24">{children}</Wrapper>
     </>
   );
 }

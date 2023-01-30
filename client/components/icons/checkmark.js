@@ -2,13 +2,10 @@ import { styled, useTheme } from "@nextui-org/react";
 import CustomSvg from "./customSvg";
 
 export default function Checkmark() {
-  const { theme } = useTheme();
-
   return (
     <div
       title="Mark as read"
       onClick={(e) => {
-        // todo: click event reaches parent card
         e.stopPropagation();
         console.log("marked as read");
       }}

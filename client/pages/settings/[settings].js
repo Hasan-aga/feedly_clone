@@ -1,11 +1,30 @@
-import { Grid, Spacer, Table, Text } from "@nextui-org/react";
+import Delete from "@/components/icons/delete";
+import { Button, Grid, Spacer, Table, Text } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function Settings() {
   const router = useRouter();
   const [feeds, setFeeds] = useState();
+  const [selected, setSelected] = useState();
 
+  async function deleteFeed(feedid, e) {
+    var requestOptions = {
+      method: "DELETE",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    console.log("delete", feedid);
+
+    try {
+      await fetch(
+        `http://localhost:3000/api/feeds?feedid=${feedid}`,
+        requestOptions
+      );
+    } catch (error) {
+      console.error("oops!", error);
+    }
+  }
   useEffect(() => {
     async function getFeeds() {
       const res = await fetch("http://localhost:3000/api/feeds");
@@ -35,7 +54,6 @@ export default function Settings() {
         <Spacer y={1} />
         <Grid>
           <Table
-            onSelectionChange={(e) => console.log("selection change", e)}
             lined
             bordered
             aria-label="Example static collection table with multiple selection"
@@ -47,13 +65,26 @@ export default function Settings() {
           >
             <Table.Header>
               <Table.Column>TITLE</Table.Column>
+              <Table.Column>DELETE</Table.Column>
             </Table.Header>
             <Table.Body>
               {feeds &&
                 feeds.map((feed, key) => {
+                  // todo: delete appears on hover and works on sibling only
                   return (
                     <Table.Row key={key + 1}>
                       <Table.Cell>{feed.title}</Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          onPress={(e) => deleteFeed(feed.rowid, e)}
+                          title="Delete feed!"
+                          color="error"
+                          ghost
+                          auto
+                        >
+                          X
+                        </Button>
+                      </Table.Cell>
                     </Table.Row>
                   );
                 })}

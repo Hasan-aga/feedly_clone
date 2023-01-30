@@ -2,8 +2,6 @@ import { useTheme } from "@nextui-org/react";
 import CustomSvg from "./customSvg";
 
 export default function Bookmark() {
-  const { theme } = useTheme();
-
   return (
     <div title="Bookmark">
       <CustomSvg>

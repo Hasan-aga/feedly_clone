@@ -42,7 +42,7 @@ export default function Feed({ feed }) {
   return (
     <>
       {articles && (
-        <Collapse title={feed.title}>
+        <Collapse title={feed.title} bordered>
           <Grid.Container
             direction="column"
             justify="center"
