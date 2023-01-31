@@ -11,16 +11,20 @@ export async function addFeed(feedInfo, userid, client) {
 
     const feedid = results.rows[0].rowid;
 
+    return feedid;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function addCategory(userid, feedid, category, client) {
+  try {
     // record feed category for current user
     await client.query(
       `INSERT INTO user_feeds_categories(userid, feedid, category) VALUES($1, $2, $3) `,
       [userid, feedid, category]
     );
-
-    return feedid;
-  } catch (error) {
-    throw new Error(`failed to process query, ${error}`);
-  }
+  } catch (error) {}
 }
 
 export async function linkUserToFeed(userID, feedID, client) {

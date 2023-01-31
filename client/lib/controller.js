@@ -1,5 +1,10 @@
 import { Client } from "pg";
-import { addFeed, linkUserToFeed, updateFeedArticles } from "./db_transaction";
+import {
+  addCategory,
+  addFeed,
+  linkUserToFeed,
+  updateFeedArticles,
+} from "./db_transaction";
 import {
   getFeedUrlAndFavicon,
   getFreshArticles,
@@ -68,6 +73,7 @@ export class Controller {
       } else {
         feedID = feedExists.rowid;
       }
+      await addCategory(this.userid, feedID, category, this.client);
       console.log(`feed id:${feedID}`);
       await linkUserToFeed(this.userid, feedID, this.client);
       await this.client.query("COMMIT");
