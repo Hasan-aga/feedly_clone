@@ -17,8 +17,7 @@ export default async function handler(req, res) {
       case "GET":
         {
           console.log(`getting articles for feed ${feedid}`);
-          // todo: maybe use this method through controller
-          const results = await getArticlesOfFeed(feedid, offset);
+          const results = await controller.getMyArticles(feedid, offset);
 
           res.status(200).json({ success: true, results });
         }

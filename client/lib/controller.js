@@ -20,6 +20,7 @@ const {
   deleteFeedForUser,
   bookmarkArticleForUser,
   deleteBookmarkForUser,
+  getArticlesOfFeed,
 } = require("./db");
 
 export class Controller {
@@ -130,7 +131,16 @@ export class Controller {
     }
   }
 
+  async getMyArticles(feeid, offset) {
+    try {
+      return await getArticlesOfFeed(feeid, this.userid, offset);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async bookmarkArticle(articleid) {
+    // todo: bookmarks are per user, currently one user bookmarks for all
     try {
       await bookmarkArticleForUser(this.userid, articleid);
     } catch (error) {

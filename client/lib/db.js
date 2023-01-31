@@ -133,7 +133,7 @@ export async function getFeedTimestamp(feedID) {
   }
 }
 
-export async function getArticlesOfFeed(feedID, offset = 0) {
+export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   try {
     const articles = await pool.query(
       `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, user_bookmarks.bookmarkid
@@ -142,11 +142,11 @@ export async function getArticlesOfFeed(feedID, offset = 0) {
       ON feed_articles.articleid = articles.articleid
       AND feedid = $1
 	  left join user_bookmarks
-	  on user_bookmarks.articleid = articles.articleid
+	  on user_bookmarks.articleid = articles.articleid and user_bookmarks.userid = $2
       ORDER BY articles.publication_date desc
       LIMIT 5
-      OFFSET $2`,
-      [feedID, offset]
+      OFFSET $3`,
+      [feedID, userid, offset]
     );
 
     return articles.rows;
