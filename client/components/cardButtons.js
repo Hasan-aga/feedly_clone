@@ -35,7 +35,7 @@ export default function CardButtons({ articleID }) {
   return (
     <>
       <Grid xs={12} justify="flex-end">
-        <Bookmark handler={(e) => bookmarkArticle(e, articleID)} />
+        <Bookmark fill handler={(e) => bookmarkArticle(e, articleID)} />
         <Checkmark />
         {isVisible && (
           <p style={{ position: "fixed", top: "5px", right: "5px" }}>
