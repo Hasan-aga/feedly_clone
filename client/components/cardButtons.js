@@ -74,7 +74,13 @@ export default function CardButtons({
             handler={(e) => bookmarkArticle(e, articleID)}
           />
         </Tooltip>
-        <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
+        <Tooltip
+          content={isRead ? "Mark as unread" : "Mark as read"}
+          rounded
+          color="primary"
+        >
+          <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
+        </Tooltip>
       </Grid>
     </>
   );

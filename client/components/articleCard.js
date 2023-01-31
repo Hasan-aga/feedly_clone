@@ -7,7 +7,7 @@ export default function ArticleCard({ article }) {
     new Date(article.publication_date)
   );
 
-  const [isRead, setIsRead] = useState(false);
+  const [isRead, setIsRead] = useState(article.readid);
   return (
     <div onClick={() => window.open(article.link, "_blank")}>
       <Grid xs={12}>
