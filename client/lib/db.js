@@ -96,6 +96,34 @@ export async function deleteBookmarkForUser(userid, articleid) {
   }
 }
 
+export async function markArticleAsReadForUser(userid, articleid) {
+  console.log(`marking ${articleid} read`);
+
+  try {
+    await pool.query(
+      `INSERT INTO user_read(userid,articleid)
+    VALUES ($1, $2)`,
+      [userid, articleid]
+    );
+    return true;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
+export async function markArticleAsUnreadForUser(userid, articleid) {
+  try {
+    await pool.query(
+      `DELETE FROM user_read
+      WHERE userid = $1 AND articleid = $2`,
+      [userid, articleid]
+    );
+    return true;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
 export async function saveArticle(article, client) {
   try {
     // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict

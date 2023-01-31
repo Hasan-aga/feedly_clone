@@ -21,6 +21,8 @@ const {
   bookmarkArticleForUser,
   deleteBookmarkForUser,
   getArticlesOfFeed,
+  markArticleAsReadForUser,
+  markArticleAsUnreadForUser,
 } = require("./db");
 
 export class Controller {
@@ -140,7 +142,6 @@ export class Controller {
   }
 
   async bookmarkArticle(articleid) {
-    // todo: bookmarks are per user, currently one user bookmarks for all
     try {
       await bookmarkArticleForUser(this.userid, articleid);
     } catch (error) {
@@ -151,6 +152,22 @@ export class Controller {
   async deleteBookmark(articleid) {
     try {
       await deleteBookmarkForUser(this.userid, articleid);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async markAsRead(articleid) {
+    try {
+      await markArticleAsReadForUser(this.userid, articleid);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async markAsUnread(articleid) {
+    try {
+      await markArticleAsUnreadForUser(this.userid, articleid);
     } catch (error) {
       throw error;
     }
