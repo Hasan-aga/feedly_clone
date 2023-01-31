@@ -3,7 +3,7 @@ import CustomSvg from "./customSvg";
 
 export default function Bookmark({ handler, fill }) {
   return (
-    <div title="Bookmark" onClick={handler}>
+    <div onClick={handler}>
       <CustomSvg>
         {fill ? (
           <path d="M5 21V5q0-.825.588-1.413Q6.175 3 7 3h10q.825 0 1.413.587Q19 4.175 19 5v16l-7-3Z" />

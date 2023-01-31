@@ -1,4 +1,4 @@
-import { Grid } from "@nextui-org/react";
+import { Grid, Tooltip } from "@nextui-org/react";
 import Bookmark from "./icons/bookmark";
 import Checkmark from "./icons/checkmark";
 import styles from "./cardButtons.module.css";
@@ -8,12 +8,14 @@ import useError from "@/hooks/useError";
 
 export default function CardButtons({ articleID }) {
   const [isVisible, toggleVisibility] = useError();
+  const [bookmarked, setBookmarked] = useState(false);
 
   async function bookmarkArticle(e, articleID) {
     e.stopPropagation();
-    console.log("bookmarking", articleID);
+    setBookmarked(!bookmarked);
+
     var requestOptions = {
-      method: "POST",
+      method: bookmarked ? "DELETE" : "POST",
       redirect: "follow",
       cerendtials: "include",
     };
@@ -35,7 +37,16 @@ export default function CardButtons({ articleID }) {
   return (
     <>
       <Grid xs={12} justify="flex-end">
-        <Bookmark fill handler={(e) => bookmarkArticle(e, articleID)} />
+        <Tooltip
+          content={bookmarked ? "Remove bookmark" : "Bookmark"}
+          rounded
+          color="primary"
+        >
+          <Bookmark
+            fill={bookmarked}
+            handler={(e) => bookmarkArticle(e, articleID)}
+          />
+        </Tooltip>
         <Checkmark />
         {isVisible && (
           <p style={{ position: "fixed", top: "5px", right: "5px" }}>
