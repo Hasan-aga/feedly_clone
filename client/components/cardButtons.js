@@ -6,8 +6,12 @@ import ErrorCard from "./errorCard";
 import { useState } from "react";
 import useError from "@/hooks/useError";
 
-export default function CardButtons({ articleID, isBookmarked }) {
-  const [isVisible, toggleVisibility] = useError();
+export default function CardButtons({
+  articleID,
+  isBookmarked,
+  isRead,
+  setIsRead,
+}) {
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
   async function bookmarkArticle(e, articleID) {
@@ -21,7 +25,7 @@ export default function CardButtons({ articleID, isBookmarked }) {
     };
     try {
       const response = await fetch(
-        `http://localhost:3000/api/articles?articleid=${articleID}`,
+        `http://localhost:3000/api/articles/bookmarks?articleid=${articleID}`,
         requestOptions
       );
 
@@ -31,7 +35,30 @@ export default function CardButtons({ articleID, isBookmarked }) {
       }
     } catch (error) {
       console.log("oops!", error);
-      toggleVisibility();
+    }
+  }
+  async function markArticleAsRead(e, articleID) {
+    console.log("mark as", isRead ? "unread" : "read");
+    e.stopPropagation();
+    setIsRead(!isRead);
+
+    var requestOptions = {
+      method: isRead ? "DELETE" : "POST",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/articles/read?articleid=${articleID}`,
+        requestOptions
+      );
+
+      if (!response.ok) {
+        const result = await response.text();
+        throw new Error(result);
+      }
+    } catch (error) {
+      console.log("oops!", error);
     }
   }
   return (
@@ -47,12 +74,7 @@ export default function CardButtons({ articleID, isBookmarked }) {
             handler={(e) => bookmarkArticle(e, articleID)}
           />
         </Tooltip>
-        <Checkmark />
-        {isVisible && (
-          <p style={{ position: "fixed", top: "5px", right: "5px" }}>
-            Already bookmarked
-          </p>
-        )}
+        <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
       </Grid>
     </>
   );

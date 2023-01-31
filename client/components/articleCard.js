@@ -1,15 +1,22 @@
 import { Card, Grid, Text, Button, Row, Spacer } from "@nextui-org/react";
+import { useState } from "react";
 import CardButtons from "./cardButtons";
 
 export default function ArticleCard({ article }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
     new Date(article.publication_date)
   );
+
+  const [isRead, setIsRead] = useState(false);
   return (
     <div onClick={() => window.open(article.link, "_blank")}>
       <Grid xs={12}>
         <Card
-          css={{ mw: "630px", padding: "$10" }}
+          css={{
+            mw: "630px",
+            padding: "$10",
+            opacity: `${isRead ? "0.5" : "1"}`,
+          }}
           variant="bordered"
           isHoverable
           isPressable
@@ -23,6 +30,8 @@ export default function ArticleCard({ article }) {
               <CardButtons
                 articleID={article.articleid}
                 isBookmarked={article.bookmarkid}
+                isRead={isRead}
+                setIsRead={setIsRead}
               />
             </Grid>
           </Card.Header>
