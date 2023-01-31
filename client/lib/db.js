@@ -164,13 +164,15 @@ export async function getFeedTimestamp(feedID) {
 export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   try {
     const articles = await pool.query(
-      `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, user_bookmarks.bookmarkid
+      `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, user_bookmarks.bookmarkid,user_read.readid
       FROM feed_articles
       INNER JOIN articles
       ON feed_articles.articleid = articles.articleid
       AND feedid = $1
-	  left join user_bookmarks
-	  on user_bookmarks.articleid = articles.articleid and user_bookmarks.userid = $2
+	    left join user_bookmarks
+	    on user_bookmarks.articleid = articles.articleid and user_bookmarks.userid = $2
+      left join user_read
+      on user_read.articleid = articles.articleid and user_read.userid = $2
       ORDER BY articles.publication_date desc
       LIMIT 5
       OFFSET $3`,
