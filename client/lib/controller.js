@@ -14,6 +14,7 @@ const {
   getFeedsOfUser,
   deleteFeedForUser,
   bookmarkArticleForUser,
+  deleteBookmarkForUser,
 } = require("./db");
 
 export class Controller {
@@ -126,6 +127,14 @@ export class Controller {
   async bookmarkArticle(articleid) {
     try {
       await bookmarkArticleForUser(this.userid, articleid);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteBookmark(articleid) {
+    try {
+      await deleteBookmarkForUser(this.userid, articleid);
     } catch (error) {
       throw error;
     }

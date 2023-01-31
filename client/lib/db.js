@@ -83,6 +83,19 @@ export async function bookmarkArticleForUser(userid, articleid) {
   }
 }
 
+export async function deleteBookmarkForUser(userid, articleid) {
+  try {
+    await pool.query(
+      `DELETE FROM user_bookmarks
+      WHERE userid = $1 AND articleid = $2`,
+      [userid, articleid]
+    );
+    return true;
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
 export async function saveArticle(article, client) {
   try {
     // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict
