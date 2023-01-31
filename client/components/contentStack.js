@@ -16,7 +16,9 @@ export default function ContentStack({ feeds }) {
     <>
       <Collapse.Group>
         {feeds &&
-          getFeedsFromCategories(feeds).map((feed) => <Feed feed={feed} />)}
+          getFeedsFromCategories(feeds).map((feed, key) => (
+            <Feed feed={feed} key={key} />
+          ))}
       </Collapse.Group>
     </>
   );

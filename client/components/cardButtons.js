@@ -2,9 +2,12 @@ import { Grid } from "@nextui-org/react";
 import Bookmark from "./icons/bookmark";
 import Checkmark from "./icons/checkmark";
 import styles from "./cardButtons.module.css";
+import ErrorCard from "./errorCard";
+import { useState } from "react";
+import useError from "@/hooks/useError";
 
 export default function CardButtons({ articleID }) {
-  console.log("article id", articleID);
+  const [isVisible, toggleVisibility] = useError();
 
   async function bookmarkArticle(e, articleID) {
     e.stopPropagation();
@@ -26,6 +29,7 @@ export default function CardButtons({ articleID }) {
       }
     } catch (error) {
       console.log("oops!", error);
+      toggleVisibility();
     }
   }
   return (
@@ -33,6 +37,11 @@ export default function CardButtons({ articleID }) {
       <Grid xs={12} justify="flex-end">
         <Bookmark handler={(e) => bookmarkArticle(e, articleID)} />
         <Checkmark />
+        {isVisible && (
+          <p style={{ position: "fixed", top: "5px", right: "5px" }}>
+            Already bookmarked
+          </p>
+        )}
       </Grid>
     </>
   );

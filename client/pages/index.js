@@ -13,7 +13,6 @@ export default function Profile() {
       const { results } = await res.json();
       if (results) {
         setFeeds(results);
-        console.log("results", results);
       }
     }
 

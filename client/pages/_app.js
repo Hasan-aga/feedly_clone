@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Layout from "@/components/layout";
+import ErrorBoundary from "@/components/errorBoundry";
 // 1. import `NextUIProvider` component
 
 export default function App({ Component, session, pageProps }) {
@@ -27,9 +28,11 @@ export default function App({ Component, session, pageProps }) {
     >
       <NextUIProvider>
         <SessionProvider session={session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ErrorBoundary>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ErrorBoundary>
         </SessionProvider>
       </NextUIProvider>
     </NextThemesProvider>

@@ -24,9 +24,10 @@ export default function Categories({ feeds }) {
         <Grid>
           <Collapse.Group accordion={false}>
             {feeds &&
-              Object.keys(feeds).map((category) => {
+              Object.keys(feeds).map((category, key) => {
                 return (
                   <Collapse
+                    key={key}
                     expanded
                     title={
                       <Text h6 css={{ textTransform: "capitalize" }}>
@@ -34,8 +35,9 @@ export default function Categories({ feeds }) {
                       </Text>
                     }
                   >
-                    {feeds[category].map((feed) => (
+                    {feeds[category].map((feed, index) => (
                       <Link
+                        key={index + 1000}
                         href={`/feed/data?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
                       >
                         <Row gap={1}>
