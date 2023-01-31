@@ -135,9 +135,8 @@ export async function getFeedTimestamp(feedID) {
 
 export async function getArticlesOfFeed(feedID, offset = 0) {
   try {
-    // todo: use join to enable ordering articles by publication_date
-    const articleIDs = await pool.query(
-      `SELECT articles.articleid
+    const articles = await pool.query(
+      `SELECT *
       FROM feed_articles
       INNER JOIN articles
       ON feed_articles.articleid = articles.articleid
@@ -148,16 +147,7 @@ export async function getArticlesOfFeed(feedID, offset = 0) {
       [feedID, offset]
     );
 
-    // get article from article id
-    const articles = [];
-    for (let { articleid } of articleIDs.rows) {
-      const article = await pool.query(
-        "SELECT * FROM articles WHERE articleid = $1",
-        [articleid]
-      );
-      articles.push(...article.rows);
-    }
-    return articles;
+    return articles.rows;
   } catch (error) {
     throw new Error(`failed to process query, ${error}`);
   }
