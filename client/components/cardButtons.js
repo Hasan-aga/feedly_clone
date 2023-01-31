@@ -6,9 +6,9 @@ import ErrorCard from "./errorCard";
 import { useState } from "react";
 import useError from "@/hooks/useError";
 
-export default function CardButtons({ articleID }) {
+export default function CardButtons({ articleID, isBookmarked }) {
   const [isVisible, toggleVisibility] = useError();
-  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(isBookmarked);
 
   async function bookmarkArticle(e, articleID) {
     e.stopPropagation();
