@@ -24,6 +24,8 @@ export default function ArticleCard({ article }) {
     >
       <Grid xs={3} css={{ padding: "0" }}>
         <Image
+          showSkeleton
+          maxDelay={10000}
           css={{ borderRadius: "5px" }}
           src={
             "https://images.unsplash.com/photo-1493787039806-2edcbe808750?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb"
