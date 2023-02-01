@@ -47,7 +47,7 @@ export default function Feed({ feed }) {
             direction="column"
             justify="center"
             alignItems="center"
-            gap={2}
+            css={{ rowGap: "$10" }}
           >
             {articles.map((article, index) => {
               return <ArticleCard key={index} article={article} />;
