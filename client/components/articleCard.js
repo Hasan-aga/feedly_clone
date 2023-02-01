@@ -39,7 +39,14 @@ export default function ArticleCard({ article }) {
             </Grid>
           </Card.Header>
           <Card.Body css={{ paddingTop: "$1" }}>
-            <Text color="#777">
+            <Text
+              color="#777"
+              css={{
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
+            >
               {article.description.slice(0, 200) + "..."}
             </Text>
           </Card.Body>
