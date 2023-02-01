@@ -22,7 +22,7 @@ export default function ArticleCard({ article }) {
       css={{ opacity: `${isRead ? "0.5" : "1"}`, cursor: "pointer" }}
       onClick={() => window.open(article.link, "_blank")}
     >
-      <Grid xs={3} css={{ padding: "0" }}>
+      <Grid xs={3} css={{ padding: "0" }} alignItems="flex-start">
         <Image
           showSkeleton
           maxDelay={10000}
@@ -30,7 +30,6 @@ export default function ArticleCard({ article }) {
           src={
             "https://images.unsplash.com/photo-1493787039806-2edcbe808750?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb"
           }
-          objectFit="cover"
           width="100%"
           alt="article image"
         />
