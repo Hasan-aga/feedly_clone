@@ -13,21 +13,24 @@ export default function ArticleCard({ article }) {
       <Grid xs={12}>
         <Card
           css={{
-            mw: "630px",
-            padding: "$10",
+            mw: "600px",
             opacity: `${isRead ? "0.5" : "1"}`,
+            pl: "$10",
+            pr: "$10",
           }}
-          variant="bordered"
           isHoverable
           isPressable
         >
-          <Card.Header>
+          <Card.Header css={{ padding: "0" }}>
             <Grid xs={8} direction="column">
-              <Text b>{article.title}</Text>
-              <Text css={{ color: "$accents8" }}>{date}</Text>
+              <Text b css={{ padding: "$1" }}>
+                {article.title}
+              </Text>
+              <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
             </Grid>
             <Grid xs={4}>
               <CardButtons
+                css={{ padding: "$1" }}
                 articleID={article.articleid}
                 isBookmarked={article.bookmarkid}
                 isRead={isRead}
@@ -35,7 +38,7 @@ export default function ArticleCard({ article }) {
               />
             </Grid>
           </Card.Header>
-          <Card.Body css={{ paddingTop: "$5" }}>
+          <Card.Body css={{ paddingTop: "$1" }}>
             <Text color="#777">
               {article.description.slice(0, 200) + "..."}
             </Text>
