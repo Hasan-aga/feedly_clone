@@ -190,6 +190,21 @@ export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   }
 }
 
+export async function updateImageLink(articleid, imgeLink) {
+  try {
+    await pool.query(
+      `update articles
+    set image_link = $2
+    where articleid = $1`,
+      [articleid, imgeLink]
+    );
+  } catch (error) {
+    throw new Error(
+      `failed to update the image link of article ${articleid}. ${error.message}`
+    );
+  }
+}
+
 export async function getUrlFromFeedID(feedID) {
   try {
     const result = await pool.query(

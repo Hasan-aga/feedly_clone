@@ -39,13 +39,24 @@ export async function getFeedUrlAndFavicon(url) {
 
 export async function getArticleImageLink(link) {
   // todo: get the body of an article
-  // todo: call this AFTER user adds feed, and dont wait on it. have it save to db
   try {
     console.log("getting page", link);
     const response = await fetch(link);
     const result = await response.text();
 
     const doc = parse(result);
+    // try to get image from meta tags
+    const openGraphImage = doc.querySelector(
+      "meta[property='og:image']"
+    ).attributes;
+    if (openGraphImage.content) {
+      return openGraphImage.content;
+    }
+
+    const metaImage = doc.querySelector("meta[name='image']").attributes;
+    if (metaImage.content) return metaImage.content;
+
+    // try to scrape the first image of the article page
     const img = doc.querySelector("img");
     const imgLink = img?.attributes.src;
     try {

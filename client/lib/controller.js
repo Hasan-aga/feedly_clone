@@ -25,6 +25,7 @@ const {
   getArticlesOfFeed,
   markArticleAsReadForUser,
   markArticleAsUnreadForUser,
+  updateImageLink,
 } = require("./db");
 
 export class Controller {
@@ -140,14 +141,28 @@ export class Controller {
       const articles = await getArticlesOfFeed(feeid, this.userid, offset);
       for (const article of articles) {
         if (article.image_link === "default link") {
-          const imageLink = await getArticleImageLink(article.link);
-          article.image_link = imageLink;
+          try {
+            const imageLink = await getArticleImageLink(article.link);
+            article.image_link = imageLink;
+          } catch (e) {
+            article.image_link = "not found";
+          }
         }
       }
-
+      this.updateImageLinksOfArticles(articles);
       return articles;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async updateImageLinksOfArticles(articles) {
+    try {
+      for (const article of articles) {
+        await updateImageLink(article.articleid, article.image_link);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
