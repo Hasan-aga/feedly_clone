@@ -50,7 +50,7 @@ export async function getArticleImageLink(link) {
     const imgLink = img?.attributes.src;
     try {
       // test the image link if it is relative or absolute
-      imgUrl = new URL(imgLink);
+      new URL(imgLink);
     } catch (error) {
       // if link is relative, concatinate it with origin
       const { origin } = new URL(link);
