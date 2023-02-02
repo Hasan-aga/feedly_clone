@@ -20,24 +20,24 @@ export default async function handler(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     res.status(403).json({ success: false, error: "You are not signed in." });
-  } else if (req.method === "POST")
-    try {
-      // get user id
-      let user = await getUserByEmail(session.user.email);
-      if (!user) {
-        user = await addUser(session.user.email);
-        console.log(`added user `, user);
-      }
-      const userID = user.rowid;
-      const { url, category } = req.query;
-      console.log(`adding feed to category ${category}`);
-      const feedID = await addFeedToDB(url, category, userID);
-      await linkUserToFeed(userID, feedID);
-      res.status(200).json({ success: true });
-    } catch (error) {
-      console.log(`failed adding feed, ${error}`);
-      res.status(500).json({ success: false, error });
+  } else if (req.method === "POST") a;
+  try {
+    // get user id
+    let user = await getUserByEmail(session.user.email);
+    if (!user) {
+      user = await addUser(session.user.email);
+      console.log(`added user `, user);
     }
+    const userID = user.rowid;
+    const { url, category } = req.query;
+    console.log(`adding feed to category ${category}`);
+    const feedID = await addFeedToDB(url, category, userID);
+    await linkUserToFeed(userID, feedID);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(`failed adding feed, ${error}`);
+    res.status(500).json({ success: false, error });
+  }
 }
 
 async function addFeedToDB(url, category, userID) {

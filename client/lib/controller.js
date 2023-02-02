@@ -6,6 +6,8 @@ import {
   updateFeedArticles,
 } from "./db_transaction";
 import {
+  getArticleBodyAndImage,
+  getArticleImageLink,
   getFeedUrlAndFavicon,
   getFreshArticles,
   groupByCategory,
@@ -135,7 +137,15 @@ export class Controller {
 
   async getMyArticles(feeid, offset) {
     try {
-      return await getArticlesOfFeed(feeid, this.userid, offset);
+      const articles = await getArticlesOfFeed(feeid, this.userid, offset);
+      for (const article of articles) {
+        if (article.image_link === "default link") {
+          const imageLink = await getArticleImageLink(article.link);
+          article.image_link = imageLink;
+        }
+      }
+
+      return articles;
     } catch (error) {
       throw error;
     }

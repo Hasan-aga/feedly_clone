@@ -19,7 +19,6 @@ export async function addFeed(feedInfo, userid) {
   const { correctUrl: url, title, category, favicon } = feedInfo;
   const client = new Client();
   await client.connect();
-  console.log(`adding feed ${JSON.stringify(feedInfo)} for user ${userid}`);
   try {
     const timestamp = new Date();
     await client.query("BEGIN");
@@ -97,8 +96,6 @@ export async function deleteBookmarkForUser(userid, articleid) {
 }
 
 export async function markArticleAsReadForUser(userid, articleid) {
-  console.log(`marking ${articleid} read`);
-
   try {
     await pool.query(
       `INSERT INTO user_read(userid,articleid)
@@ -124,6 +121,15 @@ export async function markArticleAsUnreadForUser(userid, articleid) {
   }
 }
 
+export async function getArticlesWithNoImageLink() {
+  //todo: return articleUrls of all those with no imagelink
+  try {
+    const articleids = await pool.query(`
+    select link from articles 
+    where image_link = 'default link'`);
+  } catch (error) {}
+}
+
 export async function saveArticle(article, client) {
   try {
     // we can use  ON CONFLICT (link) DO NOTHING to prevent throwing error on unique conflict
@@ -137,7 +143,6 @@ export async function saveArticle(article, client) {
         article.category,
       ]
     );
-    console.log("saved article ", article.title.slice(0, 5));
 
     return articleid.rows[0]?.articleid;
   } catch (error) {
@@ -164,7 +169,7 @@ export async function getFeedTimestamp(feedID) {
 export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   try {
     const articles = await pool.query(
-      `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, user_bookmarks.bookmarkid,user_read.readid
+      `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, articles.image_link, user_bookmarks.bookmarkid,user_read.readid
       FROM feed_articles
       INNER JOIN articles
       ON feed_articles.articleid = articles.articleid
@@ -206,14 +211,12 @@ export async function updateFeedArticles(feedID, articles) {
     // todo: transaction is failing we must use same client:
     // start transaction
     await client.query("BEGIN");
-    console.log("begin saving articles...");
     const timestamp = new Date();
     // update timestamp in rssfeeds table
     await client.query(
       "UPDATE rssfeeds SET lastupdated = $1 WHERE rowid = $2 RETURNING *",
       [timestamp, feedID]
     );
-    console.log("finished 1st query");
 
     // update article in feed_articles table
     for (let article of articles) {
@@ -223,13 +226,10 @@ export async function updateFeedArticles(feedID, articles) {
           "INSERT INTO feed_articles(feedid, articleid) VALUES($1, $2)",
           [feedID, articleid]
         );
-        console.log(`linked article ${articleid} to feed ${feedID}`);
       }
     }
-    console.log("commit.");
     await client.query("COMMIT"); // end transaction
   } catch (error) {
-    console.log("error");
     await client.query("ROLLBACK"); // if an error occurs, undo the transaction
     throw new Error(`failed to process query, ${error}`);
   } finally {
@@ -276,8 +276,6 @@ export async function getUserByEmail(email) {
 }
 
 export async function linkUserToFeed(userID, feedID) {
-  // todo: adding new feed and linking it to user and saving articles should be transaction
-  console.log(`linking user ${userID} to feed ${feedID}`);
   try {
     const result = await pool.query(
       "INSERT INTO user_to_rss_feed (userid, rssid) VALUES ($1, $2) RETURNING *",

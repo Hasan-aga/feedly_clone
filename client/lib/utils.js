@@ -1,7 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
+import parse from "node-html-parser";
 import rssFinder from "rss-finder";
-
-const bcrypt = require("bcrypt");
 
 export function isValidEmail(email) {
   // use a regular expression to verify the email format
@@ -38,19 +37,43 @@ export async function getFeedUrlAndFavicon(url) {
   }
 }
 
+export async function getArticleImageLink(link) {
+  // todo: get the body of an article
+  // todo: call this AFTER user adds feed, and dont wait on it. have it save to db
+  try {
+    console.log("getting page", link);
+    const response = await fetch(link);
+    const result = await response.text();
+
+    const doc = parse(result);
+    const img = doc.querySelector("img");
+    const imgLink = img?.attributes.src;
+    try {
+      // test the image link if it is relative or absolute
+      imgUrl = new URL(imgLink);
+    } catch (error) {
+      // if link is relative, concatinate it with origin
+      const { origin } = new URL(link);
+      return origin + imgLink;
+    }
+    return imgLink;
+  } catch (error) {
+    console.log("got error while calling article", error);
+  }
+}
+
 export async function getFreshArticles(url) {
   console.log("getting fresh articles");
   const res = await fetch(url);
   if (res.ok) {
-    console.log("getting text");
     const articles = await res.text();
-    console.log("getting xml");
     const parser = new XMLParser();
     let articleObject = parser.parse(articles);
     console.dir(articleObject);
 
     if (articleObject.rss) {
-      return articleObject.rss.channel.item;
+      const articles = articleObject.rss.channel.item;
+      return articles;
     }
     if (articleObject.feed) {
       const articles = articleObject.feed.entry.map((entry) => {

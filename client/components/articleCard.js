@@ -15,6 +15,8 @@ export default function ArticleCard({ article }) {
     new Date(article.publication_date)
   );
 
+  console.log(article.image_link);
+
   const [isRead, setIsRead] = useState(article.readid);
   return (
     <Grid
@@ -27,9 +29,7 @@ export default function ArticleCard({ article }) {
           showSkeleton
           maxDelay={10000}
           css={{ borderRadius: "5px" }}
-          src={
-            "https://images.unsplash.com/photo-1493787039806-2edcbe808750?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb"
-          }
+          src={article.image_link}
           width="100%"
           alt="article image"
         />
