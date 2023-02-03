@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Collapse, Grid, Button, Loading } from "@nextui-org/react";
+import { Collapse, Grid, Button, Loading, Table, Row } from "@nextui-org/react";
 import ArticleCard from "./articleCard";
 
 export default function Feed({ feed }) {
@@ -31,7 +31,7 @@ export default function Feed({ feed }) {
     await getArticles(newOffset);
   }
   useEffect(() => {
-    // todo: fix stale articles when switching feeds
+    // todo: remove this line:
     setArticles([]);
     console.log("new feed", articles);
     setMainLoading(true);
@@ -44,7 +44,57 @@ export default function Feed({ feed }) {
 
   return (
     <>
-      {articles && (
+      <Collapse title={feed.title} bordered expanded>
+        {
+          <Grid.Container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            css={{ rowGap: "$10" }}
+          >
+            <Table
+              aria-label="Example table with static content"
+              css={{
+                height: "auto",
+                minWidth: "100%",
+              }}
+            >
+              <Table.Header>
+                <Table.Column></Table.Column>
+              </Table.Header>
+              <Table.Body>
+                {articles.map((article, index) => {
+                  return (
+                    <Table.Row key="1">
+                      <Table.Cell>
+                        <Row>
+                          <ArticleCard key={index} article={article} />
+                        </Row>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+              <Table.Pagination
+                shadow
+                noMargin
+                align="center"
+                rowsPerPage={5}
+                onPageChange={(page) => console.log({ page })}
+              />
+            </Table>
+            <Button flat color="primary" auto onPress={loadMore}>
+              {loading ? (
+                <Loading type="points" color="currentColor" size="sm" />
+              ) : (
+                "Load More"
+              )}
+            </Button>
+          </Grid.Container>
+        }
+      </Collapse>
+
+      {/* {articles && (
         <Collapse title={feed.title} bordered>
           <Grid.Container
             direction="column"
@@ -64,7 +114,7 @@ export default function Feed({ feed }) {
             </Button>
           </Grid.Container>
         </Collapse>
-      )}
+      )} */}
     </>
   );
 }
