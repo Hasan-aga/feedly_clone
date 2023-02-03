@@ -169,7 +169,16 @@ export async function getFeedTimestamp(feedID) {
 export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   try {
     const articles = await pool.query(
-      `SELECT articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, articles.image_link, user_bookmarks.bookmarkid,user_read.readid
+      `SELECT articles.articleid,
+      articles.title,
+      articles.link,
+      articles.description, 
+      articles.publication_date,
+      articles.category, 
+      articles.image_link,
+      user_bookmarks.bookmarkid, 
+      user_read.readid,
+      count(*) OVER() AS total
       FROM feed_articles
       INNER JOIN articles
       ON feed_articles.articleid = articles.articleid

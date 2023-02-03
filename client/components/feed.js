@@ -8,7 +8,10 @@ export default function Feed({ feed }) {
   const [loading, setLoading] = useState(false);
   const [mainLoading, setMainLoading] = useState(false);
 
+  console.log(`total articles ${articles[0]?.total}`, articles);
+
   async function getArticles(offset = 0) {
+    // todo: use index pagination
     const res = await fetch(
       `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
     );
@@ -31,8 +34,6 @@ export default function Feed({ feed }) {
     await getArticles(newOffset);
   }
   useEffect(() => {
-    // todo: remove this line:
-    setArticles([]);
     console.log("new feed", articles);
     setMainLoading(true);
     getArticles();
@@ -65,7 +66,7 @@ export default function Feed({ feed }) {
               <Table.Body>
                 {articles.map((article, index) => {
                   return (
-                    <Table.Row key="1">
+                    <Table.Row key={index}>
                       <Table.Cell>
                         <Row>
                           <ArticleCard key={index} article={article} />
@@ -80,7 +81,8 @@ export default function Feed({ feed }) {
                 noMargin
                 align="center"
                 rowsPerPage={5}
-                onPageChange={(page) => console.log({ page })}
+                total={Math.ceil(articles[0]?.total / 5)}
+                onPageChange={(page) => getArticles(page * 5)}
               />
             </Table>
             <Button flat color="primary" auto onPress={loadMore}>
