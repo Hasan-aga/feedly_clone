@@ -19,7 +19,13 @@ export default function ArticleCard({ article }) {
 
   const [isRead, setIsRead] = useState(article.readid);
   return (
-    <Grid.Container gap={2}>
+    <Grid.Container
+      xs={12}
+      gap={2}
+      alignContent="center"
+      alignItems="center"
+      justify="center"
+    >
       <Grid
         xs={6}
         css={{ opacity: `${isRead ? "0.5" : "1"}`, cursor: "pointer" }}
