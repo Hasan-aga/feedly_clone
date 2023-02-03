@@ -205,6 +205,24 @@ export async function updateImageLink(articleid, imgeLink) {
   }
 }
 
+export async function getUserBookmarks(userid) {
+  try {
+    const results = await pool.query(
+      `
+    select  articles.articleid, articles.title, articles.link, articles.description, articles.publication_date, articles.category, articles.image_link, user_bookmarks.bookmarkid  from user_bookmarks
+    inner join articles on articles.articleid = user_bookmarks.articleid
+    where userid = $1`,
+      [userid]
+    );
+
+    return results.rows;
+  } catch (error) {
+    throw new Error(
+      `failed to get bookmarks for user ${userid}. ${error.message}`
+    );
+  }
+}
+
 export async function getUrlFromFeedID(feedID) {
   try {
     const result = await pool.query(

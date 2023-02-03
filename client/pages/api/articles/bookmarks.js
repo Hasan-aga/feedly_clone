@@ -25,6 +25,12 @@ export default async function handler(req, res) {
           res.status(200).json({ success: true });
         }
         break;
+      case "GET":
+        {
+          const results = await controller.getMyBookmarks();
+          res.status(200).json({ success: true, results });
+        }
+        break;
 
       default:
         res.status(404).json({

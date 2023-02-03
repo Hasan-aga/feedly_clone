@@ -1,6 +1,7 @@
 import { Collapse, Grid, Image, Loading, Row, Text } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Bookmark from "./icons/bookmark";
 import Cog from "./icons/cog";
 
 export default function Categories({ feeds }) {
@@ -12,12 +13,17 @@ export default function Categories({ feeds }) {
           <Text h5>FEEDS</Text>
         </Grid>
         <Row>
-          <Grid xs={10}>
+          <Grid xs={9}>
             <Link href="/">All</Link>
           </Grid>
-          <Grid>
+          <Grid xs={1.5}>
             <Link href="/settings/data?hello=world">
               <Cog />
+            </Link>
+          </Grid>
+          <Grid>
+            <Link href="/bookmarks">
+              <Bookmark />
             </Link>
           </Grid>
         </Row>

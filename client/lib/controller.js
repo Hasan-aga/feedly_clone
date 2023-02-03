@@ -26,6 +26,7 @@ const {
   markArticleAsReadForUser,
   markArticleAsUnreadForUser,
   updateImageLink,
+  getUserBookmarks,
 } = require("./db");
 
 export class Controller {
@@ -177,6 +178,18 @@ export class Controller {
   async deleteBookmark(articleid) {
     try {
       await deleteBookmarkForUser(this.userid, articleid);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getMyBookmarks() {
+    try {
+      const bookmarks = await getUserBookmarks(this.userid);
+      bookmarks.forEach((element) => {
+        element.publication_date = element.publication_date.toString();
+      });
+      return bookmarks;
     } catch (error) {
       throw error;
     }
