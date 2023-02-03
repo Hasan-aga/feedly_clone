@@ -186,6 +186,7 @@ export class Controller {
   async getMyBookmarks() {
     try {
       const bookmarks = await getUserBookmarks(this.userid);
+      // return date as string since getserverprops wont serialize date objects!
       bookmarks.forEach((element) => {
         element.publication_date = element.publication_date.toString();
       });
