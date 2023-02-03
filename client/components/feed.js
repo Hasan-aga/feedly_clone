@@ -15,9 +15,11 @@ export default function Feed({ feed }) {
     const { results } = await res.json();
 
     if (results) {
+      offset === 0
+        ? setArticles([...results])
+        : setArticles([...articles, ...results]);
       setLoading(false);
       setMainLoading(false);
-      setArticles([...articles, ...results]);
     }
   }
 

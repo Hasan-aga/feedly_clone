@@ -12,7 +12,7 @@ import { useTheme as useNextTheme } from "next-themes";
 import { useState } from "react";
 import { MoonIcon } from "./icons/moon";
 import { SunIcon } from "./icons/sun";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Categories from "./categories";
 
 export default function Sidebar({ session, feeds }) {

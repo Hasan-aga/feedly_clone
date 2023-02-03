@@ -6,6 +6,8 @@ export default function SpecificFeed() {
   const router = useRouter();
   const feed = router.query;
 
+  console.log("current feed", feed);
+
   return (
     <>
       <Grid xs={10} justify="center">
