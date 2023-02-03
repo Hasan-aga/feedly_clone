@@ -18,8 +18,6 @@ export default function Feed({ feed }) {
       setLoading(false);
       setMainLoading(false);
       setArticles([...articles, ...results]);
-      console.log("offset", offset);
-      console.log("articles", results);
     }
   }
 
@@ -31,6 +29,9 @@ export default function Feed({ feed }) {
     await getArticles(newOffset);
   }
   useEffect(() => {
+    // todo: fix stale articles when switching feeds
+    setArticles([]);
+    console.log("new feed", articles);
     setMainLoading(true);
     getArticles();
   }, [feed]);

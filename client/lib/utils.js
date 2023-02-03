@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import parse from "node-html-parser";
-import rssFinder from "rss-finder";
+import robustRssFinder from "robust-rss-finder";
 
 export function isValidEmail(email) {
   // use a regular expression to verify the email format
@@ -26,7 +26,7 @@ export function needsUpdate(lastUpdateTime) {
 
 export async function getFeedUrlAndFavicon(url) {
   try {
-    const res = await rssFinder(url);
+    const res = await robustRssFinder(url);
     console.log("rss finder", res);
     if (res.feedUrls.length === 0) {
       throw new Error("No link was resolved! try again.");

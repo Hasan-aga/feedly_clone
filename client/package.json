@@ -22,7 +22,7 @@
     "pg": "^8.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "rss-finder": "^2.1.5"
+    "robust-rss-finder": "^2.1.5"
   },
   "devDependencies": {
     "sass": "^1.57.1"
