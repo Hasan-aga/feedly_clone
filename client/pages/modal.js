@@ -45,7 +45,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
           fullWidth
           color="primary"
           size="lg"
-          labelPlaceholder="ex: http://blog.hasan.one"
+          labelPlaceholder="ex: blog.hasan.one"
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
