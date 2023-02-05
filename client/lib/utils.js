@@ -110,3 +110,9 @@ export function groupByCategory(dataArray) {
     return acc;
   }, {});
 }
+
+export function hasHttpPart(url) {
+  const regex = /http:|https:/;
+  const result = regex.test(url);
+  return result;
+}

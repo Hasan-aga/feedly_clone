@@ -11,6 +11,7 @@ import {
   getFeedUrlAndFavicon,
   getFreshArticles,
   groupByCategory,
+  hasHttpPart,
   needsUpdate,
 } from "./utils";
 
@@ -56,6 +57,9 @@ export class Controller {
 
   async addNewFeed(url, category) {
     console.log("adding", url);
+    if (!hasHttpPart(url)) {
+      url = "http://" + url;
+    }
     await this.client.connect();
     try {
       await this.client.query("BEGIN");
