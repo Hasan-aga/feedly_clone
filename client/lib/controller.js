@@ -28,6 +28,7 @@ const {
   markArticleAsUnreadForUser,
   updateImageLink,
   getUserBookmarks,
+  getTotalNumberOfArticlesForFeed,
 } = require("./db");
 
 export class Controller {
@@ -109,8 +110,6 @@ export class Controller {
       console.log(`user ${this.userid} feed:`, results);
       for (const feed of results) {
         // check if feed needs updating articles
-
-        console.log("feed needs update? ", needsUpdate(feed.lastupdated));
         if (needsUpdate(feed.lastupdated)) {
           // update the articles of feed
           const articles = await getFreshArticles(feed.url);
@@ -118,6 +117,11 @@ export class Controller {
           await updateFeedArticles(feed.rowid, articles, this.client);
           await this.client.query("COMMIT");
         }
+        // get total number of articles of each feed
+        const totalArticlesNumber = await getTotalNumberOfArticlesForFeed(
+          feed.rowid
+        );
+        feed.total_articles = totalArticlesNumber;
       }
 
       return groupByCategory(results);
