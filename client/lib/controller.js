@@ -117,11 +117,6 @@ export class Controller {
           await updateFeedArticles(feed.rowid, articles, this.client);
           await this.client.query("COMMIT");
         }
-        // get total number of articles of each feed
-        const totalArticlesNumber = await getTotalNumberOfArticlesForFeed(
-          feed.rowid
-        );
-        feed.total_articles = totalArticlesNumber;
       }
 
       return groupByCategory(results);

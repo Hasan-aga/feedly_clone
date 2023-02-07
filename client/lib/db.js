@@ -281,24 +281,6 @@ export async function updateFeedArticles(feedID, articles) {
   }
 }
 
-export async function getTotalNumberOfArticlesForFeed(feedid) {
-  try {
-    const number = await pool.query(
-      `
-    select count(*) as total_articles from feed_articles
-    where feedid = $1
-    group by feedid`,
-      [feedid]
-    );
-
-    return number.rows[0].total_articles;
-  } catch (error) {
-    throw new Error(
-      `failed to get total number of articles for feed ${feedid}. ${error.message}`
-    );
-  }
-}
-
 export async function getFeedByTitle(title) {
   try {
     const result = await pool.query(
