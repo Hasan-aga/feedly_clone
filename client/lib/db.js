@@ -177,8 +177,7 @@ export async function getArticlesOfFeed(feedID, userid, offset = 0) {
       articles.category, 
       articles.image_link,
       user_bookmarks.bookmarkid, 
-      user_read.readid,
-      count(*) OVER() AS total
+      user_read.readid
       FROM feed_articles
       INNER JOIN articles
       ON feed_articles.articleid = articles.articleid
@@ -279,6 +278,24 @@ export async function updateFeedArticles(feedID, articles) {
       .end()
       .then(() => console.log("client has disconnected"))
       .catch((err) => console.error("error during disconnection", err.stack));
+  }
+}
+
+export async function getTotalNumberOfArticlesForFeed(feedid) {
+  try {
+    const number = await pool.query(
+      `
+    select count(*) as total_articles from feed_articles
+    where feedid = $1
+    group by feedid`,
+      [feedid]
+    );
+
+    return number.rows[0].total_articles;
+  } catch (error) {
+    throw new Error(
+      `failed to get total number of articles for feed ${feedid}. ${error.message}`
+    );
   }
 }
 

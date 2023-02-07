@@ -8,10 +8,9 @@ export default function Feed({ feed }) {
   const [loading, setLoading] = useState(false);
   const [mainLoading, setMainLoading] = useState(false);
 
-  console.log(`total articles ${articles[0]?.total}`, articles);
+  console.log(`total articles ${feed.total_articles}`);
 
   async function getArticles(offset = 0) {
-    // todo: use index pagination
     const res = await fetch(
       `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
     );
