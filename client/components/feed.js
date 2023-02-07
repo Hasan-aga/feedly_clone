@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Collapse, Grid, Button, Loading, Table, Row } from "@nextui-org/react";
+import {
+  Collapse,
+  Grid,
+  Button,
+  Loading,
+  Table,
+  Row,
+  Pagination,
+} from "@nextui-org/react";
 import ArticleCard from "./articleCard";
 
 export default function Feed({ feed }) {
@@ -17,9 +25,8 @@ export default function Feed({ feed }) {
     const { results } = await res.json();
 
     if (results) {
-      offset === 0
-        ? setArticles([...results])
-        : setArticles([...articles, ...results]);
+      setArticles([...results]);
+
       setLoading(false);
       setMainLoading(false);
     }
@@ -75,22 +82,15 @@ export default function Feed({ feed }) {
                   );
                 })}
               </Table.Body>
-              <Table.Pagination
-                shadow
-                noMargin
-                align="center"
-                rowsPerPage={5}
-                total={Math.ceil(articles[0]?.total / 5)}
-                onPageChange={(page) => getArticles(page * 5)}
-              />
             </Table>
-            <Button flat color="primary" auto onPress={loadMore}>
-              {loading ? (
-                <Loading type="points" color="currentColor" size="sm" />
-              ) : (
-                "Load More"
-              )}
-            </Button>
+            <Pagination
+              shadow
+              noMargin
+              align="center"
+              rowsPerPage={5}
+              total={Math.ceil(feed.total_articles / 5)}
+              onChange={(page) => getArticles((page - 1) * 5)}
+            />
           </Grid.Container>
         }
       </Collapse>
