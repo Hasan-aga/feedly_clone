@@ -16,9 +16,9 @@ export default function Feed({ feed }) {
   const [articles, setArticles] = useState([]);
   const [offset, setOffset] = useState(0);
 
-  async function getArticles() {
+  async function getArticles(feed, offset = 0) {
     const res = await fetch(
-      `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${0}`
+      `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
     );
 
     if (!res.ok) {
@@ -28,8 +28,8 @@ export default function Feed({ feed }) {
   }
 
   const { isLoading, data } = useQuery({
-    queryKey: ["articles"],
-    queryFn: getArticles,
+    queryKey: ["articles", offset, feed],
+    queryFn: () => getArticles(feed, offset),
     onError: (error) => toast.error(`Something went wrong ${error.message}`),
   });
 
@@ -53,12 +53,13 @@ export default function Feed({ feed }) {
               <Table.Header>
                 <Table.Column align="center">
                   <Pagination
+                    page={offset / 5}
                     shadow
                     noMargin
                     align="center"
                     rowsPerPage={5}
                     total={Math.ceil(feed.total_articles / 5)}
-                    onChange={(page) => getArticles((page - 1) * 5)}
+                    onChange={(page) => setOffset((page - 1) * 5)}
                   />
                 </Table.Column>
               </Table.Header>
