@@ -198,6 +198,18 @@ export async function getArticlesOfFeed(feedID, userid, offset = 0) {
   }
 }
 
+export async function getArticleById(articleid) {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM articles WHERE articleid = $1`,
+      [articleid]
+    );
+    return result.rows[0];
+  } catch (error) {
+    throw new Error(`failed to process query, ${error}`);
+  }
+}
+
 export async function updateImageLink(articleid, imgeLink) {
   try {
     await pool.query(

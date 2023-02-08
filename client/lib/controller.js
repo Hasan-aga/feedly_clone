@@ -29,6 +29,7 @@ const {
   updateImageLink,
   getUserBookmarks,
   getTotalNumberOfArticlesForFeed,
+  getArticleById,
 } = require("./db");
 
 export class Controller {
@@ -160,13 +161,28 @@ export class Controller {
     }
   }
 
-  async updateImageLinksOfArticles(articles) {
-    console.log("returning articles");
+  async getArticleImage(articleid) {
+    try {
+      console.log("getting image for articleid", articleid);
+      const article = await getArticleById(articleid);
+      const imageLink = await getArticleImageLink(article.link);
+      article.image_link = imageLink;
+      console.log("setting article img", article.image_link);
+      updateImageLink(article.articleid, article.image_link);
+      return imageLink;
+    } catch (error) {
+      throw error;
+    }
+  }
 
+  async updateImageLinksOfArticles(articles) {
     try {
       for (const article of articles) {
-        if (article.image_link !== "default link")
+        if (article.image_link !== "default link") {
+          console.log("setting article img", article.image_link);
+
           await updateImageLink(article.articleid, article.image_link);
+        }
       }
     } catch (error) {
       console.log(error);
