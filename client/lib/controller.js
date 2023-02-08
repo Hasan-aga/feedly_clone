@@ -142,6 +142,7 @@ export class Controller {
   }
 
   async getMyArticles(feeid, offset) {
+    console.log("offset", offset);
     try {
       const articles = await getArticlesOfFeed(feeid, this.userid, offset);
 

@@ -4,6 +4,8 @@ import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Layout from "@/components/layout";
 import ErrorBoundary from "@/components/errorBoundry";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 // 1. import `NextUIProvider` component
 
 export default function App({ Component, session, pageProps }) {
@@ -17,24 +19,31 @@ export default function App({ Component, session, pageProps }) {
     type: "dark",
     theme: {},
   });
+
+  //react query
+  const queryClient = new QueryClient();
+
   return (
-    <NextThemesProvider
-      defaultTheme="dark"
-      attribute="class"
-      value={{
-        light: lightTheme.className,
-        dark: darkTheme.className,
-      }}
-    >
-      <NextUIProvider>
-        <SessionProvider session={session}>
-          <ErrorBoundary>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ErrorBoundary>
-        </SessionProvider>
-      </NextUIProvider>
-    </NextThemesProvider>
+    <QueryClientProvider client={queryClient}>
+      <NextThemesProvider
+        defaultTheme="dark"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <SessionProvider session={session}>
+            <ErrorBoundary>
+              <Toaster />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ErrorBoundary>
+          </SessionProvider>
+        </NextUIProvider>
+      </NextThemesProvider>
+    </QueryClientProvider>
   );
 }

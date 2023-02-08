@@ -9,41 +9,33 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import ArticleCard from "./articleCard";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 export default function Feed({ feed }) {
   const [articles, setArticles] = useState([]);
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [mainLoading, setMainLoading] = useState(false);
 
-  async function getArticles(offset = 0) {
+  async function getArticles() {
     const res = await fetch(
-      `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
+      `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${0}`
     );
-    const { results } = await res.json();
 
-    if (results) {
-      setArticles([...results]);
-
-      setLoading(false);
-      setMainLoading(false);
+    if (!res.ok) {
+      throw new Error("Problem while fetching articles.", res.ok);
     }
+    return res.json();
   }
 
-  async function loadMore() {
-    setLoading(true);
-    const newOffset = offset + 5;
-    setOffset(newOffset);
+  const { isLoading, data } = useQuery({
+    queryKey: ["articles"],
+    queryFn: getArticles,
+    onError: (error) => toast.error(`Something went wrong ${error.message}`),
+  });
 
-    await getArticles(newOffset);
-  }
-  useEffect(() => {
-    console.log("new feed", articles);
-    setMainLoading(true);
-    getArticles();
-  }, [feed]);
+  console.log(`${isLoading}`);
 
-  if (mainLoading) {
+  if (isLoading) {
     return <Loading type="points" color="currentColor" size="lg" />;
   }
 
@@ -71,7 +63,7 @@ export default function Feed({ feed }) {
                 </Table.Column>
               </Table.Header>
               <Table.Body>
-                {articles.map((article, index) => {
+                {data.results.map((article, index) => {
                   return (
                     <Table.Row key={index}>
                       <Table.Cell>

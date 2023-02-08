@@ -11,6 +11,7 @@
   "dependencies": {
     "@next/font": "13.1.2",
     "@nextui-org/react": "^1.0.0-beta.12",
+    "@tanstack/react-query": "^4.24.4",
     "bcrypt": "^5.1.0",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.2",
@@ -22,6 +23,7 @@
     "pg": "^8.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.0",
     "robust-rss-finder": "^2.1.5"
   },
   "devDependencies": {
