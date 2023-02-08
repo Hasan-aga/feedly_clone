@@ -40,7 +40,7 @@ export async function getFeedUrlAndFavicon(url) {
 export async function getArticleImageLink(link) {
   // todo: get the body of an article
   try {
-    console.log("getting page", link);
+    console.log("getting image for page", link);
     const response = await fetch(link);
     const result = await response.text();
 

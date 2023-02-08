@@ -62,26 +62,24 @@ export default function CardButtons({
     }
   }
   return (
-    <>
-      <Grid xs={12} justify="flex-end">
-        <Tooltip
-          content={bookmarked ? "Remove bookmark" : "Bookmark"}
-          rounded
-          color="primary"
-        >
-          <Bookmark
-            fill={bookmarked}
-            handler={(e) => bookmarkArticle(e, articleID)}
-          />
-        </Tooltip>
-        <Tooltip
-          content={isRead ? "Mark as unread" : "Mark as read"}
-          rounded
-          color="primary"
-        >
-          <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
-        </Tooltip>
-      </Grid>
-    </>
+    <Grid xs={12} justify="flex-end">
+      <Tooltip
+        content={bookmarked ? "Remove bookmark" : "Bookmark"}
+        rounded
+        color="primary"
+      >
+        <Bookmark
+          fill={bookmarked}
+          handler={(e) => bookmarkArticle(e, articleID)}
+        />
+      </Tooltip>
+      <Tooltip
+        content={isRead ? "Mark as unread" : "Mark as read"}
+        rounded
+        color="primary"
+      >
+        <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
+      </Tooltip>
+    </Grid>
   );
 }

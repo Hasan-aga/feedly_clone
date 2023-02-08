@@ -161,9 +161,12 @@ export class Controller {
   }
 
   async updateImageLinksOfArticles(articles) {
+    console.log("returning articles");
+
     try {
       for (const article of articles) {
-        await updateImageLink(article.articleid, article.image_link);
+        if (article.image_link !== "default link")
+          await updateImageLink(article.articleid, article.image_link);
       }
     } catch (error) {
       console.log(error);

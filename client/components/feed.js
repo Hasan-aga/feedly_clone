@@ -16,7 +16,7 @@ export default function Feed({ feed }) {
   const [loading, setLoading] = useState(false);
   const [mainLoading, setMainLoading] = useState(false);
 
-  console.log(`total articles ${feed.total_articles}`);
+  feed && console.log(`total articles ${feed}`);
 
   async function getArticles(offset = 0) {
     const res = await fetch(
