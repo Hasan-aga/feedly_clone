@@ -35,10 +35,6 @@ export default function Feed({ feed }) {
 
   console.log(`${isLoading}`);
 
-  if (isLoading) {
-    return <Loading type="points" color="currentColor" size="lg" />;
-  }
-
   return (
     <>
       <Collapse title={feed.title} bordered expanded>
@@ -49,34 +45,38 @@ export default function Feed({ feed }) {
             alignItems="center"
             css={{ rowGap: "$10" }}
           >
-            <Table aria-label="Example table with static content">
-              <Table.Header>
-                <Table.Column align="center">
-                  <Pagination
-                    page={offset / 5}
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={5}
-                    total={Math.ceil(feed.total_articles / 5)}
-                    onChange={(page) => setOffset((page - 1) * 5)}
-                  />
-                </Table.Column>
-              </Table.Header>
-              <Table.Body>
-                {data.results.map((article, index) => {
-                  return (
-                    <Table.Row key={index}>
-                      <Table.Cell>
-                        <Row>
-                          <ArticleCard key={index} article={article} />
-                        </Row>
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table>
+            {isLoading ? (
+              <Loading type="points" color="currentColor" size="lg" />
+            ) : (
+              <Table aria-label="Example table with static content">
+                <Table.Header>
+                  <Table.Column align="center">
+                    <Pagination
+                      page={offset / 5 + 1}
+                      shadow
+                      noMargin
+                      align="center"
+                      rowsPerPage={5}
+                      total={Math.ceil(feed.total_articles / 5)}
+                      onChange={(page) => setOffset((page - 1) * 5)}
+                    />
+                  </Table.Column>
+                </Table.Header>
+                <Table.Body>
+                  {data.results.map((article, index) => {
+                    return (
+                      <Table.Row key={index}>
+                        <Table.Cell>
+                          <Row>
+                            <ArticleCard key={index} article={article} />
+                          </Row>
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
+                </Table.Body>
+              </Table>
+            )}
           </Grid.Container>
         }
       </Collapse>
