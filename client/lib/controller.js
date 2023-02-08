@@ -144,17 +144,7 @@ export class Controller {
   async getMyArticles(feeid, offset) {
     try {
       const articles = await getArticlesOfFeed(feeid, this.userid, offset);
-      for (const article of articles) {
-        if (article.image_link === "default link") {
-          try {
-            const imageLink = await getArticleImageLink(article.link);
-            article.image_link = imageLink;
-          } catch (e) {
-            article.image_link = "not found";
-          }
-        }
-      }
-      this.updateImageLinksOfArticles(articles);
+
       return articles;
     } catch (error) {
       throw error;
@@ -172,20 +162,6 @@ export class Controller {
       return imageLink;
     } catch (error) {
       throw error;
-    }
-  }
-
-  async updateImageLinksOfArticles(articles) {
-    try {
-      for (const article of articles) {
-        if (article.image_link !== "default link") {
-          console.log("setting article img", article.image_link);
-
-          await updateImageLink(article.articleid, article.image_link);
-        }
-      }
-    } catch (error) {
-      console.log(error);
     }
   }
 

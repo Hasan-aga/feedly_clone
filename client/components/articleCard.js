@@ -7,7 +7,7 @@ import {
   Spacer,
   Image,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import CardButtons from "./cardButtons";
 
 export default function ArticleCard({ article }) {
@@ -15,7 +15,30 @@ export default function ArticleCard({ article }) {
     new Date(article.publication_date)
   );
 
-  console.log(article.image_link);
+  const [imageLink, setImageLink] = useState();
+
+  async function fetchArticleImage() {
+    try {
+      if (article.image_link === "default link") {
+        console.log("get image");
+
+        const response = await fetch(
+          `/api/articles/image?articleid=${article.articleid}`
+        );
+        const result = await response.json();
+        setImageLink(result.imageLink);
+      }
+    } catch (error) {
+      console.error(`failed while getting image for article  ${error}`);
+    }
+  }
+
+  useLayoutEffect(() => {
+    setImageLink(
+      "https://og.tailgraph.com/og?fontFamily=Roboto&title=Scraping%20my%20Twitter%20Social%20Graph%20with%20Python%20and%20Selenium&titleTailwind=font-bold%20bg-transparent%20text-7xl&titleFontFamily=Poppins&textTailwind=text-2xl%20mt-4&logoTailwind=h-8&bgUrl=https%3A%2F%2Fwallpaper.dog%2Flarge%2F20455104.jpg&footer=https%3A%2F%2Fwww.swyx.io&footerTailwind=text-teal-900&containerTailwind=border-2%20border-orange-200%20bg-transparent%20p-4"
+    );
+    fetchArticleImage();
+  }, [article]);
 
   const [isRead, setIsRead] = useState(article.readid);
   return (
@@ -36,7 +59,11 @@ export default function ArticleCard({ article }) {
             showSkeleton
             maxDelay={10000}
             css={{ borderRadius: "5px" }}
-            src={article.image_link}
+            src={
+              article.image_link === "default link"
+                ? imageLink
+                : article.image_link
+            }
             width="100%"
             alt="article image"
           />

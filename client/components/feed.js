@@ -16,8 +16,6 @@ export default function Feed({ feed }) {
   const [loading, setLoading] = useState(false);
   const [mainLoading, setMainLoading] = useState(false);
 
-  feed && console.log(`total articles ${feed}`);
-
   async function getArticles(offset = 0) {
     const res = await fetch(
       `http://localhost:3000/api/articles?feedid=${feed.rowid}&offset=${offset}`
@@ -59,15 +57,18 @@ export default function Feed({ feed }) {
             alignItems="center"
             css={{ rowGap: "$10" }}
           >
-            <Table
-              aria-label="Example table with static content"
-              css={{
-                height: "auto",
-                minWidth: "100%",
-              }}
-            >
+            <Table aria-label="Example table with static content">
               <Table.Header>
-                <Table.Column></Table.Column>
+                <Table.Column align="center">
+                  <Pagination
+                    shadow
+                    noMargin
+                    align="center"
+                    rowsPerPage={5}
+                    total={Math.ceil(feed.total_articles / 5)}
+                    onChange={(page) => getArticles((page - 1) * 5)}
+                  />
+                </Table.Column>
               </Table.Header>
               <Table.Body>
                 {articles.map((article, index) => {
@@ -83,14 +84,6 @@ export default function Feed({ feed }) {
                 })}
               </Table.Body>
             </Table>
-            <Pagination
-              shadow
-              noMargin
-              align="center"
-              rowsPerPage={5}
-              total={Math.ceil(feed.total_articles / 5)}
-              onChange={(page) => getArticles((page - 1) * 5)}
-            />
           </Grid.Container>
         }
       </Collapse>
