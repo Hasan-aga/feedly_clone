@@ -48,17 +48,22 @@ export async function getArticleImageLink(link) {
     // try to get image from meta tags
     const openGraphImage = doc.querySelector(
       "meta[property='og:image']"
-    ).attributes;
-    if (openGraphImage.content) {
-      return openGraphImage.content;
+    )?.attributes;
+    if (openGraphImage) {
+      const attributes = openGraphImage.attributes;
+      return attributes.content;
     }
 
-    const metaImage = doc.querySelector("meta[name='image']").attributes;
-    if (metaImage.content) return metaImage.content;
+    const metaImage = doc.querySelector("meta[name='image']");
+    if (metaImage) {
+      const attributes = metaImage.attributes;
+      return attributes.content;
+    }
 
     // try to scrape the first image of the article page
     const img = doc.querySelector("img");
     const imgLink = img?.attributes.src;
+    console.log("image:", imgLink);
     try {
       // test the image link if it is relative or absolute
       new URL(imgLink);
