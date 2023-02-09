@@ -70,6 +70,7 @@ export default function Categories({ feeds }) {
                             </Grid>
                             <Grid xs={6} alignItems="center">
                               <Image
+                                showSkeleton
                                 src={feed.favicon}
                                 width={24}
                                 height={24}

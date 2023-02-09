@@ -37,6 +37,18 @@ export async function getFeedUrlAndFavicon(url) {
   }
 }
 
+function getImageFromHeader(doc, selector) {
+  try {
+    const tag = doc.querySelector(selector);
+    if (tag && tag.attributes) {
+      return tag.attributes.content;
+    }
+    return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getArticleImageLink(link) {
   // todo: get the body of an article
   try {
@@ -45,25 +57,21 @@ export async function getArticleImageLink(link) {
     const result = await response.text();
 
     const doc = parse(result);
-    // try to get image from meta tags
-    const openGraphImage = doc.querySelector(
-      "meta[property='og:image']"
-    )?.attributes;
-    if (openGraphImage) {
-      const attributes = openGraphImage.attributes;
-      return attributes.content;
-    }
 
-    const metaImage = doc.querySelector("meta[name='image']");
-    if (metaImage) {
-      const attributes = metaImage.attributes;
-      return attributes.content;
+    const selectors = [
+      "meta[property='og:image']",
+      "meta[name='image']",
+      "meta[property='og:image']",
+    ];
+
+    for (const selector of selectors) {
+      const result = getImageFromHeader(doc, selector);
+      if (result) return result;
     }
 
     // try to scrape the first image of the article page
     const img = doc.querySelector("img");
     const imgLink = img?.attributes.src;
-    console.log("image:", imgLink);
     try {
       // test the image link if it is relative or absolute
       new URL(imgLink);

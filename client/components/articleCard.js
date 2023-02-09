@@ -34,9 +34,6 @@ export default function ArticleCard({ article }) {
   }
 
   useLayoutEffect(() => {
-    setImageLink(
-      "https://og.tailgraph.com/og?fontFamily=Roboto&title=Scraping%20my%20Twitter%20Social%20Graph%20with%20Python%20and%20Selenium&titleTailwind=font-bold%20bg-transparent%20text-7xl&titleFontFamily=Poppins&textTailwind=text-2xl%20mt-4&logoTailwind=h-8&bgUrl=https%3A%2F%2Fwallpaper.dog%2Flarge%2F20455104.jpg&footer=https%3A%2F%2Fwww.swyx.io&footerTailwind=text-teal-900&containerTailwind=border-2%20border-orange-200%20bg-transparent%20p-4"
-    );
     fetchArticleImage();
   }, [article]);
 
