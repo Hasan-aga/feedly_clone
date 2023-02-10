@@ -4,6 +4,7 @@ const { Pool, Client } = require("pg");
 
 // leaving the args to Pool empty loads the defaults from env
 const pool = new Pool();
+console.log("database:", process.env.PGDATABASE);
 export async function getAllFeeds() {
   try {
     const result = await pool.query(
