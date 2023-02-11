@@ -10,6 +10,18 @@ import {
 import { useEffect, useLayoutEffect, useState } from "react";
 import CardButtons from "./cardButtons";
 
+function getDescription(article) {
+  if (!article.description) {
+    return "No description 😓";
+  }
+  let { description } = article;
+  if (description.charAt(0) === "<") {
+    description = new DOMParser().parseFromString(description, "text/html").body
+      .textContent;
+  }
+  return description.slice(0, 200);
+}
+
 export default function ArticleCard({ article }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
     new Date(article.publication_date)
@@ -100,7 +112,7 @@ export default function ArticleCard({ article }) {
                 padding: "0",
               }}
             >
-              {article.description.slice(0, 200) + "..."}
+              {getDescription(article)}
             </Text>
           </Card.Body>
         </Card>

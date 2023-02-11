@@ -37,17 +37,17 @@ export default function Feed({ feed }) {
 
   return (
     <>
-      <Collapse title={feed.title} bordered expanded>
-        {
-          <Grid.Container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            css={{ rowGap: "$10" }}
-          >
-            {isLoading ? (
-              <Loading type="points" color="currentColor" size="lg" />
-            ) : (
+      {isLoading ? (
+        <Loading type="points" color="currentColor" size="lg" />
+      ) : (
+        <Collapse title={feed.title} bordered expanded>
+          {
+            <Grid.Container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              css={{ rowGap: "$10" }}
+            >
               <Table aria-label="Example table with static content">
                 <Table.Header>
                   <Table.Column align="center">
@@ -76,32 +76,10 @@ export default function Feed({ feed }) {
                   })}
                 </Table.Body>
               </Table>
-            )}
-          </Grid.Container>
-        }
-      </Collapse>
-
-      {/* {articles && (
-        <Collapse title={feed.title} bordered>
-          <Grid.Container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            css={{ rowGap: "$10" }}
-          >
-            {articles.map((article, index) => {
-              return <ArticleCard key={index} article={article} />;
-            })}
-            <Button flat color="primary" auto onPress={loadMore}>
-              {loading ? (
-                <Loading type="points" color="currentColor" size="sm" />
-              ) : (
-                "Load More"
-              )}
-            </Button>
-          </Grid.Container>
+            </Grid.Container>
+          }
         </Collapse>
-      )} */}
+      )}
     </>
   );
 }
