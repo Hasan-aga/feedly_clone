@@ -67,9 +67,11 @@ export default function Feed({ feed }) {
                     return (
                       <Table.Row key={index}>
                         <Table.Cell>
-                          <Row>
-                            <ArticleCard key={index} article={article} />
-                          </Row>
+                          <Grid.Container>
+                            <Row alignItems="center" justify="center">
+                              <ArticleCard key={index} article={article} />
+                            </Row>
+                          </Grid.Container>
                         </Table.Cell>
                       </Table.Row>
                     );

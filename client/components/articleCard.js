@@ -59,11 +59,14 @@ export default function ArticleCard({ article }) {
       justify="center"
     >
       <Grid
-        xs={6}
-        css={{ opacity: `${isRead ? "0.5" : "1"}`, cursor: "pointer" }}
+        xs={12}
+        css={{
+          opacity: `${isRead ? "0.5" : "1"}`,
+          cursor: "pointer",
+        }}
         onClick={() => window.open(article.link, "_blank")}
       >
-        <Grid xs={3} css={{ padding: "0" }} alignItems="flex-start">
+        <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
             showSkeleton
             maxDelay={10000}
@@ -78,44 +81,45 @@ export default function ArticleCard({ article }) {
           />
         </Grid>
         <Spacer />
-        <Card
-          css={{
-            padding: "$10",
-          }}
-        >
-          <Card.Header css={{ padding: "0" }}>
-            <Grid.Container gap={1} justify="space-between">
-              <Grid xs={8} direction="column">
-                <Text b css={{ padding: "$1" }}>
-                  {article.title}
-                </Text>
-                <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
-              </Grid>
-              <Grid xs={4}>
-                <CardButtons
-                  css={{ padding: "$1" }}
-                  articleID={article.articleid}
-                  isBookmarked={article.bookmarkid}
-                  isRead={isRead}
-                  setIsRead={setIsRead}
-                />
-              </Grid>
-            </Grid.Container>
-          </Card.Header>
-          <Card.Body css={{ padding: "0px" }}>
-            <Text
-              color="#777"
-              css={{
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                padding: "0",
-              }}
-            >
-              {getDescription(article)}
-            </Text>
-          </Card.Body>
-        </Card>
+        <Grid xs={10} css={{ padding: "0" }}>
+          <Card
+            css={{
+              padding: "$10",
+            }}
+          >
+            <Card.Header css={{ padding: "0" }}>
+              <Grid.Container gap={1} justify="space-between">
+                <Grid xs={8} direction="column">
+                  <Text css={{ padding: "$1" }}>{article.title}</Text>
+                  <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
+                </Grid>
+                <Grid xs={4}>
+                  <CardButtons
+                    css={{ padding: "$1" }}
+                    articleID={article.articleid}
+                    isBookmarked={article.bookmarkid}
+                    isRead={isRead}
+                    setIsRead={setIsRead}
+                  />
+                </Grid>
+              </Grid.Container>
+            </Card.Header>
+            <Card.Body css={{ padding: "0px" }}>
+              <Text
+                color="#777"
+                css={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  overflowWrap: "break-word",
+                  whiteSpace: "nowrap",
+                  padding: "0",
+                }}
+              >
+                {getDescription(article)}
+              </Text>
+            </Card.Body>
+          </Card>
+        </Grid>
       </Grid>
     </Grid.Container>
   );
