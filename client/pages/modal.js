@@ -34,7 +34,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
       throw new Error(result.error);
     }
 
-    return response;
+    return response.json();
   }
 
   const mutation = useMutation({
