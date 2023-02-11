@@ -1,24 +1,28 @@
-import { Button, Grid, Spacer, Text } from "@nextui-org/react";
+import { Button, Grid, Loading, Spacer, Text } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import Sidebar from "./sidebar";
 
 export default function Layout({ children }) {
   const [feeds, setFeeds] = useState();
   const { data: session } = useSession();
   console.log("session", session);
-  useEffect(() => {
-    async function getFeeds() {
-      const res = await fetch("http://localhost:3000/api/feeds");
-      const { results } = await res.json();
+  const { isLoading, data, isSuccess, isFetching } = useQuery({
+    queryKey: ["feeds"],
+    queryFn: getFeeds,
+    onError: (error) => toast.error(error.message),
+  });
 
-      if (results) {
-        setFeeds(results);
-      }
+  async function getFeeds() {
+    const response = await fetch("http://localhost:3000/api/feeds");
+
+    if (!response.ok) {
+      throw new Error("Something went wrong.");
     }
-
-    getFeeds();
-  }, []);
+    return response.json();
+  }
   if (session) {
     return (
       <>
@@ -28,7 +32,7 @@ export default function Layout({ children }) {
             direction="column"
             css={{ flexShrink: "1", backgroundColor: "$yellow100" }}
           >
-            <Sidebar session={session} feeds={feeds} />
+            <Sidebar session={session} feeds={data.results} />
           </Grid>
           <Grid.Container
             xs={10}
@@ -37,6 +41,7 @@ export default function Layout({ children }) {
             css={{ backgroundColor: "$purple50" }}
           >
             <Grid xs={12}>{children}</Grid>
+            {isFetching && <Loading />}
           </Grid.Container>
         </Grid.Container>
       </>

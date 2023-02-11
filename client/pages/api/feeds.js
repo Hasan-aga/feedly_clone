@@ -14,8 +14,8 @@ export default async function handler(req, res) {
     switch (req.method) {
       case "POST":
         {
-          const info = await controller.addNewFeed(url, category);
-          res.status(200).json({ success: true, info });
+          const results = await controller.addNewFeed(url, category);
+          res.status(200).json({ success: true, results });
         }
         break;
       case "GET":
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       default:
         res.status(404).json({
           success: false,
-          info: "No such endpoint. Check request type / path",
+          error: "No such endpoint. Check request type / path",
         });
         break;
     }

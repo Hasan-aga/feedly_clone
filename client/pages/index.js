@@ -2,23 +2,28 @@ import { useSession } from "next-auth/react";
 import { Grid } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import ContentStack from "@/components/contentStack";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 export default function Profile() {
   const { data: session } = useSession();
-  const [feeds, setFeeds] = useState();
 
-  useEffect(() => {
-    async function getFeeds() {
-      const res = await fetch("http://localhost:3000/api/feeds");
-      const { results } = await res.json();
-      if (results) {
-        setFeeds(results);
-      }
+  const { isLoading, data, isSuccess } = useQuery({
+    queryKey: ["feeds"],
+    queryFn: getFeeds,
+    onError: (error) => toast.error(error.message),
+  });
+
+  async function getFeeds() {
+    const response = await fetch("http://localhost:3000/api/feeds");
+
+    if (!response.ok) {
+      throw new Error("Something went wrong.");
     }
+    return response.json();
+  }
 
-    getFeeds();
-  }, []);
   if (session) {
-    return <ContentStack feeds={feeds} />;
+    return <ContentStack feeds={data.results} />;
   }
 }
