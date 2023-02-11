@@ -1,29 +1,57 @@
-import { Modal, Button, Text, Input, Spacer, Loading } from "@nextui-org/react";
+import {
+  Modal,
+  Button,
+  Text,
+  Input,
+  Spacer,
+  Loading,
+  Grid,
+} from "@nextui-org/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function CustomModal({ children, visible, closeHandler }) {
-  const [input, setInput] = useState(null);
+  const [link, setLink] = useState(null);
   const [category, setCategory] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const categoryInput = useRef();
-  async function addHandler() {
+
+  async function addFeed(link, category) {
+    console.log(`got ${link} and ${category}`);
     var requestOptions = {
       method: "POST",
       redirect: "follow",
       cerendtials: "include",
     };
-    try {
-      await fetch(
-        `http://localhost:3000/api/feeds?url=${input}&category=${category}`,
-        requestOptions
-      );
-    } catch (error) {
-      console.log("oops!", error);
-    } finally {
-      setIsLoading(false);
-      closeHandler();
+    const response = await fetch(
+      `http://localhost:3000/api/feeds?url=${link}&category=${category}`,
+      requestOptions
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error);
     }
+
+    return response;
   }
+
+  const mutation = useMutation({
+    mutationFn: () => {
+      return addFeed(link, category);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  if (mutation.isSuccess) {
+    closeHandler();
+  }
+
+  if (mutation.isError) {
+    console.log("got error", mutation.error);
+  }
+
   return (
     <Modal
       closeButton
@@ -46,14 +74,13 @@ export default function CustomModal({ children, visible, closeHandler }) {
           color="primary"
           size="lg"
           labelPlaceholder="ex: blog.hasan.one"
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => setLink(e.target.value)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
-              setInput(e.target.value);
+              setLink(e.target.value);
               categoryInput.current.focus();
             }
           }}
-          //   contentLeft={<Mail fill="currentColor" />}
         />
         <Spacer />
         <Input
@@ -68,8 +95,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               setCategory(e.target.value);
-              setIsLoading(true);
-              await addHandler();
+              mutation.mutate();
             }
           }}
         />
@@ -78,8 +104,8 @@ export default function CustomModal({ children, visible, closeHandler }) {
         <Button auto flat color="error" onPress={closeHandler}>
           Close
         </Button>
-        <Button auto onPress={addHandler}>
-          {isLoading ? (
+        <Button auto onPress={mutation.mutate}>
+          {mutation.isLoading ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
             "Add"

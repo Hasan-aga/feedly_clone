@@ -22,7 +22,7 @@ export default function Feed({ feed }) {
     );
 
     if (!res.ok) {
-      throw new Error("Problem while fetching articles.", res.ok);
+      throw new Error("Problem while fetching articles.");
     }
     return res.json();
   }

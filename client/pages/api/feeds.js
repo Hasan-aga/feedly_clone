@@ -41,6 +41,6 @@ export default async function handler(req, res) {
     return;
   } catch (error) {
     console.log(`failed!, ${error}`);
-    res.status(500).json({ success: false, error });
+    res.status(500).json({ success: false, error: error.message });
   }
 }
