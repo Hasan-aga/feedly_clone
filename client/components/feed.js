@@ -48,36 +48,36 @@ export default function Feed({ feed }) {
               alignItems="center"
               css={{ rowGap: "$10" }}
             >
-              <Table aria-label="Example table with static content">
-                <Table.Header>
-                  <Table.Column align="center">
-                    <Pagination
-                      page={offset / 5 + 1}
-                      shadow
-                      noMargin
-                      align="center"
-                      rowsPerPage={5}
-                      total={Math.ceil(feed.total_articles / 5)}
-                      onChange={(page) => setOffset((page - 1) * 5)}
-                    />
-                  </Table.Column>
-                </Table.Header>
-                <Table.Body>
-                  {data.results.map((article, index) => {
-                    return (
-                      <Table.Row key={index}>
-                        <Table.Cell>
-                          <Grid.Container>
+              <Grid xs={12}>
+                <Table aria-label="Example table with static content">
+                  <Table.Header>
+                    <Table.Column align="center">
+                      <Pagination
+                        page={offset / 5 + 1}
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={5}
+                        total={Math.ceil(feed.total_articles / 5)}
+                        onChange={(page) => setOffset((page - 1) * 5)}
+                      />
+                    </Table.Column>
+                  </Table.Header>
+                  <Table.Body>
+                    {data.results.map((article, index) => {
+                      return (
+                        <Table.Row key={index}>
+                          <Table.Cell>
                             <Row alignItems="center" justify="center">
                               <ArticleCard key={index} article={article} />
                             </Row>
-                          </Grid.Container>
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })}
-                </Table.Body>
-              </Table>
+                          </Table.Cell>
+                        </Table.Row>
+                      );
+                    })}
+                  </Table.Body>
+                </Table>
+              </Grid>
             </Grid.Container>
           }
         </Collapse>

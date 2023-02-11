@@ -51,6 +51,7 @@ export default function ArticleCard({ article }) {
 
   const [isRead, setIsRead] = useState(article.readid);
   return (
+    // todo: fix card width (card no size, card content set size)
     <Grid.Container
       xs={12}
       gap={2}
@@ -59,12 +60,15 @@ export default function ArticleCard({ article }) {
       justify="center"
     >
       <Grid
-        xs={12}
+        xs={6} // must always be 12 so text not hidden
         css={{
           opacity: `${isRead ? "0.5" : "1"}`,
           cursor: "pointer",
         }}
         onClick={() => window.open(article.link, "_blank")}
+        alignContent="center"
+        alignItems="center"
+        justify="center"
       >
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
@@ -90,7 +94,9 @@ export default function ArticleCard({ article }) {
             <Card.Header css={{ padding: "0" }}>
               <Grid.Container gap={1} justify="space-between">
                 <Grid xs={8} direction="column">
-                  <Text css={{ padding: "$1" }}>{article.title}</Text>
+                  <Text css={{ padding: "$1", minWidth: "1000px" }}>
+                    {article.title}
+                  </Text>
                   <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
                 </Grid>
                 <Grid xs={4}>
