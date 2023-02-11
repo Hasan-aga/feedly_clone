@@ -19,12 +19,6 @@ export default function Profile() {
     getFeeds();
   }, []);
   if (session) {
-    return (
-      <>
-        <Grid xs={10} justify="center">
-          <ContentStack feeds={feeds} />
-        </Grid>
-      </>
-    );
+    return <ContentStack feeds={feeds} />;
   }
 }

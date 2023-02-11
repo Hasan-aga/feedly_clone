@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Collapse } from "@nextui-org/react";
+import { Collapse, Grid } from "@nextui-org/react";
 import Feed from "./feed";
 
 function getFeedsFromCategories(categories) {
@@ -14,13 +14,11 @@ function getFeedsFromCategories(categories) {
 }
 export default function ContentStack({ feeds }) {
   return (
-    <>
-      <Collapse.Group>
-        {feeds &&
-          getFeedsFromCategories(feeds).map((feed, key) => (
-            <Feed feed={feed} key={key} />
-          ))}
-      </Collapse.Group>
-    </>
+    <Collapse.Group>
+      {feeds &&
+        getFeedsFromCategories(feeds).map((feed, key) => (
+          <Feed feed={feed} key={key} />
+        ))}
+    </Collapse.Group>
   );
 }

@@ -22,11 +22,22 @@ export default function Layout({ children }) {
   if (session) {
     return (
       <>
-        <Grid.Container direction="row" gap={2}>
-          <Grid xs={2} direction="column">
+        <Grid.Container gap={2}>
+          <Grid
+            xs={2}
+            direction="column"
+            css={{ flexShrink: "1", backgroundColor: "$yellow100" }}
+          >
             <Sidebar session={session} feeds={feeds} />
           </Grid>
-          {children}
+          <Grid.Container
+            xs={10}
+            gap={2}
+            alignItems="flex-start"
+            css={{ backgroundColor: "$purple50" }}
+          >
+            <Grid xs={12}>{children}</Grid>
+          </Grid.Container>
         </Grid.Container>
       </>
     );
