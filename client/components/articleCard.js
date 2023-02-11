@@ -66,9 +66,6 @@ export default function ArticleCard({ article }) {
           cursor: "pointer",
         }}
         onClick={() => window.open(article.link, "_blank")}
-        alignContent="center"
-        alignItems="center"
-        justify="center"
       >
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
@@ -94,7 +91,7 @@ export default function ArticleCard({ article }) {
             <Card.Header css={{ padding: "0" }}>
               <Grid.Container gap={1} justify="space-between">
                 <Grid xs={8} direction="column">
-                  <Text css={{ padding: "$1", minWidth: "1000px" }}>
+                  <Text css={{ padding: "$1", width: "100em" }}>
                     {article.title}
                   </Text>
                   <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
