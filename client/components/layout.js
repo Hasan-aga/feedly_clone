@@ -22,7 +22,7 @@ export default function Layout({ children }) {
     }
     return response.json();
   }
-  if (session) {
+  if (session && isSuccess) {
     return (
       <>
         <Grid.Container gap={2}>
