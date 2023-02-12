@@ -7,7 +7,7 @@ import {
   Loading,
   Grid,
 } from "@nextui-org/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -15,6 +15,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
   const [link, setLink] = useState(null);
   const [category, setCategory] = useState(null);
   const categoryInput = useRef();
+  const queryClient = useQueryClient();
 
   async function addFeed(link, category) {
     console.log(`got ${link} and ${category}`);
@@ -28,9 +29,8 @@ export default function CustomModal({ children, visible, closeHandler }) {
       requestOptions
     );
 
-    const result = await response.json();
-
     if (!response.ok) {
+      const result = await response.json();
       throw new Error(result.error);
     }
 
@@ -42,6 +42,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
       return addFeed(link, category);
     },
     onError: (error) => toast.error(error.message),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 
   if (mutation.isSuccess) {

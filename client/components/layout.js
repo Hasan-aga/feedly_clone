@@ -6,7 +6,6 @@ import { toast } from "react-hot-toast";
 import Sidebar from "./sidebar";
 
 export default function Layout({ children }) {
-  const [feeds, setFeeds] = useState();
   const { data: session } = useSession();
   console.log("session", session);
   const { isLoading, data, isSuccess, isFetching } = useQuery({
@@ -41,7 +40,6 @@ export default function Layout({ children }) {
             css={{ backgroundColor: "$purple50" }}
           >
             <Grid xs={12}>{children}</Grid>
-            {isFetching && <Loading />}
           </Grid.Container>
         </Grid.Container>
       </>

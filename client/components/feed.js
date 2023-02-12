@@ -33,8 +33,6 @@ export default function Feed({ feed }) {
     onError: (error) => toast.error(`Something went wrong ${error.message}`),
   });
 
-  console.log(`${isLoading}`);
-
   return (
     <>
       {isLoading ? (

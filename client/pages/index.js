@@ -23,7 +23,7 @@ export default function Profile() {
     return response.json();
   }
 
-  if (session) {
+  if (session && isSuccess) {
     return <ContentStack feeds={data.results} />;
   }
 }
