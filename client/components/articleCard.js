@@ -89,23 +89,33 @@ export default function ArticleCard({ article }) {
             }}
           >
             <Card.Header css={{ padding: "0" }}>
-              <Grid.Container gap={1} justify="space-between">
-                <Grid xs={8} direction="column">
-                  <Text css={{ padding: "$1", width: "100em" }}>
-                    {article.title}
-                  </Text>
-                  <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
-                </Grid>
-                <Grid xs={4}>
-                  <CardButtons
-                    css={{ padding: "$1" }}
-                    articleID={article.articleid}
-                    isBookmarked={article.bookmarkid}
-                    isRead={isRead}
-                    setIsRead={setIsRead}
-                  />
-                </Grid>
-              </Grid.Container>
+              <Grid xs={12} direction="column">
+                <Grid.Container>
+                  <Grid xs={10}>
+                    <Text
+                      h5
+                      css={{
+                        padding: "$1",
+                        width: "100em",
+                        textTransform: "capitalize",
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      {article.title}
+                    </Text>
+                  </Grid>
+                  <Grid xs={2} justify="flex-end">
+                    <CardButtons
+                      css={{ padding: "$1" }}
+                      articleID={article.articleid}
+                      isBookmarked={article.bookmarkid}
+                      isRead={isRead}
+                      setIsRead={setIsRead}
+                    />
+                  </Grid>
+                </Grid.Container>
+                <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
+              </Grid>
             </Card.Header>
             <Card.Body css={{ padding: "0px" }}>
               <Text
