@@ -14,11 +14,14 @@ function getFeedsFromCategories(categories) {
 }
 export default function ContentStack({ feeds }) {
   return (
-    <Collapse.Group>
-      {feeds &&
-        getFeedsFromCategories(feeds).map((feed, key) => (
-          <Feed feed={feed} key={key} />
-        ))}
-    </Collapse.Group>
+    <div style={{ width: "100%" }}>
+      {feeds && (
+        <Collapse.Group>
+          {getFeedsFromCategories(feeds).map((feed, key) => (
+            <Feed feed={feed} key={key} />
+          ))}
+        </Collapse.Group>
+      )}
+    </div>
   );
 }

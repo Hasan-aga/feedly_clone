@@ -29,8 +29,10 @@ export default function Layout({ children }) {
           <Sidebar session={session} feeds={data.results} />
         </Grid>
 
-        <Grid xs={6} css={{ backgroundColor: "$accents5" }}>
-          {children}
+        <Grid xs={10} css={{ backgroundColor: "$accents5" }}>
+          <Grid.Container justify="center">
+            <Grid xs={12}>{children}</Grid>
+          </Grid.Container>
         </Grid>
       </Grid.Container>
     );

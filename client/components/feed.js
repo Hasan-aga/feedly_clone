@@ -7,6 +7,7 @@ import {
   Table,
   Row,
   Pagination,
+  Avatar,
 } from "@nextui-org/react";
 import ArticleCard from "./articleCard";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -38,46 +39,44 @@ export default function Feed({ feed }) {
       {isLoading ? (
         <Loading type="points" color="currentColor" size="lg" />
       ) : (
-        <Collapse title={feed.title} bordered expanded>
-          {
-            <Grid.Container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              css={{ rowGap: "$10" }}
-            >
-              <Grid xs={12}>
-                <Table aria-label="Example table with static content">
-                  <Table.Header>
-                    <Table.Column align="center">
-                      <Pagination
-                        page={offset / 5 + 1}
-                        shadow
-                        noMargin
-                        align="center"
-                        rowsPerPage={5}
-                        total={Math.ceil(feed.total_articles / 5)}
-                        onChange={(page) => setOffset((page - 1) * 5)}
-                      />
-                    </Table.Column>
-                  </Table.Header>
-                  <Table.Body>
-                    {data.results.map((article, index) => {
-                      return (
-                        <Table.Row key={index}>
-                          <Table.Cell>
-                            <Row alignItems="center" justify="center">
-                              <ArticleCard key={index} article={article} />
-                            </Row>
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
-                  </Table.Body>
-                </Table>
-              </Grid>
-            </Grid.Container>
+        <Collapse
+          title={feed.title}
+          subtitle={feed.total_articles + " total articles"}
+          contentLeft={
+            feed.favicon && (
+              <Avatar
+                size="lg"
+                src={feed.favicon}
+                color="secondary"
+                bordered
+                squared
+              />
+            )
           }
+          expanded
+        >
+          <Grid.Container justify="center">
+            <Grid>
+              <Pagination
+                page={offset / 5 + 1}
+                shadow
+                noMargin
+                align="center"
+                rowsPerPage={5}
+                total={Math.ceil(feed.total_articles / 5)}
+                onChange={(page) => setOffset((page - 1) * 5)}
+              />
+            </Grid>
+            <Grid>
+              {data.results.map((article, index) => {
+                return (
+                  <Row alignItems="center" justify="center">
+                    <ArticleCard key={index} article={article} />
+                  </Row>
+                );
+              })}
+            </Grid>
+          </Grid.Container>
         </Collapse>
       )}
     </>
