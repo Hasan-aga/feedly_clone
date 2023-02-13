@@ -1,6 +1,14 @@
 import Delete from "@/components/icons/delete";
 import useFeeds from "@/hooks/useFeeds";
-import { Button, Grid, Loading, Spacer, Table, Text } from "@nextui-org/react";
+import {
+  Button,
+  Grid,
+  Loading,
+  Spacer,
+  Table,
+  Text,
+  Tooltip,
+} from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -31,9 +39,13 @@ export default function Settings() {
   }
 
   const mutation = useMutation({
-    mutationFn: deleteFeed,
+    mutationFn: (feedid) => deleteFeed(feedid),
     onError: (error) => toast.error(error.message),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
+    onSuccess: () => {
+      console.log("invalidating");
+
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+    },
   });
 
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
@@ -78,15 +90,25 @@ export default function Settings() {
                       <Table.Row key={key + 1}>
                         <Table.Cell>{feed.title}</Table.Cell>
                         <Table.Cell>
-                          <Button
-                            onPress={(e) => mutation.mutate(feed.rowid)}
-                            title="Delete feed!"
-                            color="error"
-                            ghost
-                            auto
+                          <Tooltip
+                            color="warning"
+                            content={
+                              <Text b color="#000">
+                                Delete feed?
+                              </Text>
+                            }
+                            contentColor="error"
+                            placement="right"
                           >
-                            X
-                          </Button>
+                            <Button
+                              onPress={() => mutation.mutate(feed.rowid)}
+                              color="error"
+                              ghost
+                              auto
+                            >
+                              X
+                            </Button>
+                          </Tooltip>
                         </Table.Cell>
                       </Table.Row>
                     );

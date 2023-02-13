@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function CustomModal({ children, visible, closeHandler }) {
@@ -45,9 +45,9 @@ export default function CustomModal({ children, visible, closeHandler }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 
-  if (mutation.isSuccess) {
+  useEffect(() => {
     closeHandler();
-  }
+  }, [mutation.isSuccess]);
 
   if (mutation.isError) {
     console.log("got error", mutation.error);

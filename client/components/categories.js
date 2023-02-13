@@ -1,3 +1,4 @@
+import useFeeds from "@/hooks/useFeeds";
 import { Collapse, Grid, Image, Loading, Row, Text } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -5,10 +6,11 @@ import { useEffect, useState } from "react";
 import Bookmark from "./icons/bookmark";
 import Cog from "./icons/cog";
 
-export default function Categories({ feeds }) {
+export default function Categories() {
   // {categoryName: [feeds array]}
   const [categoryFeeds, setCategoryFeeds] = useState({});
-
+  const { data } = useFeeds();
+  const feeds = data.results;
   useEffect(() => {
     console.log("feed", feeds);
     let temp = {};
