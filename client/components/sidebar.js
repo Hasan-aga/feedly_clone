@@ -21,7 +21,7 @@ export default function Sidebar({ session, feeds }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <>
+    <div style={{ position: "fixed", top: "1%" }}>
       <Grid.Container
         xs={12}
         direction="column"
@@ -58,6 +58,6 @@ export default function Sidebar({ session, feeds }) {
         <CustomModal visible={visible} closeHandler={() => setVisible(false)} />
         <Categories feeds={feeds} />
       </Grid.Container>
-    </>
+    </div>
   );
 }
