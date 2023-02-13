@@ -1,3 +1,4 @@
+import useFeeds from "@/hooks/useFeeds";
 import { Button, Grid, Loading, Spacer, Text } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -8,20 +9,8 @@ import Sidebar from "./sidebar";
 export default function Layout({ children }) {
   const { data: session } = useSession();
   console.log("session", session);
-  const { isLoading, data, isSuccess, isFetching } = useQuery({
-    queryKey: ["feeds"],
-    queryFn: getFeeds,
-    onError: (error) => toast.error(error.message),
-  });
+  const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
-  async function getFeeds() {
-    const response = await fetch("http://localhost:3000/api/feeds");
-
-    if (!response.ok) {
-      throw new Error("Something went wrong.");
-    }
-    return response.json();
-  }
   if (session && isSuccess) {
     return (
       <Grid.Container gap={2}>
