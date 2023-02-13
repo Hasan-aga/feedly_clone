@@ -24,30 +24,25 @@ export default function Layout({ children }) {
   }
   if (session && isSuccess) {
     return (
-      <>
-        <Grid.Container gap={2}>
-          <Grid
-            xs={2}
-            direction="column"
-            css={{ flexShrink: "1", backgroundColor: "$yellow100" }}
-          >
-            <Sidebar session={session} feeds={data.results} />
-          </Grid>
-          <Grid.Container
-            xs={10}
-            gap={2}
-            alignItems="flex-start"
-            css={{ backgroundColor: "$purple50" }}
-          >
-            <Grid xs={12}>{children}</Grid>
-          </Grid.Container>
-        </Grid.Container>
-      </>
+      <Grid.Container gap={2} css={{ backgroundColor: "$blue300" }}>
+        <Grid xs={2} direction="column" css={{ backgroundColor: "$yellow100" }}>
+          <Sidebar session={session} feeds={data.results} />
+        </Grid>
+
+        <Grid xs={6} css={{ backgroundColor: "$accents5" }}>
+          {children}
+        </Grid>
+      </Grid.Container>
     );
   }
   return (
     <>
-      <Grid.Container direction="column" gap={2} justify="center">
+      <Grid.Container
+        direction="column"
+        gap={2}
+        justify="center"
+        alignItems="center"
+      >
         <Grid>
           <Text h3>Sign-in to customize your feed.</Text>
         </Grid>

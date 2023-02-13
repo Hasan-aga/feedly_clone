@@ -22,7 +22,12 @@ export default function Sidebar({ session, feeds }) {
 
   return (
     <>
-      <Grid.Container direction="column" gap={2} alignItems="flex-start">
+      <Grid.Container
+        xs={12}
+        direction="column"
+        gap={2}
+        alignItems="flex-start"
+      >
         <Grid.Container direction="row">
           <Grid>
             <User
