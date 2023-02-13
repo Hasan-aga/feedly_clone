@@ -6,93 +6,104 @@ import { useEffect, useState } from "react";
 import Bookmark from "./icons/bookmark";
 import Cog from "./icons/cog";
 
+function renderMap(feedMap) {
+  let result = [];
+  for (const [category, feedArr] of feedMap.entries()) {
+    result.push(
+      <Collapse
+        key={category}
+        expanded
+        title={
+          <Link href={`/categories/data?title=${category}`}>
+            <Text h6 css={{ textTransform: "capitalize" }}>
+              {category}
+            </Text>
+          </Link>
+        }
+      >
+        {feedArr.map((feed, key) => {
+          return (
+            <Link
+              key={key + 1000}
+              href={`/feed/data?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
+            >
+              <Row gap={1}>
+                <Grid xs={10}>
+                  <Text>{feed.title}</Text>
+                </Grid>
+                <Grid xs={1} alignItems="flex-end" justify="center">
+                  {feed.favicon && (
+                    <Image
+                      showSkeleton
+                      src={feed.favicon}
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </Grid>
+              </Row>
+            </Link>
+          );
+        })}
+      </Collapse>
+    );
+  }
+  return result;
+}
+
 export default function Categories() {
   // {categoryName: [feeds array]}
-  const [categoryFeeds, setCategoryFeeds] = useState({});
-  const { data } = useFeeds();
-  const feeds = data.results;
-  useEffect(() => {
-    console.log("feed", feeds);
-    let temp = {};
-    feeds &&
-      Object.keys(feeds).map((category, key) => {
-        temp[category] = feeds[category];
-      });
-    setCategoryFeeds({ ...categoryFeeds, ...temp });
-    console.log("feed cats", categoryFeeds);
-  }, [feeds]);
+  const { data, isSuccess, isLoading } = useFeeds();
+  const [content, setContent] = useState();
+  if (!data) return;
+  const { results } = data;
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     const feedMap = new Map(Object.entries(data.results));
+  //     console.log("new query", feedMap);
+  //     const component = renderMap(feedMap);
+  //     setContent(component);
+  //   }
+  // }, [results]);
 
-  if (Object.keys(feeds).length === 0)
+  if (isLoading) {
+    return <p>loading...</p>;
+  }
+
+  if (results) {
+    const feedMap = new Map(Object.entries(results));
+
     return (
-      <Grid xs={8}>
-        <Text color="warning">Your feeds will be displayed here 👇️</Text>
-      </Grid>
-    );
-  return (
-    <Grid.Container direction="column">
-      <Grid>
-        <Text h5>FEEDS</Text>
-      </Grid>
-      <Row>
-        <Grid xs={9}>
-          <Link href="/">All</Link>
-        </Grid>
-        <Grid xs={1.5}>
-          <Link href="/settings/data?hello=world">
-            <Cog />
-          </Link>
-        </Grid>
+      <Grid.Container direction="column">
         <Grid>
-          <Link href="/bookmarks">
-            <Bookmark />
-          </Link>
+          <Text h5>FEEDS</Text>
         </Grid>
-      </Row>
-      <Grid>
-        <Collapse.Group accordion={false}>
-          {feeds &&
-            Object.keys(categoryFeeds).map((category, key) => {
-              const specificFeeds = categoryFeeds[category];
-              return (
-                <Collapse
-                  key={key}
-                  expanded
-                  title={
-                    <Link href={`/categories/data?title=${category}`}>
-                      <Text h6 css={{ textTransform: "capitalize" }}>
-                        {category}
-                      </Text>
-                    </Link>
-                  }
-                >
-                  {feeds &&
-                    specificFeeds.map((feed, key) => (
-                      <Link
-                        key={key + 1000}
-                        href={`/feed/data?title=${feed.title}&url=${feed.url}&rowid=${feed.rowid}`}
-                      >
-                        <Row gap={1}>
-                          <Grid xs={10}>
-                            <Text>{feed.title}</Text>
-                          </Grid>
-                          <Grid xs={1} alignItems="flex-end" justify="center">
-                            {feed.favicon && (
-                              <Image
-                                showSkeleton
-                                src={feed.favicon}
-                                width={24}
-                                height={24}
-                              />
-                            )}
-                          </Grid>
-                        </Row>
-                      </Link>
-                    ))}
-                </Collapse>
-              );
-            })}
-        </Collapse.Group>
-      </Grid>
-    </Grid.Container>
+        <Row>
+          <Grid xs={9}>
+            <Link href="/">All</Link>
+          </Grid>
+          <Grid xs={1.5}>
+            <Link href="/settings/data?hello=world">
+              <Cog />
+            </Link>
+          </Grid>
+          <Grid>
+            <Link href="/bookmarks">
+              <Bookmark />
+            </Link>
+          </Grid>
+        </Row>
+        <Grid>
+          <Collapse.Group accordion={false}>
+            {renderMap(feedMap)}
+          </Collapse.Group>
+        </Grid>
+      </Grid.Container>
+    );
+  }
+  return (
+    <Grid xs={8}>
+      <Text color="warning">Your feeds will be displayed here 👇️</Text>
+    </Grid>
   );
 }

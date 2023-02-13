@@ -68,6 +68,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
       <Modal.Body>
         <Spacer />
         <Input
+          autoComplete="on"
           autoFocus
           aria-label="add feed"
           bordered

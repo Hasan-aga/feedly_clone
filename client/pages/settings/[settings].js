@@ -43,7 +43,7 @@ export default function Settings() {
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
       console.log("invalidating");
-
+      // todo: invalidating is seemingly working but has no effect
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
     },
   });
