@@ -24,12 +24,12 @@ export default function Layout({ children }) {
   }
   if (session && isSuccess) {
     return (
-      <Grid.Container gap={2} css={{ backgroundColor: "$blue300" }}>
-        <Grid xs={2} direction="column" css={{ backgroundColor: "$yellow100" }}>
+      <Grid.Container gap={2}>
+        <Grid xs={2} direction="column">
           <Sidebar session={session} feeds={data.results} />
         </Grid>
 
-        <Grid xs={10} css={{ backgroundColor: "$accents5" }}>
+        <Grid xs={10}>
           <Grid.Container justify="center">
             <Grid xs={12}>{children}</Grid>
           </Grid.Container>
