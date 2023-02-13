@@ -52,20 +52,6 @@ export async function addFeed(feedInfo, userid) {
   }
 }
 
-export async function deleteFeedForUser(userid, feedid) {
-  try {
-    pool.query(
-      `DELETE FROM user_to_rss_feed
-    WHERE userid = $1 AND rssid = $2`,
-      [userid, feedid]
-    );
-
-    return true;
-  } catch (error) {
-    throw new Error(`failed to process query, ${error}`);
-  }
-}
-
 export async function bookmarkArticleForUser(userid, articleid) {
   try {
     await pool.query(

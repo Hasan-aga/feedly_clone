@@ -14,7 +14,7 @@ export default function Layout({ children }) {
   if (session && isSuccess) {
     return (
       <Grid.Container gap={2}>
-        <Grid xs={2} direction="column">
+        <Grid xs={0} md={2} direction="column">
           <Sidebar session={session} feeds={data.results} />
         </Grid>
 

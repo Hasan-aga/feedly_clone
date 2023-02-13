@@ -2,6 +2,8 @@ import { Client } from "pg";
 import {
   addCategory,
   addFeed,
+  deleteFeedForUser,
+  deleteFeedForUserCategory,
   linkUserToFeed,
   updateFeedArticles,
 } from "./db_transaction";
@@ -20,7 +22,6 @@ const {
   getFeedByTitle,
   addUser,
   getFeedsOfUser,
-  deleteFeedForUser,
   bookmarkArticleForUser,
   deleteBookmarkForUser,
   getArticlesOfFeed,
@@ -114,7 +115,7 @@ export class Controller {
         if (needsUpdate(feed.lastupdated)) {
           // update the articles of feed
           const articles = await getFreshArticles(feed.url);
-          this.client.query("BEGIN");
+          await this.client.query("BEGIN");
           await updateFeedArticles(feed.rowid, articles, this.client);
           await this.client.query("COMMIT");
         }
@@ -134,10 +135,22 @@ export class Controller {
   }
 
   async deleteFeed(feedid) {
+    await this.client.connect();
     try {
-      await deleteFeedForUser(this.userid, feedid);
+      await this.client.query("BEGIN");
+      await deleteFeedForUser(this.userid, feedid, this.client);
+      await deleteFeedForUserCategory(this.userid, feedid, this.client);
+      await this.client.query("COMMIT");
     } catch (error) {
+      console.log("got error,", error);
+      console.log("rolling back");
+      this.client.query("ROLLBACK");
       throw error;
+    } finally {
+      this.client
+        .end()
+        .then(() => console.log("client has disconnected"))
+        .catch((err) => console.error("error during disconnection", err.stack));
     }
   }
 

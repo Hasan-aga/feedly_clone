@@ -10,6 +10,7 @@ export default function Categories({ feeds }) {
   const [categoryFeeds, setCategoryFeeds] = useState({});
 
   useEffect(() => {
+    console.log("feed", feeds);
     let temp = {};
     feeds &&
       Object.keys(feeds).map((category, key) => {
@@ -19,7 +20,12 @@ export default function Categories({ feeds }) {
     console.log("feed cats", categoryFeeds);
   }, [feeds]);
 
-  if (!feeds) return <Loading type="points" color="currentColor" size="sm" />;
+  if (Object.keys(feeds).length === 0)
+    return (
+      <Grid xs={8}>
+        <Text color="warning">Your feeds will be displayed here 👇️</Text>
+      </Grid>
+    );
   return (
     <Grid.Container direction="column">
       <Grid>
