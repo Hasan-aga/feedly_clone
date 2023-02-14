@@ -16,8 +16,7 @@ function renderMap(feedMap) {
         title={
           <Link href={`/categories/data?title=${category}`}>
             <Text h6 css={{ textTransform: "capitalize" }} color="primary">
-              &#128279;
-              {category}
+              &#128279; {category}
             </Text>
           </Link>
         }
