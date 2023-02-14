@@ -19,14 +19,14 @@ export default function App({ Component, session, pageProps }) {
     theme: {
       colors: {
         // brand colors
-        background: "#1d1d1d",
-        text: "#3848",
-        primaryLight: "$green200",
-        primaryLightHover: "$green300",
-        primaryLightActive: "$green400",
-        primaryLightContrast: "$green600",
+        background: "#4ADE7B",
         primary: "#4ADE7B",
-        primaryBorder: "$green500",
+        primaryLight: "red",
+        primaryLightHover: "red",
+        primaryLightActive: "red",
+        primaryLightContrast: "red",
+        $blue50: "#4ADE7B",
+        primaryBorder: "#4ADE7B",
         primaryBorderHover: "$green600",
         primarySolidHover: "$green700",
         primarySolidContrast: "$white",
@@ -36,20 +36,24 @@ export default function App({ Component, session, pageProps }) {
     },
   });
 
+  console.log("dt", darkTheme);
+  //todo: override default themes
+  // if you remove NextUIProvider, themes still work since we are using default themes.
+
   //react query
   const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextThemesProvider
-        defaultTheme="dark"
-        attribute="class"
-        value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
-        }}
-      >
-        <NextUIProvider theme={darkTheme}>
+      <NextUIProvider theme={darkTheme}>
+        <NextThemesProvider
+          defaultTheme="dark"
+          attribute="class"
+          value={{
+            light: lightTheme.className,
+            dark: darkTheme.className,
+          }}
+        >
           <SessionProvider session={session}>
             <ErrorBoundary>
               <Toaster />
@@ -58,8 +62,8 @@ export default function App({ Component, session, pageProps }) {
               </Layout>
             </ErrorBoundary>
           </SessionProvider>
-        </NextUIProvider>
-      </NextThemesProvider>
+        </NextThemesProvider>
+      </NextUIProvider>
     </QueryClientProvider>
   );
 }
