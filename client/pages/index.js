@@ -12,7 +12,7 @@ export default function Profile() {
   const { isLoading, data, isSuccess } = useFeeds();
 
   async function getFeeds() {
-    const response = await fetch("http://localhost:3000/api/feeds");
+    const response = await fetch("/api/feeds");
 
     if (!response.ok) {
       throw new Error("Something went wrong.");

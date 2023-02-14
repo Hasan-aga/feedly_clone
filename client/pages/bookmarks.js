@@ -11,9 +11,7 @@ export default function bookmarks() {
   });
 
   async function getBookmarks() {
-    const response = await fetch(
-      `http://localhost:3000/api/articles/bookmarks`
-    );
+    const response = await fetch(`/api/articles/bookmarks`);
 
     if (!response.ok) {
       const result = await response.text();
