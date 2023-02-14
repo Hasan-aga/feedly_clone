@@ -15,7 +15,8 @@ function renderMap(feedMap) {
         expanded
         title={
           <Link href={`/categories/data?title=${category}`}>
-            <Text h6 css={{ textTransform: "capitalize" }}>
+            <Text h6 css={{ textTransform: "capitalize" }} color="primary">
+              &#128279;
               {category}
             </Text>
           </Link>
@@ -54,17 +55,8 @@ function renderMap(feedMap) {
 export default function Categories() {
   // {categoryName: [feeds array]}
   const { data, isSuccess, isLoading } = useFeeds();
-  const [content, setContent] = useState();
   if (!data) return;
   const { results } = data;
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     const feedMap = new Map(Object.entries(data.results));
-  //     console.log("new query", feedMap);
-  //     const component = renderMap(feedMap);
-  //     setContent(component);
-  //   }
-  // }, [results]);
 
   if (isLoading) {
     return <p>loading...</p>;
