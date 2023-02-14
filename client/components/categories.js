@@ -52,14 +52,7 @@ function renderMap(feedMap) {
 }
 
 export default function Categories() {
-  const [refresh, setRefresh] = useState();
   const { data, isSuccess, isLoading } = useFeeds();
-
-  // useEffect(() => {
-  //   if (data) setRefresh(data.result);
-  // }, [data]);
-
-  // if (!data) return;
 
   if (isLoading) {
     return <p>loading...</p>;
