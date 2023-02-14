@@ -1,0 +1,6 @@
+.cardbuttons svg {
+  fill: #06b7db;
+}
+.cardbuttons svg:hover {
+  fill: #ff6bd5;
+}
