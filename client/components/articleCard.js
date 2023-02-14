@@ -47,7 +47,6 @@ export default function ArticleCard({ article, offset, feed }) {
     fetchArticleImage();
   }, [article]);
 
-  const [isRead, setIsRead] = useState(article.readid);
   return (
     <Grid.Container
       xs={12}
@@ -59,7 +58,7 @@ export default function ArticleCard({ article, offset, feed }) {
       <Grid
         xs={6} // must always be 12 so text not hidden
         css={{
-          opacity: `${isRead ? "0.5" : "1"}`,
+          opacity: `${article.readid ? "0.5" : "1"}`,
           cursor: "pointer",
         }}
         onClick={() => window.open(article.link, "_blank")}
@@ -105,8 +104,6 @@ export default function ArticleCard({ article, offset, feed }) {
                     <CardButtons
                       article={article}
                       css={{ padding: "$1" }}
-                      isRead={isRead}
-                      setIsRead={setIsRead}
                       offset={offset}
                       feed={feed}
                     />

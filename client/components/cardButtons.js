@@ -8,13 +8,7 @@ import useError from "@/hooks/useError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-export default function CardButtons({
-  article,
-  isRead,
-  setIsRead,
-  offset,
-  feed,
-}) {
+export default function CardButtons({ article, offset, feed }) {
   const queryClient = useQueryClient();
 
   async function bookmarkArticle(articleID) {
@@ -47,29 +41,33 @@ export default function CardButtons({
     },
   });
 
-  async function markArticleAsRead(e, articleID) {
-    console.log("mark as", isRead ? "unread" : "read");
-    e.stopPropagation();
-    setIsRead(!isRead);
+  const markReadMutation = useMutation({
+    mutationFn: () => {
+      return markArticleAsRead(article.articleid);
+    },
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["articles"], offset, feed });
+    },
+  });
 
+  async function markArticleAsRead(articleID) {
     var requestOptions = {
-      method: isRead ? "DELETE" : "POST",
+      method: article.readid ? "DELETE" : "POST",
       redirect: "follow",
       cerendtials: "include",
     };
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/articles/read?articleid=${articleID}`,
-        requestOptions
-      );
+    const response = await fetch(
+      `http://localhost:3000/api/articles/read?articleid=${articleID}`,
+      requestOptions
+    );
 
-      if (!response.ok) {
-        const result = await response.text();
-        throw new Error(result);
-      }
-    } catch (error) {
-      console.log("oops!", error);
+    if (!response.ok) {
+      const result = await response.text();
+      throw new Error(result);
     }
+
+    return response.json();
   }
   return (
     <Grid xs={12} justify="flex-end">
@@ -87,11 +85,16 @@ export default function CardButtons({
         />
       </Tooltip>
       <Tooltip
-        content={isRead ? "Mark as unread" : "Mark as read"}
+        content={article.readid ? "Mark as unread" : "Mark as read"}
         rounded
         color="primary"
       >
-        <Checkmark handler={(e) => markArticleAsRead(e, article.articleID)} />
+        <Checkmark
+          handler={(e) => {
+            e.stopPropagation();
+            markReadMutation.mutate(article.articleid);
+          }}
+        />
       </Tooltip>
     </Grid>
   );
