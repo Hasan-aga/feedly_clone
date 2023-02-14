@@ -8,7 +8,7 @@ export default function Sidebar({ session, feeds }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div style={{ position: "fixed", top: "1%" }}>
+    <div style={{ position: "sticky", top: "0" }}>
       <Grid.Container
         xs={12}
         direction="column"
@@ -16,7 +16,6 @@ export default function Sidebar({ session, feeds }) {
         alignItems="flex-start"
       >
         <ProfileMenu session={session} />
-
         <Grid>
           <Spacer y={10} />
           <Button size="sm" onPress={() => setVisible(true)}>

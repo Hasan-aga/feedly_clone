@@ -13,7 +13,7 @@ import { MoonIcon } from "./icons/moon";
 import { SunIcon } from "./icons/sun";
 
 export default function ProfileMenu({ session }) {
-  const { isDark, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   return (
     <Popover isBordered>
       <Popover.Trigger>
@@ -49,10 +49,8 @@ export default function ProfileMenu({ session }) {
             <Row justify="space-between" align="center">
               <Text>Theme</Text>
               <Switch
-                checked={isDark}
                 onChange={(e) => {
-                  console.log(e.target.checked, isDark);
-                  setTheme(e.target.checked ? "light" : "dark");
+                  setTheme(theme === "dark" ? "light" : "dark");
                 }}
                 size="md"
                 iconOn={<SunIcon filled />}

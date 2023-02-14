@@ -18,7 +18,7 @@ export default function Layout({ children }) {
           xs={0}
           md={2}
           direction="column"
-          css={{ backgroundColor: "$accents0" }}
+          css={{ backgroundColor: "$cyan100", pt: "$0" }}
         >
           <Sidebar session={session} feeds={data.results} />
         </Grid>
