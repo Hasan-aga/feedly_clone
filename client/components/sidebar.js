@@ -1,7 +1,6 @@
 import CustomModal from "@/pages/modal";
-import { Button, Grid, Spacer } from "@nextui-org/react";
+import { Button, Grid, Spacer, Text } from "@nextui-org/react";
 import { useState } from "react";
-import { signOut } from "next-auth/react";
 import Categories from "./categories";
 import ProfileMenu from "./profileMenu";
 
@@ -17,12 +16,12 @@ export default function Sidebar({ session, feeds }) {
         alignItems="flex-start"
       >
         <ProfileMenu session={session} />
+
         <Grid>
-          <Button onPress={() => signOut()}>Sign out</Button>
-        </Grid>
-        <Grid>
-          <Spacer y={2} />
-          <Button onPress={() => setVisible(true)}>Add a feed</Button>
+          <Spacer y={10} />
+          <Button size="sm" onPress={() => setVisible(true)}>
+            <Text b>Add a feed +</Text>
+          </Button>
         </Grid>
         <CustomModal visible={visible} closeHandler={() => setVisible(false)} />
         <Categories feeds={feeds} />
