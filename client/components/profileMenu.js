@@ -6,14 +6,17 @@ import {
   Switch,
   Text,
   User,
+  useTheme,
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
-import { useTheme } from "next-themes";
+import { useTheme as useNextTheme } from "next-themes";
 import { MoonIcon } from "./icons/moon";
 import { SunIcon } from "./icons/sun";
 
 export default function ProfileMenu({ session }) {
-  const { theme, setTheme } = useTheme();
+  const { theme: themeName, setTheme } = useNextTheme();
+  const { theme } = useTheme;
+  console.log("active theme", theme);
   return (
     <Popover isBordered>
       <Popover.Trigger>
@@ -50,7 +53,7 @@ export default function ProfileMenu({ session }) {
               <Text>Theme</Text>
               <Switch
                 onChange={(e) => {
-                  setTheme(theme === "dark" ? "light" : "dark");
+                  setTheme(themeName === "dark" ? "light" : "dark");
                 }}
                 size="md"
                 iconOn={<SunIcon filled />}
