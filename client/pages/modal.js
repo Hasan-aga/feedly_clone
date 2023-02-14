@@ -18,7 +18,6 @@ export default function CustomModal({ children, visible, closeHandler }) {
   const queryClient = useQueryClient();
 
   async function addFeed(link, category) {
-    console.log(`got ${link} and ${category}`);
     var requestOptions = {
       method: "POST",
       redirect: "follow",
@@ -45,13 +44,10 @@ export default function CustomModal({ children, visible, closeHandler }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
   });
 
+  // todo: call it inside onSuccess above
   useEffect(() => {
     closeHandler();
   }, [mutation.isSuccess]);
-
-  if (mutation.isError) {
-    console.log("got error", mutation.error);
-  }
 
   return (
     <Modal

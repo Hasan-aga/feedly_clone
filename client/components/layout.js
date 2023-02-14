@@ -8,7 +8,6 @@ import Sidebar from "./sidebar";
 
 export default function Layout({ children }) {
   const { data: session } = useSession();
-  console.log("session", session);
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
   if (session && isSuccess) {

@@ -32,8 +32,6 @@ export default function ArticleCard({ article }) {
   async function fetchArticleImage() {
     try {
       if (article.image_link === "default link") {
-        console.log("get image");
-
         const response = await fetch(
           `/api/articles/image?articleid=${article.articleid}`
         );

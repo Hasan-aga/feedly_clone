@@ -70,8 +70,8 @@ export default function Feed({ feed }) {
             <Grid>
               {data.results.map((article, index) => {
                 return (
-                  <Row alignItems="center" justify="center">
-                    <ArticleCard key={index} article={article} />
+                  <Row alignItems="center" justify="center" key={index}>
+                    <ArticleCard article={article} />
                   </Row>
                 );
               })}

@@ -36,7 +36,6 @@ export default function App({ Component, session, pageProps }) {
     },
   });
 
-  console.log("dt", darkTheme);
   //todo: override default themes
   // if you remove NextUIProvider, themes still work since we are using default themes.
 

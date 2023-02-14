@@ -48,14 +48,12 @@ function renderMap(feedMap) {
       </Collapse>
     );
   }
-  console.log("data render", feedMap);
 
   return result;
 }
 
 export default function Categories() {
   const { data, isSuccess, isLoading } = useFeeds();
-  console.log("cat render");
   if (data) {
     const feedMap = new Map(Object.entries(data.results));
 

@@ -13,7 +13,6 @@ export default function SpecificCategory() {
 
   if (isLoading) return <Loading type="points" />;
   if (data) {
-    console.log("data", data);
     const { results } = data;
     return results[title] ? (
       <Collapse.Group>
