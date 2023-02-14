@@ -1,23 +1,11 @@
 import CustomModal from "@/pages/modal";
-import {
-  Button,
-  Grid,
-  Row,
-  Spacer,
-  Switch,
-  User,
-  useTheme,
-} from "@nextui-org/react";
-import { useTheme as useNextTheme } from "next-themes";
+import { Button, Grid, Spacer } from "@nextui-org/react";
 import { useState } from "react";
-import { MoonIcon } from "./icons/moon";
-import { SunIcon } from "./icons/sun";
 import { signOut } from "next-auth/react";
 import Categories from "./categories";
+import ProfileMenu from "./profileMenu";
 
 export default function Sidebar({ session, feeds }) {
-  const { setTheme } = useNextTheme();
-  const { isDark } = useTheme();
   const [visible, setVisible] = useState(false);
 
   return (
@@ -28,26 +16,7 @@ export default function Sidebar({ session, feeds }) {
         gap={2}
         alignItems="flex-start"
       >
-        <Grid.Container direction="row">
-          <Grid>
-            <User
-              size="lg"
-              bordered
-              color="primary"
-              src={session.user.image}
-              name={session.user.name}
-            />
-          </Grid>
-          <Grid>
-            <Switch
-              checked={isDark}
-              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-              size="xl"
-              iconOn={<SunIcon filled />}
-              iconOff={<MoonIcon filled />}
-            />
-          </Grid>
-        </Grid.Container>
+        <ProfileMenu session={session} />
         <Grid>
           <Button onPress={() => signOut()}>Sign out</Button>
         </Grid>
