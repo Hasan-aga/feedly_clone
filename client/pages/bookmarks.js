@@ -3,6 +3,7 @@ import { Grid, Text } from "@nextui-org/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function bookmarks() {
+  // todo: we need offset and feed so we can pass them to articles for query invalidation
   const { data, isSuccess } = useQuery({
     queryKey: ["bookmarks"],
     queryFn: () => getBookmarks(),
