@@ -43,6 +43,7 @@ export default function Settings() {
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      toast("invalidating");
     },
   });
 

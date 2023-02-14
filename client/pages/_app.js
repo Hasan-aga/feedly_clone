@@ -21,7 +21,7 @@ export default function App({ Component, session, pageProps }) {
   });
 
   //react query
-  const queryClient = new QueryClient();
+  const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>

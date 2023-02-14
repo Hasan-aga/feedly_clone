@@ -48,49 +48,47 @@ function renderMap(feedMap) {
       </Collapse>
     );
   }
+  console.log("data render", feedMap);
+
   return result;
 }
 
 export default function Categories() {
   const { data, isSuccess, isLoading } = useFeeds();
+  console.log("cat render");
+  if (data) {
+    const feedMap = new Map(Object.entries(data.results));
 
-  if (isLoading) {
-    return <p>loading...</p>;
-  }
-
-  if (!isSuccess) {
-    return <p>failed to load feeds</p>;
-  }
-
-  const { results } = data;
-
-  const feedMap = new Map(Object.entries(results));
-
-  return feedMap.size !== 0 ? (
-    <Grid.Container direction="column">
-      <Grid>
-        <Text h5>FEEDS</Text>
-      </Grid>
-      <Row>
-        <Grid xs={9}>
-          <Link href="/">All</Link>
-        </Grid>
-        <Grid xs={1.5}>
-          <Link href="/settings/data?hello=world">
-            <Cog />
-          </Link>
-        </Grid>
+    return (
+      <Grid.Container direction="column">
         <Grid>
-          <Link href="/bookmarks">
-            <Bookmark />
-          </Link>
+          <Text h5>FEEDS</Text>
         </Grid>
-      </Row>
-      <Grid>
-        <Collapse.Group accordion={false}>{renderMap(feedMap)}</Collapse.Group>
-      </Grid>
-    </Grid.Container>
-  ) : (
+        <Row>
+          <Grid xs={9}>
+            <Link href="/">All</Link>
+          </Grid>
+          <Grid xs={1.5}>
+            <Link href="/settings/data?hello=world">
+              <Cog />
+            </Link>
+          </Grid>
+          <Grid>
+            <Link href="/bookmarks">
+              <Bookmark />
+            </Link>
+          </Grid>
+        </Row>
+        <Grid>
+          <Collapse.Group accordion={false}>
+            {renderMap(feedMap)}
+          </Collapse.Group>
+        </Grid>
+      </Grid.Container>
+    );
+  }
+
+  return (
     <Grid xs={8}>
       <Text color="warning">Your feeds will be displayed here 👇️</Text>
     </Grid>
