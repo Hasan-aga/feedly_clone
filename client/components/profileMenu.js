@@ -16,7 +16,6 @@ import { SunIcon } from "./icons/sun";
 export default function ProfileMenu({ session }) {
   const { theme: themeName, setTheme } = useNextTheme();
   const { theme } = useTheme;
-  console.log("active theme", theme);
   return (
     <Popover isBordered>
       <Popover.Trigger>

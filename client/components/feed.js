@@ -71,7 +71,11 @@ export default function Feed({ feed }) {
               {data.results.map((article, index) => {
                 return (
                   <Row alignItems="center" justify="center" key={index}>
-                    <ArticleCard article={article} />
+                    <ArticleCard
+                      article={article}
+                      offset={offset}
+                      feed={feed}
+                    />
                   </Row>
                 );
               })}

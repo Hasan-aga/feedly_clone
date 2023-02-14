@@ -22,7 +22,7 @@ function getDescription(article) {
   return description.slice(0, 200);
 }
 
-export default function ArticleCard({ article }) {
+export default function ArticleCard({ article, offset, feed }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
     new Date(article.publication_date)
   );
@@ -49,7 +49,6 @@ export default function ArticleCard({ article }) {
 
   const [isRead, setIsRead] = useState(article.readid);
   return (
-    // todo: fix card width (card no size, card content set size)
     <Grid.Container
       xs={12}
       gap={2}
@@ -104,11 +103,12 @@ export default function ArticleCard({ article }) {
                   </Grid>
                   <Grid xs={2} justify="flex-end">
                     <CardButtons
+                      article={article}
                       css={{ padding: "$1" }}
-                      articleID={article.articleid}
-                      isBookmarked={article.bookmarkid}
                       isRead={isRead}
                       setIsRead={setIsRead}
+                      offset={offset}
+                      feed={feed}
                     />
                   </Grid>
                 </Grid.Container>

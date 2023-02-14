@@ -5,38 +5,47 @@ import styles from "./cardButtons.module.css";
 import ErrorCard from "./errorCard";
 import { useState } from "react";
 import useError from "@/hooks/useError";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 export default function CardButtons({
-  articleID,
-  isBookmarked,
+  article,
   isRead,
   setIsRead,
+  offset,
+  feed,
 }) {
-  const [bookmarked, setBookmarked] = useState(isBookmarked);
+  const queryClient = useQueryClient();
 
-  async function bookmarkArticle(e, articleID) {
-    e.stopPropagation();
-    setBookmarked(!bookmarked);
-
+  async function bookmarkArticle(articleID) {
     var requestOptions = {
-      method: bookmarked ? "DELETE" : "POST",
+      method: article.bookmarkid ? "DELETE" : "POST",
       redirect: "follow",
       cerendtials: "include",
     };
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/articles/bookmarks?articleid=${articleID}`,
-        requestOptions
-      );
+    const response = await fetch(
+      `http://localhost:3000/api/articles/bookmarks?articleid=${articleID}`,
+      requestOptions
+    );
 
-      if (!response.ok) {
-        const result = await response.text();
-        throw new Error(result);
-      }
-    } catch (error) {
-      console.log("oops!", error);
+    if (!response.ok) {
+      const result = await response.text();
+      throw new Error(result);
     }
+
+    return response.json();
   }
+
+  // add remove to/from bookmarks
+  const bookmarkMutation = useMutation({
+    mutationFn: () => {
+      return bookmarkArticle(article.articleid);
+    },
+    onError: (error) => toast.error(error.message),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["articles", offset, feed] }),
+  });
+
   async function markArticleAsRead(e, articleID) {
     console.log("mark as", isRead ? "unread" : "read");
     e.stopPropagation();
@@ -64,13 +73,16 @@ export default function CardButtons({
   return (
     <Grid xs={12} justify="flex-end">
       <Tooltip
-        content={bookmarked ? "Remove bookmark" : "Bookmark"}
+        content={article.bookmarkid ? "Remove bookmark" : "Bookmark"}
         rounded
         color="primary"
       >
         <Bookmark
-          fill={bookmarked}
-          handler={(e) => bookmarkArticle(e, articleID)}
+          fill={article.bookmarkid}
+          handler={(e) => {
+            e.stopPropagation();
+            bookmarkMutation.mutate(e);
+          }}
         />
       </Tooltip>
       <Tooltip
@@ -78,7 +90,7 @@ export default function CardButtons({
         rounded
         color="primary"
       >
-        <Checkmark handler={(e) => markArticleAsRead(e, articleID)} />
+        <Checkmark handler={(e) => markArticleAsRead(e, article.articleID)} />
       </Tooltip>
     </Grid>
   );
