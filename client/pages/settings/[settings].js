@@ -85,7 +85,7 @@ export default function Settings() {
               <Table.Body>
                 {arr &&
                   arr.map((feed, key) => {
-                    // todo: delete appears on hover and works on sibling only
+                    // todo: delete appears on hover
                     return (
                       <Table.Row key={key + 1}>
                         <Table.Cell>{feed.title}</Table.Cell>

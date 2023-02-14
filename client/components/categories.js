@@ -52,47 +52,52 @@ function renderMap(feedMap) {
 }
 
 export default function Categories() {
-  // {categoryName: [feeds array]}
+  const [refresh, setRefresh] = useState();
   const { data, isSuccess, isLoading } = useFeeds();
-  if (!data) return;
-  const { results } = data;
+
+  // useEffect(() => {
+  //   if (data) setRefresh(data.result);
+  // }, [data]);
+
+  // if (!data) return;
 
   if (isLoading) {
     return <p>loading...</p>;
   }
 
-  if (results) {
-    const feedMap = new Map(Object.entries(results));
-
-    return (
-      <Grid.Container direction="column">
-        <Grid>
-          <Text h5>FEEDS</Text>
-        </Grid>
-        <Row>
-          <Grid xs={9}>
-            <Link href="/">All</Link>
-          </Grid>
-          <Grid xs={1.5}>
-            <Link href="/settings/data?hello=world">
-              <Cog />
-            </Link>
-          </Grid>
-          <Grid>
-            <Link href="/bookmarks">
-              <Bookmark />
-            </Link>
-          </Grid>
-        </Row>
-        <Grid>
-          <Collapse.Group accordion={false}>
-            {renderMap(feedMap)}
-          </Collapse.Group>
-        </Grid>
-      </Grid.Container>
-    );
+  if (!isSuccess) {
+    return <p>failed to load feeds</p>;
   }
-  return (
+
+  const { results } = data;
+
+  const feedMap = new Map(Object.entries(results));
+
+  return feedMap.size !== 0 ? (
+    <Grid.Container direction="column">
+      <Grid>
+        <Text h5>FEEDS</Text>
+      </Grid>
+      <Row>
+        <Grid xs={9}>
+          <Link href="/">All</Link>
+        </Grid>
+        <Grid xs={1.5}>
+          <Link href="/settings/data?hello=world">
+            <Cog />
+          </Link>
+        </Grid>
+        <Grid>
+          <Link href="/bookmarks">
+            <Bookmark />
+          </Link>
+        </Grid>
+      </Row>
+      <Grid>
+        <Collapse.Group accordion={false}>{renderMap(feedMap)}</Collapse.Group>
+      </Grid>
+    </Grid.Container>
+  ) : (
     <Grid xs={8}>
       <Text color="warning">Your feeds will be displayed here 👇️</Text>
     </Grid>
