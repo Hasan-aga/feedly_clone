@@ -32,7 +32,6 @@ export default function CardButtons({
       const result = await response.text();
       throw new Error(result);
     }
-
     return response.json();
   }
 
@@ -42,8 +41,10 @@ export default function CardButtons({
       return bookmarkArticle(article.articleid);
     },
     onError: (error) => toast.error(error.message),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["articles", offset, feed] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"], offset, feed });
+    },
   });
 
   async function markArticleAsRead(e, articleID) {

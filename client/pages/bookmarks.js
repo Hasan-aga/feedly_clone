@@ -1,22 +1,37 @@
 import ArticleCard from "@/components/articleCard";
-import { Controller } from "@/lib/controller";
 import { Grid, Text } from "@nextui-org/react";
-import { getSession } from "next-auth/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function bookmarks() 
-function getBookmarks(params) {
-  
-}
+export default function bookmarks() {
+  const { data, isSuccess } = useQuery({
+    queryKey: ["bookmarks"],
+    queryFn: () => getBookmarks(),
+    onError: (error) => toast.error(`Something went wrong ${error.message}`),
+  });
 
-  if (props.error) return <>Error {props.error}</>;
-  return (
-    <Grid xs={10} justify="center" alignItems="center" direction="column">
-      <Text h3>Bookmarks</Text>
-      {props.bookmarks.map((article, index) => {
-        return <ArticleCard key={index} article={article} />;
-      })}
-    </Grid>
-  );
+  async function getBookmarks() {
+    const response = await fetch(
+      `http://localhost:3000/api/articles/bookmarks`
+    );
+
+    if (!response.ok) {
+      const result = await response.text();
+      throw new Error(result);
+    }
+
+    return response.json();
+  }
+
+  if (isSuccess) {
+    return (
+      <Grid xs={10} justify="center" alignItems="center" direction="column">
+        <Text h3>Bookmarks</Text>
+        {data.results.map((article, index) => {
+          return <ArticleCard key={index} article={article} />;
+        })}
+      </Grid>
+    );
+  }
 }
 
 // This gets called on every request
