@@ -9,7 +9,7 @@ import Sidebar from "./sidebar";
 export default function Layout({ children }) {
   const { data: session } = useSession();
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
-
+  console.log("session", session);
   if (session && isSuccess) {
     return (
       <Grid.Container gap={2} css={{ height: "100vh", overflow: "hidden" }}>

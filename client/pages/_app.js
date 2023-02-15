@@ -19,14 +19,14 @@ export default function App({ Component, session, pageProps }) {
     theme: {
       colors: {
         // brand colors
-        background: "#282a36",
-        primary: "#bd93f9",
+        background: "#3A0CA3",
+        primary: "#7209B7",
         primaryLight: "red",
         primaryLightHover: "red",
         primaryLightActive: "red",
         primaryLightContrast: "red",
         $blue50: "#4ADE7B",
-        primaryBorder: "#4ADE7B",
+        primaryBorder: "#4895EF",
         primaryBorderHover: "$green600",
         primarySolidHover: "$green700",
         primarySolidContrast: "$white",
