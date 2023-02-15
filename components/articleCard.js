@@ -59,7 +59,7 @@ export default function ArticleCard({ article, offset, feed }) {
       justify="center"
     >
       <Grid
-        xs={6} // must always be 12 so text not hidden
+        xs={6}
         css={{
           opacity: `${article.readid ? "0.5" : "1"}`,
           cursor: "pointer",
