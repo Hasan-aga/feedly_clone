@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 
 export default function useFeeds() {
   async function getFeeds() {
-    const response = await fetch("/api/feeds");
+    const response = await fetch("http://localhost:3000/api/feeds");
 
     if (!response.ok) {
       throw new Error("Something went wrong.");

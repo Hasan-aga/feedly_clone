@@ -33,7 +33,7 @@ export default function ArticleCard({ article, offset, feed }) {
     try {
       if (article.image_link === "default link") {
         const response = await fetch(
-          `/api/articles/image?articleid=${article.articleid}`
+          `http://localhost:3000/api/articles/image?articleid=${article.articleid}`
         );
         const result = await response.json();
         setImageLink(result.imageLink);

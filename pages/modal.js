@@ -24,7 +24,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
       cerendtials: "include",
     };
     const response = await fetch(
-      `api/feeds?url=${link}&category=${category}`,
+      `http://localhost:3000/api/feeds?url=${link}&category=${category}`,
       requestOptions
     );
 
@@ -89,7 +89,6 @@ export default function CustomModal({ children, visible, closeHandler }) {
           color="primary"
           size="lg"
           labelPlaceholder="ex: Tech"
-          onChange={(e) => setCategory(e.target.value.toLowerCase())}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               setCategory(e.target.value);

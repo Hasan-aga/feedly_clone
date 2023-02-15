@@ -26,7 +26,10 @@ export default function Settings() {
     };
     console.log("delete", feedid);
 
-    const response = await fetch(`/api/feeds?feedid=${feedid}`, requestOptions);
+    const response = await fetch(
+      `http://localhost:3000/api/feeds?feedid=${feedid}`,
+      requestOptions
+    );
 
     if (!response.ok) {
       throw new Error("failed to delete query");

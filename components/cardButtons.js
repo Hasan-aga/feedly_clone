@@ -18,7 +18,7 @@ export default function CardButtons({ article, offset, feed }) {
       cerendtials: "include",
     };
     const response = await fetch(
-      `/api/articles/bookmarks?articleid=${articleID}`,
+      `http://localhost:3000/api/articles/bookmarks?articleid=${articleID}`,
       requestOptions
     );
 
@@ -58,7 +58,7 @@ export default function CardButtons({ article, offset, feed }) {
       cerendtials: "include",
     };
     const response = await fetch(
-      `/api/articles/read?articleid=${articleID}`,
+      `http://localhost:3000/api/articles/read?articleid=${articleID}`,
       requestOptions
     );
 
