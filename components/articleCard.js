@@ -49,7 +49,10 @@ export default function ArticleCard({ article, offset, feed }) {
 
   return (
     <Grid.Container
-      xs={12}
+      lg={12}
+      md={10}
+      sm={8}
+      xs={6}
       gap={2}
       alignContent="center"
       alignItems="center"
