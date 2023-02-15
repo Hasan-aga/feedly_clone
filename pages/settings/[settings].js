@@ -27,7 +27,7 @@ export default function Settings() {
     console.log("delete", feedid);
 
     const response = await fetch(
-      `http://localhost:3000/api/feeds?feedid=${feedid}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?feedid=${feedid}`,
       requestOptions
     );
 

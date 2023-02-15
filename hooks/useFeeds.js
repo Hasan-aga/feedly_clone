@@ -3,7 +3,10 @@ import { toast } from "react-hot-toast";
 
 export default function useFeeds() {
   async function getFeeds() {
-    const response = await fetch("http://localhost:3000/api/feeds");
+    console.log("env", process.env.NEXT_PUBLIC_BASE_URL);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds`
+    );
 
     if (!response.ok) {
       throw new Error("Something went wrong.");

@@ -24,7 +24,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
       cerendtials: "include",
     };
     const response = await fetch(
-      `http://localhost:3000/api/feeds?url=${link}&category=${category}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?url=${link}&category=${category}`,
       requestOptions
     );
 

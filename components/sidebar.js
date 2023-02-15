@@ -8,16 +8,10 @@ export default function Sidebar({ session, feeds }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <Grid.Container
-      xs={12}
-      gap={1}
-      alignItems="flex-start"
-      justify="flex-start"
-    >
+    <Grid.Container xs={12} gap={1} alignItems="flex-start" justify="center">
       <ProfileMenu session={session} />
       <Grid>
-        <Spacer y={2} />
-        <Button rounded size="xl" onPress={() => setVisible(true)}>
+        <Button rounded onPress={() => setVisible(true)}>
           <Text b>Add feed +</Text>
         </Button>
       </Grid>
