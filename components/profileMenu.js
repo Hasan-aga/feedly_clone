@@ -36,7 +36,7 @@ export default function ProfileMenu({ session }) {
               src={session.user.image}
               name={session.user.name}
             />
-            <Text css={{ rotate: "90deg" }}>&#10148;</Text>
+            <Text>🔻</Text>
           </Row>
         </Grid>
       </Popover.Trigger>
