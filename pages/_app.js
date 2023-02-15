@@ -16,19 +16,16 @@ export default function App({ Component, session, pageProps }) {
     theme: {
       colors: {
         // brand colors
-        background: "#000037",
-        backgroundAlpha: "#00005c",
-        foreground: "#F0CAA3",
-        backgroundContrast: "#3B185F",
-        white: "#e6e6ef",
-        // blue50: "#",
-        // blue100: "#",
-        // blue200: "#",
-        // blue300: "#",
-        blue400: "#000040",
-        blue500: "rgba(137, 116, 159, 0.7)",
-        blue600: "#89749f",
-        blue700: "#9d8caf",
+        background: "#DDE5B6",
+        backgroundAlpha: "rgba(254, 250, 224, 0.7)",
+        foreground: "#283618",
+        backgroundContrast: "#ADC178",
+        white: "#111",
+
+        blue400: "#F0EAD2",
+        blue500: "rgba(160, 167, 136, 0.7)",
+        blue600: "#606C38",
+        blue700: "#a0a788",
       },
     },
   });
@@ -103,7 +100,7 @@ export default function App({ Component, session, pageProps }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextUIProvider theme={darkTheme}>
+      <NextUIProvider>
         <NextThemesProvider
           defaultTheme="dark"
           attribute="class"
