@@ -8,12 +8,17 @@ export default function Sidebar({ session, feeds }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <Grid.Container xs={12} gap={1} alignItems="center" justify="flex-start">
+    <Grid.Container
+      xs={12}
+      gap={1}
+      alignItems="flex-start"
+      justify="flex-start"
+    >
       <ProfileMenu session={session} />
       <Grid>
         <Spacer y={2} />
-        <Button size="sm" onPress={() => setVisible(true)}>
-          <Text b>Add a feed +</Text>
+        <Button rounded size="xl" onPress={() => setVisible(true)}>
+          <Text b>Add feed +</Text>
         </Button>
       </Grid>
       <CustomModal visible={visible} closeHandler={() => setVisible(false)} />
