@@ -10,7 +10,21 @@ export default function Layout({ children }) {
   const { data: session } = useSession();
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
   console.log("session", session);
-  if (session && isSuccess) {
+  if (session) {
+    return (
+      <Grid.Container
+        direction="column"
+        gap={2}
+        justify="center"
+        alignItems="center"
+      >
+        <Grid>
+          <Text h3>Sign-in is successful ✅.</Text>
+        </Grid>
+      </Grid.Container>
+    );
+  }
+  if (isSuccess) {
     return (
       <Grid.Container gap={2} css={{ height: "100vh", overflow: "hidden" }}>
         <Grid xs={0} md={2} direction="column" css={{ pt: "$0" }}>
