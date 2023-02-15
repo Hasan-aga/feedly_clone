@@ -10,22 +10,9 @@ export default function Layout({ children }) {
   const { data: session } = useSession();
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
   console.log("session", session);
-  if (session) {
-    return (
-      <Grid.Container
-        direction="column"
-        gap={2}
-        justify="center"
-        alignItems="center"
-      >
-        <Grid>
-          <Text h3>Sign-in is successful ✅.</Text>
-        </Grid>
-      </Grid.Container>
-    );
-  }
-  if (isSuccess) {
-    return (
+
+  if (session && isSuccess) {
+    return isSuccess ? (
       <Grid.Container gap={2} css={{ height: "100vh", overflow: "hidden" }}>
         <Grid xs={0} md={2} direction="column" css={{ pt: "$0" }}>
           <Sidebar session={session} feeds={data.results} />
@@ -42,6 +29,17 @@ export default function Layout({ children }) {
           <Grid.Container justify="center">
             <Grid xs={12}>{children}</Grid>
           </Grid.Container>
+        </Grid>
+      </Grid.Container>
+    ) : (
+      <Grid.Container
+        direction="column"
+        gap={2}
+        justify="center"
+        alignItems="center"
+      >
+        <Grid>
+          <Text h3>✅</Text>
         </Grid>
       </Grid.Container>
     );
