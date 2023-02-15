@@ -30,7 +30,8 @@ export default function Layout({ children }) {
         </Grid>
 
         <Grid
-          xs={10}
+          md={10}
+          xs={12}
           css={{
             height: "100vh",
             overflowY: "scroll",
