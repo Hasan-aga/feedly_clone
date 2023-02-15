@@ -3,7 +3,6 @@ import { toast } from "react-hot-toast";
 
 export default function useFeeds() {
   async function getFeeds() {
-    console.log("env", process.env.NEXT_PUBLIC_BASE_URL);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds`
     );
