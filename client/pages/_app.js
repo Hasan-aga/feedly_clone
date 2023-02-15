@@ -19,8 +19,8 @@ export default function App({ Component, session, pageProps }) {
     theme: {
       colors: {
         // brand colors
-        background: "#4ADE7B",
-        primary: "#4ADE7B",
+        background: "#282a36",
+        primary: "#bd93f9",
         primaryLight: "red",
         primaryLightHover: "red",
         primaryLightActive: "red",
