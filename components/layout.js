@@ -13,8 +13,19 @@ export default function Layout({ children }) {
 
   if (session && isSuccess) {
     return isSuccess ? (
-      <Grid.Container gap={2} css={{ height: "100vh", overflow: "hidden" }}>
-        <Grid xs={0} md={2} direction="column" css={{ pt: "$0" }}>
+      <Grid.Container
+        gap={2}
+        css={{
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        <Grid
+          xs={0}
+          md={2}
+          direction="column"
+          css={{ pt: "$0", backgroundColor: "$blue400" }}
+        >
           <Sidebar session={session} feeds={data.results} />
         </Grid>
 

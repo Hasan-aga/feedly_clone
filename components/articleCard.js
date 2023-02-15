@@ -114,7 +114,7 @@ export default function ArticleCard({ article, offset, feed }) {
             </Card.Header>
             <Card.Body css={{ padding: "0px" }}>
               <Text
-                color="#777"
+                color="$gray800"
                 css={{
                   textOverflow: "ellipsis",
                   overflow: "hidden",
