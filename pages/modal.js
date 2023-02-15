@@ -13,7 +13,6 @@ import { toast } from "react-hot-toast";
 
 export default function CustomModal({ children, visible, closeHandler }) {
   const [link, setLink] = useState(null);
-  const [category, setCategory] = useState(null);
   const categoryInput = useRef();
   const queryClient = useQueryClient();
 
@@ -37,17 +36,15 @@ export default function CustomModal({ children, visible, closeHandler }) {
   }
 
   const mutation = useMutation({
-    mutationFn: () => {
+    mutationFn: (category) => {
       return addFeed(link, category);
     },
     onError: (error) => toast.error(error.message),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feeds"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      closeHandler();
+    },
   });
-
-  // todo: call it inside onSuccess above
-  useEffect(() => {
-    closeHandler();
-  }, [mutation.isSuccess]);
 
   return (
     <Modal
@@ -91,8 +88,7 @@ export default function CustomModal({ children, visible, closeHandler }) {
           labelPlaceholder="ex: Tech"
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
-              setCategory(e.target.value);
-              mutation.mutate();
+              mutation.mutate(e.target.value);
             }
           }}
         />
