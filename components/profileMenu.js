@@ -15,6 +15,7 @@ import { SunIcon } from "./icons/sun";
 
 export default function ProfileMenu({ session }) {
   const { theme: themeName, setTheme } = useNextTheme();
+  console.log("theme name", themeName);
   const { theme } = useTheme;
   return (
     <Popover isBordered>
@@ -51,6 +52,7 @@ export default function ProfileMenu({ session }) {
             <Row justify="space-between" align="center">
               <Text>Theme</Text>
               <Switch
+                checked={themeName === "dark" ? false : true}
                 onChange={(e) => {
                   setTheme(themeName === "dark" ? "light" : "dark");
                 }}
