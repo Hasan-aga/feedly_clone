@@ -1,7 +1,8 @@
-import { Button, Card, Col, Grid, Row, Text } from "@nextui-org/react";
+import { Button, Card, Col, Grid, Popover, Row, Text } from "@nextui-org/react";
 import { useEffect, useLayoutEffect, useState } from "react";
+import CardButtons from "./cardButtons";
 
-export default function SmallArticleCard({ article }) {
+export default function SmallArticleCard({ article, offset, feed }) {
   const [imageLink, setImageLink] = useState();
 
   async function fetchArticleImage() {
@@ -38,7 +39,51 @@ export default function SmallArticleCard({ article }) {
         }}
         onClick={() => window.open(article.link, "_blank")}
       >
-        <Card css={{ w: "100%", h: "400px" }}>
+        <Card css={{ w: "100%", h: "300px" }}>
+          <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+            <Col>
+              <Popover placement="top">
+                <Popover.Trigger>
+                  <div
+                    style={{
+                      zIndex: "10",
+                      width: "fit-content",
+                      borderRadius: "10px",
+                      backgroundColor: "black",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignContent: "center",
+                    }}
+                  >
+                    <Text
+                      size={16}
+                      weight="bold"
+                      transform="uppercase"
+                      color="white"
+                    >
+                      &#8942;
+                    </Text>
+                  </div>
+                </Popover.Trigger>
+                <Popover.Content>
+                  <Grid
+                    css={{
+                      borderRadius: "14px",
+                      padding: "0.75rem",
+                      maxWidth: "330px",
+                    }}
+                  >
+                    <CardButtons
+                      article={article}
+                      css={{ padding: "$1" }}
+                      offset={offset}
+                      feed={feed}
+                    />
+                  </Grid>
+                </Popover.Content>
+              </Popover>
+            </Col>
+          </Card.Header>
           <Card.Body css={{ p: 0 }}>
             <Card.Image
               src={
