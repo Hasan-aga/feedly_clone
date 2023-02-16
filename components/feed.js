@@ -70,8 +70,14 @@ export default function Feed({ feed }) {
             </Grid>
             <Grid>
               {data.results.map((article, index) => {
+                console.log("art", article);
                 return (
-                  <Row alignItems="center" justify="center" key={index}>
+                  <Row
+                    alignItems="center"
+                    justify="center"
+                    key={index}
+                    dir={article.language === "ar" ? "rtl" : ""}
+                  >
                     <ArticleCard
                       article={article}
                       offset={offset}
