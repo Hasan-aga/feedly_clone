@@ -49,17 +49,15 @@ export default function ArticleCard({ article, offset, feed }) {
 
   return (
     <Grid.Container
-      lg={12}
-      md={10}
-      sm={8}
-      xs={6}
+      xs={12}
       gap={2}
       alignContent="center"
       alignItems="center"
       justify="center"
     >
       <Grid
-        xs={6}
+        sm={6}
+        xs={8}
         css={{
           opacity: `${article.readid ? "0.5" : "1"}`,
           cursor: "pointer",

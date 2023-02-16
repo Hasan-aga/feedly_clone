@@ -12,6 +12,7 @@ import {
 import ArticleCard from "./articleCard";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import SmallArticleCard from "./smallArticleCard";
 
 export default function Feed({ feed }) {
   const [articles, setArticles] = useState([]);
@@ -68,13 +69,13 @@ export default function Feed({ feed }) {
                 onChange={(page) => setOffset((page - 1) * 5)}
               />
             </Grid>
-            <Grid>
-              {data.results.map((article, index) => {
-                console.log("art", article);
-                return (
-                  <Row
-                    alignItems="center"
-                    justify="center"
+            {data.results.map((article, index) => {
+              console.log("art", article);
+              return (
+                <>
+                  <Grid
+                    xs={0}
+                    sm={12}
                     key={index}
                     dir={article.language === "ar" ? "rtl" : ""}
                   >
@@ -83,10 +84,22 @@ export default function Feed({ feed }) {
                       offset={offset}
                       feed={feed}
                     />
-                  </Row>
-                );
-              })}
-            </Grid>
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    sm={0}
+                    key={index}
+                    dir={article.language === "ar" ? "rtl" : ""}
+                  >
+                    <SmallArticleCard
+                      article={article}
+                      offset={offset}
+                      feed={feed}
+                    />
+                  </Grid>
+                </>
+              );
+            })}
           </Grid.Container>
         </Collapse>
       )}
