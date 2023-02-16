@@ -54,7 +54,7 @@ function renderMap(feedMap) {
 
 export default function Categories() {
   const { data, isSuccess, isLoading } = useFeeds();
-  if (data) {
+  if (!Object.keys(data.results) === 0) {
     const feedMap = new Map(Object.entries(data.results));
 
     return (
@@ -67,7 +67,7 @@ export default function Categories() {
             <Link href="/">All</Link>
           </Grid>
           <Grid xs={1.5}>
-            <Link href="/settings/data?hello=world">
+            <Link href="/settings/">
               <Cog />
             </Link>
           </Grid>
@@ -88,7 +88,7 @@ export default function Categories() {
 
   return (
     <Grid xs={8}>
-      <Text color="warning">Your feeds will be displayed here 👇️</Text>
+      <Text color="warning">Your categories will be displayed here 👇️</Text>
     </Grid>
   );
 }
