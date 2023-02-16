@@ -1,3 +1,4 @@
+import { Grid } from "@nextui-org/react";
 import React from "react";
 
 class ErrorBoundary extends React.Component {
@@ -20,7 +21,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <div>
+        <Grid xs={12} justify="center" alignItems="center">
           <h2>Oops, there is an error!</h2>
           <button
             type="button"
@@ -28,7 +29,7 @@ class ErrorBoundary extends React.Component {
           >
             Try again?
           </button>
-        </div>
+        </Grid>
       );
     }
 
