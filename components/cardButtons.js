@@ -1,9 +1,6 @@
 import { Grid, Tooltip } from "@nextui-org/react";
 import Bookmark from "./icons/bookmark";
 import Checkmark from "./icons/checkmark";
-import styles from "./cardButtons.module.css";
-import ErrorCard from "./errorCard";
-import { useState } from "react";
 import useError from "@/hooks/useError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";

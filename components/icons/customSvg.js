@@ -1,7 +1,7 @@
 import { styled, useTheme } from "@nextui-org/react";
 
 export default function CustomSvg({
-  fill = "currentColor",
+  fill = "$primary",
   width = "24px",
   height = "24px",
   children,

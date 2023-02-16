@@ -1,5 +1,13 @@
 import useFeeds from "@/hooks/useFeeds";
-import { Collapse, Grid, Image, Loading, Row, Text } from "@nextui-org/react";
+import {
+  Collapse,
+  Grid,
+  Image,
+  Loading,
+  Row,
+  Text,
+  Tooltip,
+} from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -76,12 +84,16 @@ export default function Categories() {
         </Grid>
         <Grid xs={1.5}>
           <Link href="/settings/">
-            <Cog />
+            <Tooltip color="primary" content={"Settings"}>
+              <Cog />
+            </Tooltip>
           </Link>
         </Grid>
         <Grid>
           <Link href="/bookmarks">
-            <Bookmark />
+            <Tooltip color="primary" content={"Bookmarks"}>
+              <Bookmark />
+            </Tooltip>
           </Link>
         </Grid>
       </Row>

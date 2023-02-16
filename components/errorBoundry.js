@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 class ErrorBoundary extends React.Component {
@@ -20,8 +21,18 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <div>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyItems: "center",
+            alignItems: "center",
+          }}
+        >
           <h2>Oops, there is an error!</h2>
+          <Image src="/sweating_emoji.svg" width="64" height="64" />
+
           <button
             type="button"
             onClick={() => this.setState({ hasError: false })}
