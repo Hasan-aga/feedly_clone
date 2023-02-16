@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import CustomNavbar from "./CustomNavbar";
 import Sidebar from "./sidebar";
 
 export default function Layout({ children }) {
@@ -13,36 +14,39 @@ export default function Layout({ children }) {
 
   if (session && isSuccess) {
     return isSuccess ? (
-      <Grid.Container
-        gap={2}
-        css={{
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <Grid
-          xs={0}
-          md={2}
-          direction="column"
-          css={{ pt: "$0", backgroundColor: "$blue400" }}
-        >
-          <Sidebar session={session} feeds={data.results} />
-        </Grid>
-
-        <Grid
-          md={10}
-          xs={12}
+      <Grid xs={12} direction="column">
+        <CustomNavbar session={session} />
+        <Grid.Container
+          gap={2}
           css={{
             height: "100vh",
-            overflowY: "scroll",
-            overflowX: "hidden",
+            overflow: "hidden",
           }}
         >
-          <Grid.Container justify="center">
-            <Grid xs={12}>{children}</Grid>
-          </Grid.Container>
-        </Grid>
-      </Grid.Container>
+          <Grid
+            xs={0}
+            md={2}
+            direction="column"
+            css={{ pt: "$0", backgroundColor: "$blue400" }}
+          >
+            <Sidebar session={session} feeds={data.results} />
+          </Grid>
+
+          <Grid
+            md={10}
+            xs={12}
+            css={{
+              height: "100vh",
+              overflowY: "scroll",
+              overflowX: "hidden",
+            }}
+          >
+            <Grid.Container justify="center">
+              <Grid xs={12}>{children}</Grid>
+            </Grid.Container>
+          </Grid>
+        </Grid.Container>
+      </Grid>
     ) : (
       <Grid.Container
         direction="column"
