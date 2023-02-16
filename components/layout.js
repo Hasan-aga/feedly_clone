@@ -15,7 +15,9 @@ export default function Layout({ children }) {
   if (session && isSuccess) {
     return isSuccess ? (
       <Grid xs={12} direction="column">
-        <CustomNavbar session={session} />
+        <Grid md={0}>
+          <CustomNavbar session={session} />
+        </Grid>
         <Grid.Container
           gap={2}
           css={{

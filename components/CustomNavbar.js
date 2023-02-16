@@ -11,30 +11,32 @@ export default function CustomNavbar({ session }) {
       <Navbar.Content>
         <ProfileMenu session={session} />
       </Navbar.Content>
-      <Navbar.Content hideIn="xs" variant="underline">
+      <Navbar.Content variant="underline">
         <Navbar.Item>
           <Link href="/">
-            <HomeIcon />
+            <Tooltip placement="bottom" color="primary" content="Home">
+              <HomeIcon />
+            </Tooltip>
           </Link>
         </Navbar.Item>
         <Navbar.Item>
           <Link href="/settings/">
-            <Tooltip color="primary" content={"Settings"}>
+            <Tooltip placement="bottom" color="primary" content="Settings">
               <Cog />
             </Tooltip>
           </Link>
         </Navbar.Item>
         <Navbar.Item>
           <Link href="/bookmarks">
-            <Tooltip color="primary" content={"Settings"}>
+            <Tooltip placement="bottom" color="primary" content="Bookmarks">
               <Bookmark />
             </Tooltip>
           </Link>
         </Navbar.Item>
       </Navbar.Content>
 
-      <Navbar.Brand>
-        <Text b color="inherit" hideIn="xs">
+      <Navbar.Brand hideIn="xs">
+        <Text b color="inherit">
           Feedni
         </Text>
       </Navbar.Brand>
