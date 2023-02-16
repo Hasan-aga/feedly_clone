@@ -13,11 +13,6 @@ import ArticleCard from "./articleCard";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-export function containsArabicCharacters(str) {
-  var arabicPattern = /[\u0600-\u06FF]/;
-  return arabicPattern.test(str);
-}
-
 export default function Feed({ feed }) {
   const [articles, setArticles] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -76,12 +71,7 @@ export default function Feed({ feed }) {
             <Grid>
               {data.results.map((article, index) => {
                 return (
-                  <Row
-                    alignItems="center"
-                    justify="center"
-                    key={index}
-                    dir={containsArabicCharacters(article.title) ? "rtl" : ""}
-                  >
+                  <Row alignItems="center" justify="center" key={index}>
                     <ArticleCard
                       article={article}
                       offset={offset}
