@@ -47,7 +47,8 @@ export default function SmallArticleCard({ article, offset, feed }) {
                   <Button
                     css={{
                       all: "unset",
-                      backgroundColor: "$background",
+                      // backgroundColor: "$background",
+                      bgBlur: "$black",
                       borderRadius: "100%",
                       width: "$2xl",
                       height: "$2xl",
@@ -87,16 +88,14 @@ export default function SmallArticleCard({ article, offset, feed }) {
               width="100%"
               height="100%"
               objectFit="cover"
-              alt="Card example background"
+              alt="article preview image"
             />
           </Card.Body>
           <Card.Footer
             isBlurred
             css={{
               position: "absolute",
-              bgBlur: "#ffffff66",
-              borderTop: "$borderWeights$light solid rgba(255, 255, 255, 0.2)",
-              bottom: 0,
+              bottom: "0px",
               zIndex: 1,
             }}
           >
@@ -106,7 +105,7 @@ export default function SmallArticleCard({ article, offset, feed }) {
                   {article.title}
                 </Text>
                 <Text
-                  color="$gray500"
+                  color="$accent10"
                   css={{
                     textOverflow: "ellipsis",
                     overflow: "hidden",
