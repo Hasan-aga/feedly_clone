@@ -102,7 +102,8 @@ export default function Layout({ children }) {
         alignItems="center"
       >
         <Grid>
-          <Text h3>✅</Text>
+          <Text h3>Fetching data ✅ </Text>
+          <Loading type="points" />
         </Grid>
       </Grid.Container>
     );
