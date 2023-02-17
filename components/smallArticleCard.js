@@ -44,26 +44,19 @@ export default function SmallArticleCard({ article, offset, feed }) {
             <Col>
               <Popover placement="top">
                 <Popover.Trigger>
-                  <div
-                    style={{
-                      zIndex: "10",
-                      width: "fit-content",
-                      borderRadius: "10px",
-                      backgroundColor: "black",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignContent: "center",
+                  <Button
+                    css={{
+                      all: "unset",
+                      backgroundColor: "$background",
+                      borderRadius: "100%",
+                      width: "$2xl",
+                      height: "$2xl",
+                      fontSize: "$2xl",
+                      color: "$white",
                     }}
                   >
-                    <Text
-                      size={16}
-                      weight="bold"
-                      transform="uppercase"
-                      color="white"
-                    >
-                      &#8942;
-                    </Text>
-                  </div>
+                    &#8942;
+                  </Button>
                 </Popover.Trigger>
                 <Popover.Content>
                   <Grid
