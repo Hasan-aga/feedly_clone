@@ -101,9 +101,7 @@ export default function SmallArticleCard({ article, offset, feed }) {
           >
             <Row>
               <Col>
-                <Text h5 color="black">
-                  {article.title}
-                </Text>
+                <Text h5>{article.title}</Text>
                 <Text
                   color="$accent10"
                   css={{
