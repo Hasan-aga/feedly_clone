@@ -1,10 +1,7 @@
 import useFeeds from "@/hooks/useFeeds";
 import { Button, Grid, Loading, Spacer, Text } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import CustomNavbar from "./CustomNavbar";
 import Sidebar from "./sidebar";
 
@@ -18,16 +15,18 @@ export default function Layout({ children }) {
       <>
         <Grid.Container
           direction="column"
-          gap={2}
           justify="center"
           alignItems="center"
+          css={{ height: "100vh", position: "relative", rowGap: "$10" }}
         >
-          <Grid>
-            <Text h3>Sign-in to customize your feed.</Text>
-          </Grid>
-          <Grid xs={2} direction="column">
-            <Button onPress={() => signIn()}>Sign in</Button>
-          </Grid>
+          <Text h3>Sign-in to customize your feed.</Text>
+          <Button onPress={() => signIn()}>Sign in</Button>
+          <Image
+            src="/wink_emoji.svg"
+            alt="welocm emoji"
+            width="64"
+            height="64"
+          />
         </Grid.Container>
       </>
     );
