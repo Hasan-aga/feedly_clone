@@ -6,10 +6,8 @@ import Layout from "@/components/layout";
 import ErrorBoundary from "@/components/errorBoundry";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-
+import "./_app.style.css";
 export default function App({ Component, session, pageProps }) {
-  console.log("env", process.env.NEXT_PUBLIC_BASE_URL);
-
   // 2. Use at the root of your app
   const lightTheme = createTheme({
     type: "light",
