@@ -54,26 +54,26 @@ export default function App({ Component, session, pageProps }) {
   const [queryClient] = React.useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NextUIProvider>
-        <NextThemesProvider
-          defaultTheme="dark"
-          attribute="class"
-          value={{
-            light: lightTheme.className,
-            dark: darkTheme.className,
-          }}
-        >
-          <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <QueryClientProvider client={queryClient}>
+        <NextUIProvider>
+          <NextThemesProvider
+            defaultTheme="dark"
+            attribute="class"
+            value={{
+              light: lightTheme.className,
+              dark: darkTheme.className,
+            }}
+          >
             <ErrorBoundary>
               <Toaster />
               <Layout>
                 <Component {...pageProps} />
               </Layout>
             </ErrorBoundary>
-          </SessionProvider>
-        </NextThemesProvider>
-      </NextUIProvider>
-    </QueryClientProvider>
+          </NextThemesProvider>
+        </NextUIProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
