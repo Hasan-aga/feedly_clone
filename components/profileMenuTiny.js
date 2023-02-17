@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Grid,
   Popover,
@@ -13,21 +14,20 @@ import { useTheme as useNextTheme } from "next-themes";
 import { MoonIcon } from "./icons/moon";
 import { SunIcon } from "./icons/sun";
 
-export default function ProfileMenu({ session }) {
+export default function ProfileMenuTiny({ session }) {
   const { theme: themeName, setTheme } = useNextTheme();
   return (
     <Popover isBordered>
       <Popover.Trigger>
-        <Grid xs={0} sm={12} css={{ cursor: "pointer" }}>
+        <Grid xs={12} sm={0} css={{ cursor: "pointer" }}>
           <Row xs={12} justify="space-between" align="center">
-            <User
+            <Avatar
               size="lg"
               bordered
               color="primary"
               src={session.user.image}
               name={session.user.name}
             />
-            <Text>🔻</Text>
           </Row>
         </Grid>
       </Popover.Trigger>

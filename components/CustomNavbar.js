@@ -7,6 +7,7 @@ import Bookmark from "./icons/bookmark";
 import Cog from "./icons/cog";
 import HomeIcon from "./icons/homeIcon";
 import ProfileMenu from "./profileMenu";
+import ProfileMenuTiny from "./profileMenuTiny";
 
 export default function CustomNavbar({ session }) {
   const [visible, setVisible] = useState(false);
@@ -16,6 +17,7 @@ export default function CustomNavbar({ session }) {
       <Navbar isCompact isBordered variant="sticky">
         <Navbar.Content>
           <ProfileMenu session={session} />
+          <ProfileMenuTiny session={session} />
         </Navbar.Content>
         <Navbar.Content variant="underline">
           <Navbar.Item>
