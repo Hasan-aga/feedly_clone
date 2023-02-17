@@ -1,4 +1,5 @@
 import ArticleCard from "@/components/articleCard";
+import ArticleCardWrapper from "@/components/articleCardWrapper";
 import { Grid, Text } from "@nextui-org/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -25,10 +26,10 @@ export default function bookmarks() {
 
   if (isSuccess) {
     return (
-      <Grid xs={10} justify="center" alignItems="center" direction="column">
+      <Grid xs={12} justify="center" alignItems="center" direction="column">
         <Text h3>Bookmarks</Text>
         {data.results.map((article, index) => {
-          return <ArticleCard key={index} article={article} />;
+          return <ArticleCardWrapper key={index} article={article} />;
         })}
       </Grid>
     );

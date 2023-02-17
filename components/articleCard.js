@@ -43,15 +43,7 @@ export default function ArticleCard({ article, offset, feed }) {
       alignItems="center"
       justify="center"
     >
-      <Grid
-        sm={6}
-        xs={8}
-        css={{
-          opacity: `${article.readid ? "0.5" : "1"}`,
-          cursor: "pointer",
-        }}
-        onClick={() => window.open(article.link, "_blank")}
-      >
+      <Grid sm={6} xs={8} onClick={() => window.open(article.link, "_blank")}>
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
             showSkeleton
