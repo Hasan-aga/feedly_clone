@@ -4,7 +4,19 @@ import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import CustomNavbar from "./CustomNavbar";
 import Sidebar from "./sidebar";
-
+/**
+ * A Next.js component that displays a layout with feeds and user authentication status.
+ *
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The children components to be rendered within the layout.
+ *
+ * @returns {ReactNode} The component UI to be rendered.
+ *
+ * @example
+ * <Layout>
+ *   <h1>Welcome to my app!</h1>
+ * </Layout>
+ */
 export default function Layout({ children }) {
   const { data: session, status } = useSession();
   console.log("session", session);
