@@ -7,7 +7,7 @@ import {
   Spacer,
   Image,
 } from "@nextui-org/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
 export default function ArticleCard({ article, offset, feed }) {
@@ -16,6 +16,7 @@ export default function ArticleCard({ article, offset, feed }) {
   );
 
   const [imageLink, setImageLink] = useState();
+  const imageRef = useRef();
 
   async function fetchArticleImage() {
     try {
@@ -51,6 +52,7 @@ export default function ArticleCard({ article, offset, feed }) {
       <Grid sm={6} xs={8} onClick={() => window.open(article.link, "_blank")}>
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
+            ref={imageRef}
             showSkeleton
             maxDelay={10000}
             css={{ borderRadius: "5px" }}
@@ -61,6 +63,7 @@ export default function ArticleCard({ article, offset, feed }) {
             }
             width="100%"
             alt="article image"
+            onError={() => (imageRef.current.src = "/feedni-default-img.jpg")}
           />
         </Grid>
         <Spacer />

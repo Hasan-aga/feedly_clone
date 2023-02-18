@@ -1,9 +1,10 @@
 import { Button, Card, Col, Grid, Popover, Row, Text } from "@nextui-org/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
 export default function SmallArticleCard({ article, offset, feed }) {
   const [imageLink, setImageLink] = useState();
+  const imageRef = useRef();
 
   async function fetchArticleImage() {
     try {
@@ -11,6 +12,11 @@ export default function SmallArticleCard({ article, offset, feed }) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/articles/image?articleid=${article.articleid}`
         );
+        if (!response.ok) {
+          //case no image found
+          setImageLink("/feedni-default-img.jpg");
+          return;
+        }
         const result = await response.json();
         setImageLink(result.imageLink);
       }
@@ -80,6 +86,7 @@ export default function SmallArticleCard({ article, offset, feed }) {
           </Card.Header>
           <Card.Body css={{ p: 0 }}>
             <Card.Image
+              ref={imageRef}
               src={
                 article.image_link === "default link"
                   ? imageLink
@@ -89,6 +96,9 @@ export default function SmallArticleCard({ article, offset, feed }) {
               height="100%"
               objectFit="cover"
               alt="article preview image"
+              onError={() => {
+                imageRef.current.src = "/feedni-default-img.jpg";
+              }}
             />
           </Card.Body>
           <Card.Footer
