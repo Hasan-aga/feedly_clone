@@ -23,6 +23,11 @@ export default function ArticleCard({ article, offset, feed }) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/articles/image?articleid=${article.articleid}`
         );
+        if (!response.ok) {
+          //case no image found
+          setImageLink("/feedni-default-img.jpg");
+          return;
+        }
         const result = await response.json();
         setImageLink(result.imageLink);
       }
