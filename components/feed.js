@@ -43,6 +43,9 @@ export default function Feed({ feed }) {
         <Loading type="points" color="currentColor" size="lg" />
       ) : (
         <Collapse
+          expanded
+          bordered
+          css={{ marginBottom: "$10" }}
           title={feed.title}
           subtitle={feed.total_articles + " total articles"}
           contentLeft={
@@ -56,7 +59,6 @@ export default function Feed({ feed }) {
               />
             )
           }
-          expanded
         >
           <Grid.Container justify="center">
             <Grid>
