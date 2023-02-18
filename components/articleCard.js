@@ -1,3 +1,4 @@
+import useMarkAsRead from "@/hooks/useMarkAsRead";
 import {
   Card,
   Grid,
@@ -17,6 +18,7 @@ export default function ArticleCard({ article, offset, feed }) {
 
   const [imageLink, setImageLink] = useState();
   const imageRef = useRef();
+  const markReadMutation = useMarkAsRead(article, offset, feed, false);
 
   async function fetchArticleImage() {
     try {
@@ -48,8 +50,16 @@ export default function ArticleCard({ article, offset, feed }) {
       alignContent="center"
       alignItems="center"
       justify="center"
+      css={{ cursor: "pointer" }}
     >
-      <Grid sm={6} xs={8} onClick={() => window.open(article.link, "_blank")}>
+      <Grid
+        sm={6}
+        xs={8}
+        onClick={() => {
+          markReadMutation.mutate();
+          window.open(article.link, "_blank");
+        }}
+      >
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
             ref={imageRef}

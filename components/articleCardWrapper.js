@@ -1,3 +1,4 @@
+import useMarkAsRead from "@/hooks/useMarkAsRead";
 import { Grid } from "@nextui-org/react";
 import ArticleCard from "./articleCard";
 import SmallArticleCard from "./smallArticleCard";
@@ -15,12 +16,12 @@ import SmallArticleCard from "./smallArticleCard";
  * <ArticleCardWrapper article={article}/>
  */
 export default function ArticleCardWrapper({ article, offset, feed }) {
+  const markAsReadMutation = useMarkAsRead(article, offset, feed, false);
   return (
     <Grid.Container
       xs={12}
       css={{
         opacity: `${article.readid ? "0.5" : "1"}`,
-        cursor: "pointer",
       }}
     >
       <Grid xs={0} sm={12} dir={article.language === "ar" ? "rtl" : ""}>

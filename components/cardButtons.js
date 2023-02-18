@@ -64,7 +64,7 @@ export default function CardButtons({ article, offset, feed }) {
         <Checkmark
           handler={(e) => {
             e.stopPropagation();
-            markReadMutation.mutate(article.articleid);
+            markReadMutation.mutate();
           }}
         />
       </Tooltip>
