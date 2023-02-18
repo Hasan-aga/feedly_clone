@@ -50,11 +50,11 @@ export default function ArticleCard({ article, offset, feed }) {
       alignContent="center"
       alignItems="center"
       justify="center"
-      css={{ cursor: "pointer" }}
     >
       <Grid
         sm={6}
         xs={8}
+        css={{ cursor: "pointer" }}
         onClick={() => {
           markReadMutation.mutate();
           window.open(article.link, "_blank");
