@@ -15,10 +15,12 @@ export default function SpecificCategory() {
   if (data) {
     const { results } = data;
     return results[title] ? (
-      <Collapse.Group>
-        {results[title] &&
-          results[title].map((feed, key) => <Feed feed={feed} key={key} />)}
-      </Collapse.Group>
+      <div style={{ width: "100%" }}>
+        <Collapse.Group>
+          {results[title] &&
+            results[title].map((feed, key) => <Feed feed={feed} key={key} />)}
+        </Collapse.Group>
+      </div>
     ) : (
       <Text color="warning">No results for this category.</Text>
     );
