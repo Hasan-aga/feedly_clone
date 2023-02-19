@@ -61,8 +61,8 @@ export default function Settings() {
     arr.push(...value);
   }
   return (
-    <>
-      <Grid xs={10} justify="center" direction="column">
+    <div style={{ width: "100%" }}>
+      <Grid xs={12} direction="column" justify="center" alignItems="center">
         <Grid>
           <Text color="error" h2>
             Settings
@@ -119,6 +119,6 @@ export default function Settings() {
           </Table>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
