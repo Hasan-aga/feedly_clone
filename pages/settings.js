@@ -55,9 +55,7 @@ export default function Settings() {
 
   function sortArr({ column }) {
     const { items, sortDescriptor } = arr;
-    console.log(items);
-    console.log(sortDescriptor);
-    console.log(column);
+
     items.sort((a, b) => {
       let first = a[column];
       let second = b[column];
@@ -68,7 +66,6 @@ export default function Settings() {
       }
       return cmp;
     });
-    console.log("sorted", items);
     setArr({
       items,
       sortDescriptor:
@@ -78,7 +75,6 @@ export default function Settings() {
 
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
-  console.log("dat", Object.keys(data.results));
   if (Object.keys(data.results).length === 0) {
     return (
       <Grid>
