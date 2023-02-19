@@ -60,7 +60,7 @@ export default function Settings() {
       let second = b[column];
       console.log(`a ${first} | b ${second}`);
       let cmp = collator.compare(first, second);
-      if (sortDescriptor.direction === "descending") {
+      if (sortDescriptor === "descending") {
         cmp *= -1;
       }
       return cmp;
