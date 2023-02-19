@@ -9,7 +9,6 @@ export default async function handler(req, res) {
       throw new Error("you are not signed in.");
     }
     const { url, category, feedid } = req.query;
-    console.log("categoryyyyyyyyyy", category);
     const controller = await Controller.start(session);
 
     switch (req.method) {
@@ -28,6 +27,12 @@ export default async function handler(req, res) {
       case "DELETE":
         {
           await controller.deleteFeed(feedid);
+          res.status(200).json({ success: true });
+        }
+        break;
+      case "PUT":
+        {
+          await controller.moveFeedToCategory(feedid, category);
           res.status(200).json({ success: true });
         }
         break;

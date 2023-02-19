@@ -5,7 +5,10 @@ import {
   Button,
   Col,
   Grid,
+  Input,
   Loading,
+  Modal,
+  Popover,
   Row,
   Spacer,
   Table,
@@ -18,12 +21,18 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
+  const [visible, setVisible] = useState(false);
+  const [category, setcategory] = useState();
   const queryClient = useQueryClient();
   const collator = useCollator({ numeric: true });
   const [arr, setArr] = useState({
     items: [],
     sortDescriptor: { direction: "descending", column: "title" },
   });
+
+  function closeHandler() {
+    setVisible(false);
+  }
   async function deleteFeed(feedid) {
     var requestOptions = {
       method: "DELETE",
@@ -43,13 +52,40 @@ export default function Settings() {
 
     return response.json();
   }
+  async function moveFeedToCategory(feedid, newCategory) {
+    var requestOptions = {
+      method: "PUT",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    console.log("move", feedid);
 
-  const mutation = useMutation({
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?feedid=${feedid}&category=${newCategory}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to move feed");
+    }
+
+    return response.json();
+  }
+
+  const deleteMutation = useMutation({
     mutationFn: (feedid) => deleteFeed(feedid),
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       toast("Deleting...");
+    },
+  });
+  const moveMutation = useMutation({
+    mutationFn: (feedid) => moveFeedToCategory(feedid, category),
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      toast("Moving...");
     },
   });
 
@@ -146,7 +182,8 @@ export default function Settings() {
                             placement="top"
                           >
                             <Button
-                              onPress={() => mutation.mutate(feed.rowid)}
+                              key={`delete${feed.title}`}
+                              onPress={() => deleteMutation.mutate(feed.rowid)}
                               css={{ all: "unset", cursor: "pointer" }}
                             >
                               <Delete />
@@ -164,12 +201,71 @@ export default function Settings() {
                             placement="top"
                           >
                             <Button
-                              onPress={() => console.log("moving")}
+                              key={`move${feed.title}`}
+                              onPress={() => {
+                                setVisible(true);
+                                console.log("moving", feed.title);
+                              }}
                               css={{ all: "unset", cursor: "pointer" }}
                             >
                               <Move />
                             </Button>
                           </Tooltip>
+                          <Modal
+                            key={`getcatfor${feed.title}`}
+                            closeButton
+                            aria-labelledby="modal-title"
+                            open={visible}
+                            onClose={closeHandler}
+                          >
+                            <Modal.Header>
+                              <Text id="modal-title" size={18}>
+                                Move <Text b>{feed.title}</Text> to different
+                                category
+                              </Text>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <Row>
+                                <Input
+                                  autoFocus
+                                  aria-label="pick new category"
+                                  bordered
+                                  fullWidth
+                                  color="primary"
+                                  size="lg"
+                                  labelPlaceholder="ex: Tech"
+                                  onChange={(e) => setcategory(e.target.value)}
+                                  onKeyDown={async (e) => {
+                                    if (e.key === "Enter") {
+                                      setcategory(e.target.value);
+                                      moveMutation.mutate(feed.rowid);
+                                      closeHandler();
+                                    }
+                                  }}
+                                />
+                              </Row>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <Button
+                                auto
+                                flat
+                                color="error"
+                                onPress={closeHandler}
+                              >
+                                Close
+                              </Button>
+                              <Button
+                                auto
+                                onPress={() => {
+                                  moveMutation.mutate(feed.rowid);
+
+                                  closeHandler();
+                                }}
+                              >
+                                Sign in
+                              </Button>
+                            </Modal.Footer>
+                          </Modal>
                         </div>
                       </Table.Cell>
                     </Table.Row>
