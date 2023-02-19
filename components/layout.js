@@ -20,7 +20,7 @@ import Sidebar from "./sidebar";
 export default function Layout({ children }) {
   const { data: session, status } = useSession();
   console.log("session", session);
-  const { isLoading, data, isSuccess, isFetching } = useFeeds();
+  const { isLoading, data, isSuccess, isFetching, refetch } = useFeeds();
 
   if (status === "unauthenticated") {
     return (
@@ -70,6 +70,7 @@ export default function Layout({ children }) {
   }
 
   if (status === "authenticated") {
+    refetch();
     return isSuccess ? (
       <Grid xs={12} direction="column">
         <Grid md={0}>
