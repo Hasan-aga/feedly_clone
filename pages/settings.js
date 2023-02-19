@@ -8,13 +8,19 @@ import {
   Table,
   Text,
   Tooltip,
+  useCollator,
 } from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
   const queryClient = useQueryClient();
-
+  const collator = useCollator({ numeric: true });
+  const [arr, setArr] = useState({
+    items: [],
+    sortDescriptor: "descending",
+  });
   async function deleteFeed(feedid) {
     var requestOptions = {
       method: "DELETE",
@@ -44,6 +50,28 @@ export default function Settings() {
     },
   });
 
+  function sortArr({ column }) {
+    const { items, sortDescriptor } = arr;
+    console.log(items);
+    console.log(sortDescriptor);
+    items.sort((a, b) => {
+      let first = a[column];
+      let second = b[column];
+      console.log(`a ${first} | b ${second}`);
+      let cmp = collator.compare(first, second);
+      if (sortDescriptor.direction === "descending") {
+        cmp *= -1;
+      }
+      return cmp;
+    });
+    console.log("sorted", items);
+    setArr({
+      items,
+      sortDescriptor:
+        sortDescriptor === "ascending" ? "descending" : "ascending",
+    });
+  }
+
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
   console.log("dat", Object.keys(data.results));
@@ -55,11 +83,11 @@ export default function Settings() {
     );
   }
 
-  let arr = [];
-
-  for (const [key, value] of Object.entries(data.results)) {
-    arr.push(...value);
-  }
+  useEffect(() => {
+    for (const [key, value] of Object.entries(data.results)) {
+      setArr({ ...arr, items: [...value] });
+    }
+  }, []);
 
   return (
     <div style={{ width: "100%" }}>
@@ -81,6 +109,8 @@ export default function Settings() {
               minWidth: "100%",
             }}
             selectionMode="multiple"
+            onSortChange={sortArr}
+            sortDescriptor={arr.sortDescriptor}
           >
             <Table.Header>
               <Table.Column key="title" allowsSorting>
@@ -88,7 +118,7 @@ export default function Settings() {
               </Table.Column>
               <Table.Column>DELETE</Table.Column>
             </Table.Header>
-            <Table.Body items={arr} loadingState={isFetching}>
+            <Table.Body items={arr.items} loadingState={isFetching}>
               {(feed) => {
                 return (
                   <Table.Row key={feed.title}>
@@ -123,3 +153,6 @@ export default function Settings() {
     </div>
   );
 }
+
+// you add a sort function to your data arr
+// you can control what gets passed to this function
