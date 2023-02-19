@@ -9,6 +9,7 @@ export default async function handler(req, res) {
       throw new Error("you are not signed in.");
     }
     const { url, category, feedid } = req.query;
+    console.log("categoryyyyyyyyyy", category);
     const controller = await Controller.start(session);
 
     switch (req.method) {

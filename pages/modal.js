@@ -97,7 +97,10 @@ export default function CustomModal({ children, visible, closeHandler }) {
         <Button auto flat color="error" onPress={closeHandler}>
           Close
         </Button>
-        <Button auto onPress={mutation.mutate}>
+        <Button
+          auto
+          onPress={() => mutation.mutate(categoryInput.current.value)}
+        >
           {mutation.isLoading ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
