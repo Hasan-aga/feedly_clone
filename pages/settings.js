@@ -139,11 +139,9 @@ export default function Settings() {
                         >
                           <Button
                             onPress={() => mutation.mutate(feed.rowid)}
-                            color="error"
-                            ghost
-                            auto
+                            css={{ all: "unset" }}
                           >
-                            X
+                            <Delete />
                           </Button>
                         </Tooltip>
                       </Table.Cell>
