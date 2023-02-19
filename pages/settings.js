@@ -60,6 +60,7 @@ export default function Settings() {
   for (const [key, value] of Object.entries(data.results)) {
     arr.push(...value);
   }
+
   return (
     <div style={{ width: "100%" }}>
       <Grid xs={12} direction="column" justify="center" alignItems="center">
@@ -71,6 +72,7 @@ export default function Settings() {
         <Spacer y={1} />
         <Grid>
           <Table
+            compact
             lined
             bordered
             aria-label="Example static collection table with multiple selection"
@@ -81,40 +83,39 @@ export default function Settings() {
             selectionMode="multiple"
           >
             <Table.Header>
-              <Table.Column>TITLE</Table.Column>
+              <Table.Column key="title" allowsSorting>
+                TITLE
+              </Table.Column>
               <Table.Column>DELETE</Table.Column>
             </Table.Header>
-            <Table.Body>
-              {arr &&
-                arr.map((feed, key) => {
-                  // todo: delete appears on hover
-                  return (
-                    <Table.Row key={key + 1}>
-                      <Table.Cell>{feed.title}</Table.Cell>
-                      <Table.Cell>
-                        <Tooltip
-                          color="warning"
-                          content={
-                            <Text b color="#000">
-                              Delete feed?
-                            </Text>
-                          }
-                          contentColor="error"
-                          placement="right"
+            <Table.Body items={arr} loadingState={isFetching}>
+              {(feed) => {
+                return (
+                  <Table.Row key={feed.title}>
+                    <Table.Cell>{feed.title}</Table.Cell>
+                    <Table.Cell>
+                      <Tooltip
+                        color="warning"
+                        content={
+                          <Text b color="#000">
+                            Delete feed?
+                          </Text>
+                        }
+                        contentColor="error"
+                        placement="right"
+                      >
+                        <Button
+                          onPress={() => mutation.mutate(feed.rowid)}
+                          color="error"
+                          css={{ all: "unset" }}
                         >
-                          <Button
-                            onPress={() => mutation.mutate(feed.rowid)}
-                            color="error"
-                            ghost
-                            auto
-                          >
-                            X
-                          </Button>
-                        </Tooltip>
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                })}
+                          <Delete />
+                        </Button>
+                      </Tooltip>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              }}
             </Table.Body>
           </Table>
         </Grid>
