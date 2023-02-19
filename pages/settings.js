@@ -154,6 +154,7 @@ export default function Settings() {
                               <Delete />
                             </Button>
                           </Tooltip>
+
                           <Tooltip
                             color="warning"
                             content={
@@ -183,6 +184,3 @@ export default function Settings() {
     </div>
   );
 }
-
-// you add a sort function to your data arr
-// you can control what gets passed to this function
