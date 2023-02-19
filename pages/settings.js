@@ -1,9 +1,12 @@
 import Delete from "@/components/icons/delete";
+import Move from "@/components/icons/move";
 import useFeeds from "@/hooks/useFeeds";
 import {
   Button,
+  Col,
   Grid,
   Loading,
+  Row,
   Spacer,
   Table,
   Text,
@@ -114,10 +117,9 @@ export default function Settings() {
           >
             <Table.Header>
               <Table.Column key="title" allowsSorting>
-                {" "}
-                TITLE
+                Title
               </Table.Column>
-              <Table.Column>DELETE</Table.Column>
+              <Table.Column>Action</Table.Column>
             </Table.Header>
             <Table.Body>
               {arr.items &&
@@ -127,23 +129,49 @@ export default function Settings() {
                     <Table.Row key={key + 1}>
                       <Table.Cell>{feed.title}</Table.Cell>
                       <Table.Cell>
-                        <Tooltip
-                          color="warning"
-                          content={
-                            <Text b color="#000">
-                              Delete feed?
-                            </Text>
-                          }
-                          contentColor="error"
-                          placement="right"
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "1rem",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                          }}
                         >
-                          <Button
-                            onPress={() => mutation.mutate(feed.rowid)}
-                            css={{ all: "unset" }}
+                          <Tooltip
+                            color="warning"
+                            content={
+                              <Text b color="#000">
+                                Delete feed?
+                              </Text>
+                            }
+                            contentColor="error"
+                            placement="top"
                           >
-                            <Delete />
-                          </Button>
-                        </Tooltip>
+                            <Button
+                              onPress={() => mutation.mutate(feed.rowid)}
+                              css={{ all: "unset", cursor: "pointer" }}
+                            >
+                              <Delete />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip
+                            color="warning"
+                            content={
+                              <Text b color="#000">
+                                Move to different category?
+                              </Text>
+                            }
+                            contentColor="error"
+                            placement="top"
+                          >
+                            <Button
+                              onPress={() => console.log("moving")}
+                              css={{ all: "unset", cursor: "pointer" }}
+                            >
+                              <Move />
+                            </Button>
+                          </Tooltip>
+                        </div>
                       </Table.Cell>
                     </Table.Row>
                   );
