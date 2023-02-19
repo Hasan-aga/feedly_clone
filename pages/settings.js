@@ -54,6 +54,7 @@ export default function Settings() {
     const { items, sortDescriptor } = arr;
     console.log(items);
     console.log(sortDescriptor);
+    console.log(column);
     items.sort((a, b) => {
       let first = a[column];
       let second = b[column];
@@ -100,7 +101,6 @@ export default function Settings() {
         <Spacer y={1} />
         <Grid>
           <Table
-            compact
             lined
             bordered
             aria-label="Example static collection table with multiple selection"
@@ -114,38 +114,42 @@ export default function Settings() {
           >
             <Table.Header>
               <Table.Column key="title" allowsSorting>
+                {" "}
                 TITLE
               </Table.Column>
               <Table.Column>DELETE</Table.Column>
             </Table.Header>
-            <Table.Body items={arr.items} loadingState={isFetching}>
-              {(feed) => {
-                return (
-                  <Table.Row key={feed.title}>
-                    <Table.Cell>{feed.title}</Table.Cell>
-                    <Table.Cell>
-                      <Tooltip
-                        color="warning"
-                        content={
-                          <Text b color="#000">
-                            Delete feed?
-                          </Text>
-                        }
-                        contentColor="error"
-                        placement="right"
-                      >
-                        <Button
-                          onPress={() => mutation.mutate(feed.rowid)}
-                          color="error"
-                          css={{ all: "unset" }}
+            <Table.Body>
+              {arr.items &&
+                arr.items.map((feed, key) => {
+                  // todo: delete appears on hover
+                  return (
+                    <Table.Row key={key + 1}>
+                      <Table.Cell>{feed.title}</Table.Cell>
+                      <Table.Cell>
+                        <Tooltip
+                          color="warning"
+                          content={
+                            <Text b color="#000">
+                              Delete feed?
+                            </Text>
+                          }
+                          contentColor="error"
+                          placement="right"
                         >
-                          <Delete />
-                        </Button>
-                      </Tooltip>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              }}
+                          <Button
+                            onPress={() => mutation.mutate(feed.rowid)}
+                            color="error"
+                            ghost
+                            auto
+                          >
+                            X
+                          </Button>
+                        </Tooltip>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
             </Table.Body>
           </Table>
         </Grid>
