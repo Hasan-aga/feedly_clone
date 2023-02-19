@@ -22,7 +22,7 @@ export default function Settings() {
   const collator = useCollator({ numeric: true });
   const [arr, setArr] = useState({
     items: [],
-    sortDescriptor: "descending",
+    sortDescriptor: { direction: "descending", column: "title" },
   });
   async function deleteFeed(feedid) {
     var requestOptions = {
@@ -55,13 +55,11 @@ export default function Settings() {
 
   function sortArr({ column }) {
     const { items, sortDescriptor } = arr;
-
     items.sort((a, b) => {
       let first = a[column];
       let second = b[column];
-      console.log(`a ${first} | b ${second}`);
       let cmp = collator.compare(first, second);
-      if (sortDescriptor === "descending") {
+      if (sortDescriptor.direction === "descending") {
         cmp *= -1;
       }
       return cmp;
@@ -69,7 +67,9 @@ export default function Settings() {
     setArr({
       items,
       sortDescriptor:
-        sortDescriptor === "ascending" ? "descending" : "ascending",
+        sortDescriptor.direction === "ascending"
+          ? { direction: "descending", column: "title" }
+          : { direction: "ascending", column: "title" },
     });
   }
 
