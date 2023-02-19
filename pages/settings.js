@@ -49,7 +49,7 @@ export default function Settings() {
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
-      toast("invalidating");
+      toast("Deleting...");
     },
   });
 
@@ -84,10 +84,12 @@ export default function Settings() {
   }
 
   useEffect(() => {
+    let temp = [];
     for (const [key, value] of Object.entries(data.results)) {
-      setArr({ ...arr, items: [...value] });
+      temp.push(...value);
     }
-  }, []);
+    setArr({ ...arr, items: [...temp] });
+  }, [data.results]);
 
   return (
     <div style={{ width: "100%" }}>
