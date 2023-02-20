@@ -2,7 +2,7 @@ import useFeeds from "@/hooks/useFeeds";
 import { useRouter } from "next/router";
 import ContentStack from "@/components/contentStack";
 import Feed from "@/components/feed";
-import { Collapse, Loading, Text } from "@nextui-org/react";
+import { Collapse, Grid, Loading, Row, Text } from "@nextui-org/react";
 import { isError } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
@@ -16,6 +16,13 @@ export default function SpecificCategory() {
     const { results } = data;
     return results[title] ? (
       <div style={{ width: "100%" }}>
+        <Row>
+          <Text size="$4xl">You are viewing the</Text>
+          <Text size="$4xl" css={{ color: "$error" }}>
+            &nbsp; &#x275D; {` ${title} `} &#x275E; &nbsp;
+          </Text>
+          <Text size="$4xl">category</Text>
+        </Row>
         <Collapse.Group>
           {results[title] &&
             results[title].map((feed, key) => <Feed feed={feed} key={key} />)}
