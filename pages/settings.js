@@ -211,61 +211,6 @@ export default function Settings() {
                               <Move />
                             </Button>
                           </Tooltip>
-                          <Modal
-                            key={`getcatfor${feed.title}`}
-                            closeButton
-                            aria-labelledby="modal-title"
-                            open={visible}
-                            onClose={closeHandler}
-                          >
-                            <Modal.Header>
-                              <Text id="modal-title" size={18}>
-                                Move <Text b>{feed.title}</Text> to different
-                                category
-                              </Text>
-                            </Modal.Header>
-                            <Modal.Body>
-                              <Row>
-                                <Input
-                                  autoFocus
-                                  aria-label="pick new category"
-                                  bordered
-                                  fullWidth
-                                  color="primary"
-                                  size="lg"
-                                  labelPlaceholder="ex: Tech"
-                                  onChange={(e) => setcategory(e.target.value)}
-                                  onKeyDown={async (e) => {
-                                    if (e.key === "Enter") {
-                                      setcategory(e.target.value);
-                                      moveMutation.mutate(feed.rowid);
-                                      closeHandler();
-                                    }
-                                  }}
-                                />
-                              </Row>
-                            </Modal.Body>
-                            <Modal.Footer>
-                              <Button
-                                auto
-                                flat
-                                color="error"
-                                onPress={closeHandler}
-                              >
-                                Close
-                              </Button>
-                              <Button
-                                auto
-                                onPress={() => {
-                                  moveMutation.mutate(feed.rowid);
-
-                                  closeHandler();
-                                }}
-                              >
-                                Sign in
-                              </Button>
-                            </Modal.Footer>
-                          </Modal>
                         </div>
                       </Table.Cell>
                     </Table.Row>
