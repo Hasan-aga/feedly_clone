@@ -233,7 +233,11 @@ export default function Settings() {
                                 <MovePopup
                                   feed={feed}
                                   setcategory={setcategory}
-                                  close={() => console.log("close")}
+                                  close={() =>
+                                    setopenMap((prev) => {
+                                      return { ...prev, [feed.title]: false };
+                                    })
+                                  }
                                 />
                               </Popover.Content>
                             </Popover>
