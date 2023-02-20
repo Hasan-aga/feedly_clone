@@ -67,7 +67,6 @@ export default function Feed({ feed }) {
                 shadow
                 noMargin
                 align="center"
-                rowsPerPage={5}
                 total={Math.ceil(feed.total_articles / 5)}
                 onChange={(page) => setOffset((page - 1) * 5)}
               />
