@@ -30,6 +30,12 @@ export default async function handler(req, res) {
           res.status(200).json({ success: true });
         }
         break;
+      case "PUT":
+        {
+          await controller.moveFeedToCategory(feedid, category);
+          res.status(200).json({ success: true });
+        }
+        break;
 
       default:
         res.status(404).json({

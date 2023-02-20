@@ -5,7 +5,10 @@ import {
   Button,
   Col,
   Grid,
+  Input,
   Loading,
+  Modal,
+  Popover,
   Row,
   Spacer,
   Table,
@@ -14,16 +17,29 @@ import {
   useCollator,
 } from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
+  const [category, setcategory] = useState();
+  const [openMap, setopenMap] = useState();
   const queryClient = useQueryClient();
   const collator = useCollator({ numeric: true });
   const [arr, setArr] = useState({
     items: [],
     sortDescriptor: { direction: "descending", column: "title" },
   });
+
+  function handleOpenClose(feed) {
+    setopenMap((prev) => {
+      const keyExists = prev && Object.keys(prev).includes(feed.title);
+      return {
+        ...prev,
+        [feed.title]: keyExists ? !prev[feed.title] : true,
+      };
+    });
+  }
+
   async function deleteFeed(feedid) {
     var requestOptions = {
       method: "DELETE",
@@ -44,7 +60,7 @@ export default function Settings() {
     return response.json();
   }
 
-  const mutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: (feedid) => deleteFeed(feedid),
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
@@ -84,11 +100,17 @@ export default function Settings() {
   }
 
   useEffect(() => {
+    //todo: use map to store key/value
     let temp = [];
     for (const [key, value] of Object.entries(data.results)) {
       temp.push(...value);
     }
     setArr({ ...arr, items: [...temp] });
+    let tempMap = {};
+    for (let element of temp) {
+      tempMap[element.title] = false;
+    }
+    setopenMap(tempMap);
   }, [data.results]);
 
   return (
@@ -122,7 +144,6 @@ export default function Settings() {
             <Table.Body>
               {arr.items &&
                 arr.items.map((feed, key) => {
-                  // todo: delete appears on hover
                   return (
                     <Table.Row key={key + 1}>
                       <Table.Cell>{feed.title}</Table.Cell>
@@ -146,7 +167,8 @@ export default function Settings() {
                             placement="top"
                           >
                             <Button
-                              onPress={() => mutation.mutate(feed.rowid)}
+                              key={`delete${feed.title}`}
+                              onPress={() => deleteMutation.mutate(feed.rowid)}
                               css={{ all: "unset", cursor: "pointer" }}
                             >
                               <Delete />
@@ -163,12 +185,31 @@ export default function Settings() {
                             contentColor="error"
                             placement="top"
                           >
-                            <Button
-                              onPress={() => console.log("moving")}
-                              css={{ all: "unset", cursor: "pointer" }}
+                            <Popover
+                              isOpen={openMap && openMap[feed.title]}
+                              onOpenChange={() => handleOpenClose(feed)}
+                              key={`pop${feed.title}`}
                             >
-                              <Move />
-                            </Button>
+                              <Popover.Trigger>
+                                <Button
+                                  key={`move${feed.title}`}
+                                  css={{ all: "unset", cursor: "pointer" }}
+                                >
+                                  <Move />
+                                </Button>
+                              </Popover.Trigger>
+                              <Popover.Content>
+                                <MovePopup
+                                  feed={feed}
+                                  setcategory={setcategory}
+                                  close={() =>
+                                    setopenMap((prev) => {
+                                      return { ...prev, [feed.title]: false };
+                                    })
+                                  }
+                                />
+                              </Popover.Content>
+                            </Popover>
                           </Tooltip>
                         </div>
                       </Table.Cell>
@@ -181,4 +222,87 @@ export default function Settings() {
       </Grid>
     </div>
   );
+}
+
+function MovePopup({ feed, close }) {
+  const queryClient = useQueryClient();
+  const inputRef = useRef();
+
+  const moveMutation = useMutation({
+    mutationFn: ({ feedid, category }) => moveFeedToCategory(feedid, category),
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      toast("Moving...");
+    },
+  });
+
+  async function moveFeedToCategory(feedid, newCategory) {
+    var requestOptions = {
+      method: "PUT",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    console.log("move", feedid);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?feedid=${feedid}&category=${newCategory}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to move feed");
+    }
+
+    return response.json();
+  }
+
+  return (
+    <Grid css={{ padding: "$10" }}>
+      <Row>
+        <Text id="popup text" size={18}>
+          Move <Text b>{feed.title}</Text> to:
+        </Text>
+      </Row>
+      <Row>
+        <Input
+          ref={inputRef}
+          aria-label="move to category"
+          placeholder="Select Category"
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              saveAndClose(e.target.value, feed.rowid);
+            }
+          }}
+        ></Input>
+      </Row>
+      <Spacer />
+      <Row>
+        <Grid.Container justify="space-between" alignContent="center">
+          <Grid>
+            <Button size="xs" onPress={close}>
+              Cancel
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              onPress={() => saveAndClose(inputRef.current.value, feed.rowid)}
+              size="xs"
+              shadow
+              color="error"
+            >
+              Move
+            </Button>
+          </Grid>
+        </Grid.Container>
+      </Row>
+    </Grid>
+  );
+
+  function saveAndClose(category, feedid) {
+    // note: mutation expects one parameter, to pass more use object:
+    moveMutation.mutate({ feedid, category });
+    close();
+  }
 }
