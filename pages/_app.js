@@ -7,6 +7,7 @@ import ErrorBoundary from "@/components/errorBoundry";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import "./_app.style.css";
+import AuthenticationWrapper from "@/components/AuthenticationWrapper";
 export default function App({ Component, session, pageProps }) {
   const lightTheme = createTheme({
     type: "light",
@@ -61,9 +62,9 @@ export default function App({ Component, session, pageProps }) {
           >
             <ErrorBoundary>
               <Toaster />
-              <Layout>
+              <AuthenticationWrapper>
                 <Component {...pageProps} />
-              </Layout>
+              </AuthenticationWrapper>
             </ErrorBoundary>
           </NextThemesProvider>
         </NextUIProvider>
