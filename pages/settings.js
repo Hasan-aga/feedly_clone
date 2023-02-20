@@ -21,8 +21,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
-  const [visible, setVisible] = useState(false);
   const [category, setcategory] = useState();
+  const [openMap, setopenMap] = useState(new Map());
   const queryClient = useQueryClient();
   const collator = useCollator({ numeric: true });
   const [arr, setArr] = useState({
@@ -30,9 +30,6 @@ export default function Settings() {
     sortDescriptor: { direction: "descending", column: "title" },
   });
 
-  function closeHandler() {
-    setVisible(false);
-  }
   async function deleteFeed(feedid) {
     var requestOptions = {
       method: "DELETE",
@@ -120,11 +117,15 @@ export default function Settings() {
   }
 
   useEffect(() => {
+    //todo: use map to store key/value
     let temp = [];
+    let tempMap = new Map();
     for (const [key, value] of Object.entries(data.results)) {
       temp.push(...value);
+      tempMap.set(value, false);
     }
     setArr({ ...arr, items: [...temp] });
+    setopenMap(tempMap);
   }, [data.results]);
 
   return (
@@ -158,7 +159,6 @@ export default function Settings() {
             <Table.Body>
               {arr.items &&
                 arr.items.map((feed, key) => {
-                  // todo: delete appears on hover
                   return (
                     <Table.Row key={key + 1}>
                       <Table.Cell>{feed.title}</Table.Cell>
@@ -200,12 +200,14 @@ export default function Settings() {
                             contentColor="error"
                             placement="top"
                           >
-                            <Popover>
+                            <Popover
+                              isOpen={openMap.get(feed)}
+                              key={`pop${feed.title}`}
+                            >
                               <Popover.Trigger>
                                 <Button
                                   key={`move${feed.title}`}
                                   onPress={() => {
-                                    setVisible(true);
                                     console.log("moving", feed.title);
                                   }}
                                   css={{ all: "unset", cursor: "pointer" }}
@@ -214,7 +216,10 @@ export default function Settings() {
                                 </Button>
                               </Popover.Trigger>
                               <Popover.Content>
-                                <p>hello {feed.title}</p>
+                                <MovePopup
+                                  feed={feed}
+                                  setcategory={setcategory}
+                                />
                               </Popover.Content>
                             </Popover>
                           </Tooltip>
@@ -228,5 +233,44 @@ export default function Settings() {
         </Grid>
       </Grid>
     </div>
+  );
+}
+
+function MovePopup({ feed, setcategory }) {
+  console.log("got feed", feed);
+  return (
+    <Grid css={{ padding: "$10" }}>
+      <Row>
+        <Text id="popup text" size={18}>
+          Move <Text b>{feed.title}</Text> to:
+        </Text>
+      </Row>
+      <Row>
+        <Input
+          aria-label="move to category"
+          placeholder="Select Category"
+          onChange={(e) => setcategory(e.target.value)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setcategory(e.target.value);
+            }
+          }}
+        ></Input>
+      </Row>
+      <Spacer />
+      <Row>
+        <Grid.Container justify="space-between" alignContent="center">
+          <Grid>
+            <Button size="xs">Cancel</Button>
+          </Grid>
+          <Grid>
+            <Button size="xs" shadow color="error">
+              Move
+            </Button>
+          </Grid>
+        </Grid.Container>
+      </Row>
+    </Grid>
   );
 }
