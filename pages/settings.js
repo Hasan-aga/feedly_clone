@@ -17,7 +17,7 @@ import {
   useCollator,
 } from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
@@ -59,25 +59,6 @@ export default function Settings() {
 
     return response.json();
   }
-  async function moveFeedToCategory(feedid, newCategory) {
-    var requestOptions = {
-      method: "PUT",
-      redirect: "follow",
-      cerendtials: "include",
-    };
-    console.log("move", feedid);
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?feedid=${feedid}&category=${newCategory}`,
-      requestOptions
-    );
-
-    if (!response.ok) {
-      throw new Error("failed to move feed");
-    }
-
-    return response.json();
-  }
 
   const deleteMutation = useMutation({
     mutationFn: (feedid) => deleteFeed(feedid),
@@ -85,14 +66,6 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       toast("Deleting...");
-    },
-  });
-  const moveMutation = useMutation({
-    mutationFn: (feedid) => moveFeedToCategory(feedid, category),
-    onError: (error) => toast.error(error.message),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["feeds"] });
-      toast("Moving...");
     },
   });
 
@@ -138,7 +111,6 @@ export default function Settings() {
       tempMap[element.title] = false;
     }
     setopenMap(tempMap);
-    console.log("amp", openMap);
   }, [data.results]);
 
   return (
@@ -221,9 +193,6 @@ export default function Settings() {
                               <Popover.Trigger>
                                 <Button
                                   key={`move${feed.title}`}
-                                  onPress={() => {
-                                    console.log("moving", feed.title);
-                                  }}
                                   css={{ all: "unset", cursor: "pointer" }}
                                 >
                                   <Move />
@@ -255,8 +224,39 @@ export default function Settings() {
   );
 }
 
-function MovePopup({ feed, setcategory, close }) {
-  console.log("got feed", feed);
+function MovePopup({ feed, close }) {
+  const queryClient = useQueryClient();
+  const inputRef = useRef();
+
+  const moveMutation = useMutation({
+    mutationFn: ({ feedid, category }) => moveFeedToCategory(feedid, category),
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      toast("Moving...");
+    },
+  });
+
+  async function moveFeedToCategory(feedid, newCategory) {
+    var requestOptions = {
+      method: "PUT",
+      redirect: "follow",
+      cerendtials: "include",
+    };
+    console.log("move", feedid);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/feeds?feedid=${feedid}&category=${newCategory}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to move feed");
+    }
+
+    return response.json();
+  }
+
   return (
     <Grid css={{ padding: "$10" }}>
       <Row>
@@ -266,13 +266,13 @@ function MovePopup({ feed, setcategory, close }) {
       </Row>
       <Row>
         <Input
+          ref={inputRef}
           aria-label="move to category"
           placeholder="Select Category"
-          onChange={(e) => setcategory(e.target.value)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              setcategory(e.target.value);
+              saveAndClose(e.target.value, feed.rowid);
             }
           }}
         ></Input>
@@ -286,7 +286,12 @@ function MovePopup({ feed, setcategory, close }) {
             </Button>
           </Grid>
           <Grid>
-            <Button size="xs" shadow color="error">
+            <Button
+              onPress={() => saveAndClose(inputRef.current.value, feed.rowid)}
+              size="xs"
+              shadow
+              color="error"
+            >
               Move
             </Button>
           </Grid>
@@ -294,4 +299,10 @@ function MovePopup({ feed, setcategory, close }) {
       </Row>
     </Grid>
   );
+
+  function saveAndClose(category, feedid) {
+    // note: mutation expects one parameter, to pass more use object:
+    moveMutation.mutate({ feedid, category });
+    close();
+  }
 }
