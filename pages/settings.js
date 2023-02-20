@@ -22,13 +22,23 @@ import { toast } from "react-hot-toast";
 
 export default function Settings() {
   const [category, setcategory] = useState();
-  const [openMap, setopenMap] = useState(new Map());
+  const [openMap, setopenMap] = useState();
   const queryClient = useQueryClient();
   const collator = useCollator({ numeric: true });
   const [arr, setArr] = useState({
     items: [],
     sortDescriptor: { direction: "descending", column: "title" },
   });
+
+  function handleOpenClose(feed) {
+    setopenMap((prev) => {
+      const keyExists = prev && Object.keys(prev).includes(feed.title);
+      return {
+        ...prev,
+        [feed.title]: keyExists ? !prev[feed.title] : true,
+      };
+    });
+  }
 
   async function deleteFeed(feedid) {
     var requestOptions = {
@@ -119,13 +129,16 @@ export default function Settings() {
   useEffect(() => {
     //todo: use map to store key/value
     let temp = [];
-    let tempMap = new Map();
     for (const [key, value] of Object.entries(data.results)) {
       temp.push(...value);
-      tempMap.set(value, false);
     }
     setArr({ ...arr, items: [...temp] });
+    let tempMap = {};
+    for (let element of temp) {
+      tempMap[element.title] = false;
+    }
     setopenMap(tempMap);
+    console.log("amp", openMap);
   }, [data.results]);
 
   return (
@@ -201,7 +214,8 @@ export default function Settings() {
                             placement="top"
                           >
                             <Popover
-                              isOpen={openMap.get(feed)}
+                              isOpen={openMap && openMap[feed.title]}
+                              onOpenChange={() => handleOpenClose(feed)}
                               key={`pop${feed.title}`}
                             >
                               <Popover.Trigger>
@@ -219,6 +233,7 @@ export default function Settings() {
                                 <MovePopup
                                   feed={feed}
                                   setcategory={setcategory}
+                                  close={() => console.log("close")}
                                 />
                               </Popover.Content>
                             </Popover>
@@ -236,7 +251,7 @@ export default function Settings() {
   );
 }
 
-function MovePopup({ feed, setcategory }) {
+function MovePopup({ feed, setcategory, close }) {
   console.log("got feed", feed);
   return (
     <Grid css={{ padding: "$10" }}>
@@ -262,7 +277,9 @@ function MovePopup({ feed, setcategory }) {
       <Row>
         <Grid.Container justify="space-between" alignContent="center">
           <Grid>
-            <Button size="xs">Cancel</Button>
+            <Button size="xs" onPress={close}>
+              Cancel
+            </Button>
           </Grid>
           <Grid>
             <Button size="xs" shadow color="error">
