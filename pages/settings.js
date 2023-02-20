@@ -200,16 +200,23 @@ export default function Settings() {
                             contentColor="error"
                             placement="top"
                           >
-                            <Button
-                              key={`move${feed.title}`}
-                              onPress={() => {
-                                setVisible(true);
-                                console.log("moving", feed.title);
-                              }}
-                              css={{ all: "unset", cursor: "pointer" }}
-                            >
-                              <Move />
-                            </Button>
+                            <Popover>
+                              <Popover.Trigger>
+                                <Button
+                                  key={`move${feed.title}`}
+                                  onPress={() => {
+                                    setVisible(true);
+                                    console.log("moving", feed.title);
+                                  }}
+                                  css={{ all: "unset", cursor: "pointer" }}
+                                >
+                                  <Move />
+                                </Button>
+                              </Popover.Trigger>
+                              <Popover.Content>
+                                <p>hello {feed.title}</p>
+                              </Popover.Content>
+                            </Popover>
                           </Tooltip>
                         </div>
                       </Table.Cell>
