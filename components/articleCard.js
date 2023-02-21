@@ -1,4 +1,3 @@
-import useMarkAsRead from "@/hooks/useMarkAsRead";
 import {
   Card,
   Grid,
@@ -11,14 +10,13 @@ import {
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
-export default function ArticleCard({ article, offset, feed }) {
+export default function ArticleCard({ article, offset, feed, clickHandler }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
     new Date(article.publication_date)
   );
 
   const [imageLink, setImageLink] = useState();
   const imageRef = useRef();
-  const markReadMutation = useMarkAsRead(article, offset, feed, false);
 
   async function fetchArticleImage() {
     try {
@@ -51,15 +49,7 @@ export default function ArticleCard({ article, offset, feed }) {
       alignItems="center"
       justify="center"
     >
-      <Grid
-        sm={6}
-        xs={8}
-        css={{ cursor: "pointer" }}
-        onClick={() => {
-          markReadMutation.mutate();
-          window.open(article.link, "_blank");
-        }}
-      >
+      <Grid sm={6} xs={8} css={{ cursor: "pointer" }} onClick={clickHandler}>
         <Grid xs={2} css={{ padding: "0" }} alignItems="flex-start">
           <Image
             ref={imageRef}

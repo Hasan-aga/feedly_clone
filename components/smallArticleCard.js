@@ -2,7 +2,12 @@ import { Button, Card, Col, Grid, Popover, Row, Text } from "@nextui-org/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
-export default function SmallArticleCard({ article, offset, feed }) {
+export default function SmallArticleCard({
+  article,
+  offset,
+  feed,
+  clickHandler,
+}) {
   const [imageLink, setImageLink] = useState();
   const imageRef = useRef();
 
@@ -43,7 +48,7 @@ export default function SmallArticleCard({ article, offset, feed }) {
           opacity: `${article.readid ? "0.5" : "1"}`,
           cursor: "pointer",
         }}
-        onClick={() => window.open(article.link, "_blank")}
+        onClick={clickHandler}
       >
         <Card css={{ w: "100%", h: "300px" }}>
           <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>

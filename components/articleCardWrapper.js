@@ -16,7 +16,13 @@ import SmallArticleCard from "./smallArticleCard";
  * <ArticleCardWrapper article={article}/>
  */
 export default function ArticleCardWrapper({ article, offset, feed }) {
-  const markAsReadMutation = useMarkAsRead(article, offset, feed, false);
+  const markReadMutation = useMarkAsRead(article, offset, feed, false);
+
+  function clickHandler() {
+    markReadMutation.mutate();
+    window.open(article.link, "_blank");
+  }
+
   return (
     <Grid.Container
       xs={12}
@@ -25,10 +31,20 @@ export default function ArticleCardWrapper({ article, offset, feed }) {
       }}
     >
       <Grid xs={0} sm={12} dir={article.language === "ar" ? "rtl" : ""}>
-        <ArticleCard article={article} offset={offset} feed={feed} />
+        <ArticleCard
+          article={article}
+          offset={offset}
+          feed={feed}
+          clickHandler={clickHandler}
+        />
       </Grid>
       <Grid xs={12} sm={0} dir={article.language === "ar" ? "rtl" : ""}>
-        <SmallArticleCard article={article} offset={offset} feed={feed} />
+        <SmallArticleCard
+          article={article}
+          offset={offset}
+          feed={feed}
+          clickHandler={clickHandler}
+        />
       </Grid>
     </Grid.Container>
   );
