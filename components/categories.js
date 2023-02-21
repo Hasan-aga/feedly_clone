@@ -62,6 +62,7 @@ function renderMap(feedMap) {
 
 export default function Categories() {
   const { data, isSuccess, isLoading } = useFeeds();
+  const { route } = useRouter();
 
   if (Object.keys(data.results).length === 0) {
     return (
@@ -73,6 +74,17 @@ export default function Categories() {
 
   const feedMap = new Map(Object.entries(data.results));
 
+  if (route === "/categories") {
+    return (
+      <Grid.Container direction="column">
+        <Grid>
+          <Collapse.Group accordion={false}>
+            {renderMap(feedMap)}
+          </Collapse.Group>
+        </Grid>
+      </Grid.Container>
+    );
+  }
   return (
     <Grid.Container direction="column">
       <Grid>
