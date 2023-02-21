@@ -21,7 +21,6 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function Settings() {
-  const [category, setcategory] = useState();
   const [openMap, setopenMap] = useState();
   const queryClient = useQueryClient();
   const collator = useCollator({ numeric: true });
@@ -201,7 +200,6 @@ export default function Settings() {
                               <Popover.Content>
                                 <MovePopup
                                   feed={feed}
-                                  setcategory={setcategory}
                                   close={() =>
                                     setopenMap((prev) => {
                                       return { ...prev, [feed.title]: false };
