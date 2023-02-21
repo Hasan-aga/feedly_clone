@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Add from "./icons/add";
 import Bookmark from "./icons/bookmark";
+import CategoryIcon from "./icons/categoryIcon";
 import Cog from "./icons/cog";
 import HomeIcon from "./icons/homeIcon";
 import ProfileMenu from "./profileMenu";
@@ -33,6 +34,13 @@ export default function CustomNavbar({ session }) {
                 <Add />
               </Tooltip>
             </div>
+          </Navbar.Item>
+          <Navbar.Item>
+            <Link href="/categories">
+              <Tooltip placement="bottom" color="primary" content="Categories">
+                <CategoryIcon />
+              </Tooltip>
+            </Link>
           </Navbar.Item>
           <Navbar.Item>
             <Link href="/settings/">
