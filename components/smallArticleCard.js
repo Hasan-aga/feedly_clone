@@ -2,12 +2,7 @@ import { Button, Card, Col, Grid, Popover, Row, Text } from "@nextui-org/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
-export default function SmallArticleCard({
-  article,
-  offset,
-  feed,
-  clickHandler,
-}) {
+export default function SmallArticleCard({ children, article, clickHandler }) {
   const [imageLink, setImageLink] = useState();
   const imageRef = useRef();
 
@@ -78,12 +73,7 @@ export default function SmallArticleCard({
                       maxWidth: "330px",
                     }}
                   >
-                    <CardButtons
-                      article={article}
-                      css={{ padding: "$1" }}
-                      offset={offset}
-                      feed={feed}
-                    />
+                    {children}
                   </Grid>
                 </Popover.Content>
               </Popover>

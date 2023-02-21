@@ -1,6 +1,7 @@
 import useMarkAsRead from "@/hooks/useMarkAsRead";
 import { Grid } from "@nextui-org/react";
 import ArticleCard from "./articleCard";
+import CardButtons from "./cardButtons";
 import SmallArticleCard from "./smallArticleCard";
 
 /**
@@ -36,7 +37,14 @@ export default function ArticleCardWrapper({ article, offset, feed }) {
           offset={offset}
           feed={feed}
           clickHandler={clickHandler}
-        />
+        >
+          <CardButtons
+            article={article}
+            css={{ padding: "$1" }}
+            offset={offset}
+            feed={feed}
+          />
+        </ArticleCard>
       </Grid>
       <Grid xs={12} sm={0} dir={article.language === "ar" ? "rtl" : ""}>
         <SmallArticleCard
@@ -44,7 +52,14 @@ export default function ArticleCardWrapper({ article, offset, feed }) {
           offset={offset}
           feed={feed}
           clickHandler={clickHandler}
-        />
+        >
+          <CardButtons
+            article={article}
+            css={{ padding: "$1" }}
+            offset={offset}
+            feed={feed}
+          />
+        </SmallArticleCard>
       </Grid>
     </Grid.Container>
   );

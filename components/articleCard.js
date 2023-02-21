@@ -10,7 +10,7 @@ import {
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardButtons from "./cardButtons";
 
-export default function ArticleCard({ article, offset, feed, clickHandler }) {
+export default function ArticleCard({ children, article, clickHandler }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
     new Date(article.publication_date)
   );
@@ -90,12 +90,7 @@ export default function ArticleCard({ article, offset, feed, clickHandler }) {
                     </Text>
                   </Grid>
                   <Grid xs={2} justify="flex-end">
-                    <CardButtons
-                      article={article}
-                      css={{ padding: "$1" }}
-                      offset={offset}
-                      feed={feed}
-                    />
+                    {children}
                   </Grid>
                 </Grid.Container>
                 <Text css={{ color: "$accents8", pb: "$1" }}>{date}</Text>
