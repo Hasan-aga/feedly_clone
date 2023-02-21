@@ -17,7 +17,7 @@ export default function SpecificCategory() {
     return results[title] ? (
       <div style={{ width: "100%" }}>
         <Text css={{ display: "inline-block" }} size=" $2xl">
-          You are viewing the
+          Viewing the
         </Text>
         <Text css={{ display: "inline-block" }} color="error" size="$2xl">
           &nbsp; &#x275D; {` ${title} `} &#x275E; &nbsp;
