@@ -16,13 +16,15 @@ export default function SpecificCategory() {
     const { results } = data;
     return results[title] ? (
       <div style={{ width: "100%" }}>
-        <Row>
-          <Text size="$4xl">You are viewing the</Text>
-          <Text size="$4xl" css={{ color: "$error" }}>
-            &nbsp; &#x275D; {` ${title} `} &#x275E; &nbsp;
-          </Text>
-          <Text size="$4xl">category</Text>
-        </Row>
+        <Text css={{ display: "inline-block" }} size=" $2xl">
+          You are viewing the
+        </Text>
+        <Text css={{ display: "inline-block" }} color="error" size="$2xl">
+          &nbsp; &#x275D; {` ${title} `} &#x275E; &nbsp;
+        </Text>
+        <Text css={{ display: "inline-block" }} size="$2xl">
+          category:
+        </Text>
         <Collapse.Group>
           {results[title] &&
             results[title].map((feed, key) => <Feed feed={feed} key={key} />)}
