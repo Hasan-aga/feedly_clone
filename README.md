@@ -12,5 +12,5 @@ The backend is devided into 3 layers:
   2. The controller: this layer handles all data validation/processing. 
   3. The database (model): this layer handles querying the database. minimal data processing.
   
-The frontend is your typical NextJS application.
+The frontend is your typical React application.
 
