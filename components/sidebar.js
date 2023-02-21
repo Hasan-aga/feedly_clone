@@ -16,7 +16,7 @@ export default function Sidebar({ session, feeds }) {
         </Button>
       </Grid>
       <CustomModal visible={visible} closeHandler={() => setVisible(false)} />
-      <Categories feeds={feeds} />
+      <Categories />
       <Grid css={{ alignSelf: "flex-end" }}>
         <Text>
           Made by <Link href="http://hasan.one/">Hasan</Link>
