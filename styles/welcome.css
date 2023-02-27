@@ -1,0 +1,27 @@
+.reveal {
+  opacity: 1;
+  animation: reveal-animation 1s;
+}
+.hide {
+  opacity: 1;
+  animation: reveal-animation-opposite 1s infinite;
+}
+
+@keyframes reveal-animation {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+@keyframes reveal-animation-opposite {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
