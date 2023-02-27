@@ -2,6 +2,7 @@ import useWakeServer from "@/hooks/useWakeServer";
 import { Button, Grid, Loading, Text } from "@nextui-org/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import CustomHead from "./head";
 import Layout from "./layout";
 import Welcome from "./welcome";
 
@@ -17,26 +18,29 @@ export default function AuthenticationWrapper({ children }) {
 
   if (status === "loading") {
     return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-        }}
-      >
-        <Loading color="success" size="lg" type="points" />
-        <Text h5 color="success">
-          Signing you in...
-        </Text>
-        <Image
-          src="/welcome_emoji.svg"
-          alt="welocm emoji"
-          width="64"
-          height="64"
-        />
-      </div>
+      <>
+        <CustomHead />
+        <div
+          style={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
+          <Loading color="success" size="lg" type="points" />
+          <Text h5 color="success">
+            Signing you in...
+          </Text>
+          <Image
+            src="/welcome_emoji.svg"
+            alt="welocm emoji"
+            width="64"
+            height="64"
+          />
+        </div>
+      </>
     );
   }
 
