@@ -45,7 +45,7 @@ export default function SmallArticleCard({ children, article, clickHandler }) {
         }}
         onClick={clickHandler}
       >
-        <Card css={{ w: "100%", h: "300px" }}>
+        <Card css={{ w: "100%", h: "250px" }}>
           <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
             <Col>
               <Popover placement="top">
@@ -53,12 +53,11 @@ export default function SmallArticleCard({ children, article, clickHandler }) {
                   <Button
                     css={{
                       all: "unset",
-                      // backgroundColor: "$background",
-                      bgBlur: "$black",
+                      backgroundColor: "$backgroundAlpha",
                       borderRadius: "100%",
                       width: "$2xl",
                       height: "$2xl",
-                      fontSize: "$2xl",
+                      fontSize: "$1xl",
                       color: "$white",
                     }}
                   >
