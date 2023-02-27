@@ -39,8 +39,9 @@ export default function Welcome() {
         />
         <meta
           property="og:image"
-          content="https://feedni.hasan.one/Group%2026-min.png"
+          content="https://github.com/Hasan-aga/feedni/blob/master/public/Group%2026%20(dark)-min.png?raw=true"
         />
+        <meta name="twitter:creator" content="@selamFromHasan" />
       </Head>
       <Grid.Container
         direction="column"
