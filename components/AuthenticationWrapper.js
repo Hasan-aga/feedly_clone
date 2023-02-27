@@ -3,6 +3,7 @@ import { Button, Grid, Loading, Text } from "@nextui-org/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Layout from "./layout";
+import Welcome from "./welcome";
 
 // a component that handles auth and selects what to render accordingly
 export default function AuthenticationWrapper({ children }) {
@@ -11,25 +12,7 @@ export default function AuthenticationWrapper({ children }) {
   console.log("session", session);
 
   if (status === "unauthenticated") {
-    return (
-      <>
-        <Grid.Container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          css={{ height: "100vh", position: "relative", rowGap: "$10" }}
-        >
-          <Text h3>Sign-in to customize your feed.</Text>
-          <Button onPress={() => signIn()}>Sign in</Button>
-          <Image
-            src="/wink_emoji.svg"
-            alt="welocm emoji"
-            width="64"
-            height="64"
-          />
-        </Grid.Container>
-      </>
-    );
+    return <Welcome />;
   }
 
   if (status === "loading") {
