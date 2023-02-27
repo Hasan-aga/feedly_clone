@@ -4,6 +4,7 @@ import Link from "next/link";
 import mockImage from "../public/Group 26-min.png";
 import darkMockImage from "../public/Group 26 (dark)-min.png";
 import { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function Welcome() {
   const [flip, setflip] = useState(false);
