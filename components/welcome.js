@@ -145,10 +145,10 @@ export default function Welcome() {
             )}
           </Grid>
         </Grid.Container>
-        <Text css={{ position: "sticky", bottom: "10px" }}>
-          Created By <Link href="https://hasan.one/">Hasan</Link>
-        </Text>
       </Grid.Container>
+      <Text css={{ position: "sticky", bottom: "10px" }}>
+        Created By <Link href="https://hasan.one/">Hasan</Link>
+      </Text>
     </>
   );
 }
