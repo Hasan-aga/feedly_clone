@@ -37,7 +37,10 @@ export default function Welcome() {
           content="Use Feedni to follow your favorite blogs, magazines and news
           outlets"
         />
-        <meta property="og:image" content="/Group 26-min.png" />
+        <meta
+          property="og:image"
+          content="https://feedni.hasan.one/Group%2026-min.png"
+        />
       </Head>
       <Grid.Container
         direction="column"
