@@ -18,6 +18,20 @@ import Sidebar from "./sidebar";
  * </Layout>
  */
 export default function Layout({ children, session }) {
+  console.log(`
+  ######           #     #                             
+  #     # #   #    #     #   ##    ####    ##   #    # 
+  #     #  # #     #     #  #  #  #       #  #  ##   # 
+  ######    #      ####### #    #  ####  #    # # #  # 
+  #     #   #      #     # ######      # ###### #  # # 
+  #     #   #      #     # #    # #    # #    # #   ## 
+  ######    #      #     # #    #  ####  #    # #    # 
+                                                       
+ `);
+
+  if (process.env.NODE_ENV === "development") {
+    console.log = () => {};
+  }
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
   return isSuccess ? (
