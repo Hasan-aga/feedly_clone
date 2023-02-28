@@ -42,6 +42,7 @@ export default function Feed({ feed }) {
         <Loading type="points" color="currentColor" size="lg" />
       ) : (
         <Collapse
+          expanded
           bordered
           css={{ marginBottom: "$10" }}
           title={feed.title}
