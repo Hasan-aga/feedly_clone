@@ -2,6 +2,7 @@ import useFeeds from "@/hooks/useFeeds";
 import { Button, Grid, Loading, Spacer, Text } from "@nextui-org/react";
 import Image from "next/image";
 import CustomNavbar from "./CustomNavbar";
+import CustomHead from "./head";
 import Sidebar from "./sidebar";
 /**
  * A Next.js component that displays a layout with feeds and user authentication status.
@@ -20,41 +21,43 @@ export default function Layout({ children, session }) {
   const { isLoading, data, isSuccess, isFetching } = useFeeds();
 
   return isSuccess ? (
-    <Grid xs={12} direction="column">
-      <Grid md={0}>
-        <CustomNavbar session={session} />
-      </Grid>
-      <Grid.Container
-        gap={2}
-        css={{
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <Grid
-          xs={0}
-          md={2}
-          direction="column"
-          css={{ pt: "$0", backgroundColor: "$blue400" }}
-        >
-          <Sidebar session={session} feeds={data.results} />
+    <>
+      <CustomHead />
+      <Grid xs={12} direction="column">
+        <Grid md={0}>
+          <CustomNavbar session={session} />
         </Grid>
-
-        <Grid
-          md={10}
-          xs={12}
+        <Grid.Container
+          gap={2}
           css={{
             height: "100vh",
-            overflowY: "scroll",
-            overflowX: "hidden",
+            overflow: "hidden",
           }}
         >
-          <Grid.Container justify="center">
-            <Grid xs={12}>{children}</Grid>
-          </Grid.Container>
-        </Grid>
-      </Grid.Container>
-    </Grid>
+          <Grid
+            xs={0}
+            md={2}
+            direction="column"
+            css={{ pt: "$0", backgroundColor: "$blue400" }}
+          >
+            <Sidebar session={session} feeds={data.results} />
+          </Grid>
+          <Grid
+            md={10}
+            xs={12}
+            css={{
+              height: "100vh",
+              overflowY: "scroll",
+              overflowX: "hidden",
+            }}
+          >
+            <Grid.Container justify="center">
+              <Grid xs={12}>{children}</Grid>
+            </Grid.Container>
+          </Grid>
+        </Grid.Container>
+      </Grid>
+    </>
   ) : (
     <Grid.Container
       direction="column"
