@@ -18,3 +18,5 @@ The frontend is your typical NextJS application.
 
 The database schema looks like this:
 ![image](public/supbase_schema.png)
+
+the database connection is configured in the environment.
