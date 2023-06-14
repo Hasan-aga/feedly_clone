@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       case "GET":
         {
           const results = await controller.getMyFeeds();
+          console.log("returned from api");
           res.status(200).json({ success: true, results });
         }
         break;
