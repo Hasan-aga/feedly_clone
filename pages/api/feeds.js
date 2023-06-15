@@ -20,9 +20,9 @@ export default async function handler(req, res) {
         break;
       case "GET":
         {
-          const results = await controller.getMyFeeds();
-          controller.checkAndUpdate(results);
-          res.status(200).json({ success: true, results });
+          const { results, groupedResults } = await controller.getMyFeeds();
+          res.status(200).json({ success: true, results: groupedResults });
+          await controller.checkAndUpdate(results);
         }
         break;
       case "DELETE":
