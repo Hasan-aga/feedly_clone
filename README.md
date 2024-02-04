@@ -14,6 +14,23 @@ The backend is devided into 3 layers:
 2. The controller: this layer handles all data validation/processing.
 3. The database (model): this layer handles querying the database. minimal data processing.
 
+You will need to configure `http://localhost:3000` as an Authorized JavaScript origins and Authorized redirect origins in your auth provider.
+
+For Google, you will need to create .env.local and provide these variables:
+
+```
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=****
+GOOGLE_CLIENT_SECRET=****
+NEXTAUTH_SECRET=****
+NEXTAUTH_URL=****
+PGHOST=<ip or domain name of postgres machine>
+PGPASSWORD=****
+PGUSER=<your postgres username>
+PGDATABASE=<your postgres database name>
+PGPORT=<your postgres port>
+```
+
 The frontend is your typical NextJS application.
 
 The database schema looks like this:
