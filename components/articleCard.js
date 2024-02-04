@@ -1,14 +1,14 @@
-import {
-  Card,
-  Grid,
-  Text,
-  Button,
-  Row,
-  Spacer,
-  Image,
-} from "@nextui-org/react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import CardButtons from "./cardButtons";
+import { Card, Grid, Image, Spacer, Text } from "@nextui-org/react";
+import { useLayoutEffect, useRef, useState } from "react";
+
+function parseHtmlEntities(str) {
+  const parser = new DOMParser();
+  const dom = parser.parseFromString(
+    `<!doctype html><body>${str}`,
+    "text/html"
+  );
+  return dom.body.textContent;
+}
 
 export default function ArticleCard({ children, article, clickHandler }) {
   const date = new Intl.DateTimeFormat("en-GB").format(
@@ -86,7 +86,7 @@ export default function ArticleCard({ children, article, clickHandler }) {
                         letterSpacing: "1px",
                       }}
                     >
-                      {article.title}
+                      {parseHtmlEntities(article.title)}
                     </Text>
                   </Grid>
                   <Grid xs={2} justify="flex-end">
