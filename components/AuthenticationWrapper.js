@@ -1,6 +1,5 @@
-import useWakeServer from "@/hooks/useWakeServer";
-import { Button, Grid, Loading, Text } from "@nextui-org/react";
-import { signIn, useSession } from "next-auth/react";
+import { Loading, Text } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import CustomHead from "./head";
 import Layout from "./layout";
@@ -8,7 +7,6 @@ import Welcome from "./welcome";
 
 // a component that handles auth and selects what to render accordingly
 export default function AuthenticationWrapper({ children }) {
-  useWakeServer();
   const { data: session, status } = useSession();
   console.log("session", session);
 

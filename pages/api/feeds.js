@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         break;
       case "GET":
         {
+          console.debug("hit get feeds endpoint");
           const results = await controller.getMyFeeds();
           res.status(200).json({ success: true, results });
         }
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
     }
     return;
   } catch (error) {
-    console.log(`failed!, ${error}`);
+    console.log(`failed while working with feeds!, ${error}`);
     res.status(500).json({ success: false, error: error.message });
   }
 }
