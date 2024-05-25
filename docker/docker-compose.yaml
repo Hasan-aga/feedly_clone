@@ -1,9 +1,29 @@
 services:
   feedni:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ./docker/Dockerfile
     ports:
       - "3003:3000"
     env_file:
-      - .env.local
+      - ../.env.local
+    volumes:
+      - feedni_data:/app
+
+  postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: feedni
+      POSTGRES_USER: hasan
+      POSTGRES_PASSWORD: cyber-punk2024*
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - ../.env.local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  feedni_data:
